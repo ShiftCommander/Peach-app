@@ -2030,13 +2030,10 @@ function renderChromaticWheel(chromatic) {
 }
 
 function ensureWheelAnimator(wheel) {
-  if (chromaticWheelQuickTo || typeof window.gsap === 'undefined') return;
+  if (chromaticWheelQuickTo && chromaticWheelTweenElement === wheel) return;
 
-  chromaticWheelQuickTo = window.gsap.quickTo(wheel, '--wheel-rotation', {
-    duration: 0.115,
-    ease: 'power2.out',
-    overwrite: true
-  });
+  chromaticWheelTweenElement = wheel;
+  chromaticWheelQuickTo = (value) => animateWheelRotation(wheel, value);
 }
 
 function applyWheelRotation(wheel, targetRotation, { cents = null, immediate = false } = {}) {
@@ -2046,13 +2043,53 @@ function applyWheelRotation(wheel, targetRotation, { cents = null, immediate = f
   const nearPerfect = Number.isFinite(cents) && Math.abs(cents) <= PERFECT_CENTS;
   const value = `${normalizedTarget.toFixed(3)}deg`;
 
-  if (immediate || nearPerfect || typeof window.gsap === 'undefined' || !chromaticWheelQuickTo) {
-    if (typeof window.gsap !== 'undefined') window.gsap.killTweensOf(wheel, '--wheel-rotation');
+  if (immediate || nearPerfect || !chromaticWheelQuickTo) {
+    cancelWheelAnimation();
     wheel.style.setProperty('--wheel-rotation', value);
     return;
   }
 
   chromaticWheelQuickTo(value);
+}
+
+function animateWheelRotation(wheel, value) {
+  const target = parseFloat(value);
+  if (!Number.isFinite(target)) return;
+
+  cancelWheelAnimation();
+
+  const start = readWheelRotation(wheel);
+  const startAt = performance.now();
+  const duration = 115;
+
+  const tick = (now) => {
+    const progress = Math.min(1, (now - startAt) / duration);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = start + ((target - start) * eased);
+    wheel.style.setProperty('--wheel-rotation', `${current.toFixed(3)}deg`);
+
+    if (progress < 1) {
+      chromaticWheelTween = requestAnimationFrame(tick);
+      return;
+    }
+
+    chromaticWheelTween = null;
+    wheel.style.setProperty('--wheel-rotation', `${target.toFixed(3)}deg`);
+  };
+
+  chromaticWheelTween = requestAnimationFrame(tick);
+}
+
+function cancelWheelAnimation() {
+  if (!chromaticWheelTween) return;
+  cancelAnimationFrame(chromaticWheelTween);
+  chromaticWheelTween = null;
+}
+
+function readWheelRotation(wheel) {
+  const inlineValue = wheel.style.getPropertyValue('--wheel-rotation');
+  const parsed = parseFloat(inlineValue);
+  return Number.isFinite(parsed) ? parsed : chromaticWheelRotationDeg;
 }
 
 function getWheelTargetRotation(noteIndex, { idle = false, cents = 0 } = {}) {
@@ -2409,8 +2446,8 @@ function registerServiceWorker() {
     navigator.serviceWorker.register('./sw.js')
       .then(() => navigator.serviceWorker.ready)
       .then(() => {
-        if (!navigator.serviceWorker.controller && !sessionStorage.getItem('peach-sw-v22-reloaded')) {
-          sessionStorage.setItem('peach-sw-v22-reloaded', '1');
+        if (!navigator.serviceWorker.controller && !sessionStorage.getItem('peach-sw-v35-reloaded')) {
+          sessionStorage.setItem('peach-sw-v35-reloaded', '1');
           window.setTimeout(() => window.location.reload(), 350);
         }
       })

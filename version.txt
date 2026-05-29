@@ -1,2 +1,2 @@
-Peach - Guitar Tuner V34
-GSAP-assisted chromatic wheel motion + engraved physical dial labels.
+Peach - Guitar Tuner V35
+Offline-ready release prep: local chromatic wheel animation, refreshed PWA cache, release headers, and documentation.
