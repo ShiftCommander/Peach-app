@@ -1,0 +1,6049 @@
+@import url("https://fonts.googleapis.com/css2?family=Boldonse&display=swap");
+@import url("https://cdn.jsdelivr.net/npm/@fontsource-variable/hubot-sans/index.css");
+:root {
+  color-scheme: dark;
+  --bg: #020617;
+  --panel: #0f172a;
+  --panel-deep: #07101f;
+  --panel-soft: #101a2e;
+  --border: rgba(148, 163, 184, 0.16);
+  --border-strong: rgba(45, 212, 191, 0.34);
+  --text: #f8fafc;
+  --muted: #94a3b8;
+  --muted-2: #64748b;
+  --teal: #2dd4bf;
+  --teal-soft: rgba(45, 212, 191, 0.12);
+  --amber: #f59e0b;
+  --amber-soft: rgba(245, 158, 11, 0.14);
+  --rose: #f43f5e;
+  --rose-soft: rgba(244, 63, 94, 0.14);
+  --shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
+}
+
+* { box-sizing: border-box; }
+
+html {
+  min-height: 100%;
+  background: var(--bg);
+}
+
+body {
+  min-height: 100%;
+  margin: 0;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 50% -10%, rgba(45, 212, 191, 0.12), transparent 34rem),
+    linear-gradient(180deg, #020617 0%, #030712 100%);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+button,
+select,
+input {
+  font: inherit;
+}
+
+button,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button { cursor: pointer; }
+
+.is-hidden { display: none !important; }
+
+.app-shell {
+  width: min(100%, 31rem);
+  min-height: 100dvh;
+  margin-inline: auto;
+  padding: env(safe-area-inset-top) 1rem env(safe-area-inset-bottom);
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.85rem;
+  padding: 1rem 0 0.85rem;
+  background: linear-gradient(180deg, rgba(2, 6, 23, 0.96) 0%, rgba(2, 6, 23, 0.84) 72%, rgba(2, 6, 23, 0) 100%);
+  backdrop-filter: blur(14px);
+}
+
+.brand {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.72rem;
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: 1.12rem;
+  line-height: 1;
+  letter-spacing: -0.045em;
+}
+
+.brand p {
+  margin: 0.18rem 0 0;
+  font-size: 0.68rem;
+  line-height: 1;
+  color: var(--muted-2);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.brand-mark {
+  position: relative;
+  flex: 0 0 auto;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.85rem;
+  background:
+    radial-gradient(circle at 50% 38%, rgba(45, 212, 191, 0.35), transparent 38%),
+    linear-gradient(145deg, #0f172a, #020617);
+  border: 1px solid rgba(45, 212, 191, 0.24);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 10px 30px rgba(45, 212, 191, 0.07);
+}
+
+.brand-mark::before {
+  content: "";
+  position: absolute;
+  left: 0.52rem;
+  right: 0.52rem;
+  bottom: 0.72rem;
+  height: 0.9rem;
+  border: 2px solid rgba(45, 212, 191, 0.9);
+  border-bottom: 0;
+  border-radius: 3rem 3rem 0 0;
+}
+
+.brand-mark__needle {
+  position: absolute;
+  width: 0.12rem;
+  height: 1.16rem;
+  left: calc(50% - 0.06rem);
+  bottom: 0.55rem;
+  border-radius: 99rem;
+  background: #f8fafc;
+  transform-origin: bottom center;
+  transform: rotate(18deg);
+}
+
+.app-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.9rem;
+  padding: 0.2rem 0 1rem;
+}
+
+.install-card,
+.mic-permission-card,
+.tuner-card,
+.history-card,
+.diapason-card {
+  border: 1px solid var(--border);
+  background:
+    linear-gradient(180deg, rgba(15, 23, 42, 0.98), rgba(8, 13, 26, 0.98)),
+    radial-gradient(circle at 50% 0%, rgba(45, 212, 191, 0.11), transparent 22rem);
+  border-radius: 1.45rem;
+  box-shadow: var(--shadow);
+}
+
+.install-card,
+.mic-permission-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.82rem;
+}
+
+.install-card {
+  border-color: rgba(45, 212, 191, 0.26);
+  background: linear-gradient(135deg, rgba(45, 212, 191, 0.12), rgba(15, 23, 42, 0.84));
+}
+
+.mic-permission-card {
+  border-color: rgba(245, 158, 11, 0.28);
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(15, 23, 42, 0.9));
+}
+
+.install-card strong,
+.install-card span,
+.mic-permission-card strong,
+.mic-permission-card span {
+  display: block;
+}
+
+.install-card strong,
+.mic-permission-card strong {
+  font-size: 0.85rem;
+  letter-spacing: -0.02em;
+}
+
+.install-card span,
+.mic-permission-card span {
+  margin-top: 0.12rem;
+  color: var(--muted);
+  font-size: 0.72rem;
+  line-height: 1.25;
+}
+
+.install-card button,
+.mic-permission-card button {
+  border: 0;
+  border-radius: 999rem;
+  padding: 0.62rem 0.82rem;
+  color: #03110f;
+  background: var(--teal);
+  font-size: 0.76rem;
+  font-weight: 950;
+  white-space: nowrap;
+  box-shadow: 0 12px 30px rgba(45, 212, 191, 0.14);
+}
+
+.mic-permission-card button {
+  color: #170c02;
+  background: var(--amber);
+}
+
+.tuner-card {
+  position: relative;
+  overflow: hidden;
+  padding: 1.02rem 1.08rem 1.12rem;
+}
+
+.tuner-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 13%, rgba(45, 212, 191, 0.08), transparent 15rem);
+}
+
+.tuner-topline {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.2rem;
+}
+
+.listening-pill,
+.signal-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.55rem;
+  padding: 0.35rem 0.58rem;
+  border-radius: 999rem;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  color: var(--muted-2);
+  background: rgba(2, 6, 23, 0.35);
+  font-size: 0.63rem;
+  font-weight: 950;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.listening-pill.is-live {
+  color: #dffdf8;
+  border-color: rgba(45, 212, 191, 0.28);
+  background: rgba(45, 212, 191, 0.09);
+}
+
+.listening-pill.is-waiting {
+  color: #fde68a;
+  border-color: rgba(245, 158, 11, 0.28);
+  background: rgba(245, 158, 11, 0.10);
+}
+
+.signal-pill.is-signal {
+  color: var(--teal);
+}
+
+.signal-pill.is-silent {
+  color: var(--muted-2);
+}
+
+.dial {
+  position: relative;
+  width: 100%;
+  height: 9.15rem;
+  overflow: hidden;
+  margin-bottom: 0.12rem;
+}
+
+.dial-ring {
+  position: absolute;
+  left: 50%;
+  bottom: -8.8rem;
+  transform: translateX(-50%);
+  border-radius: 999rem;
+}
+
+.dial-ring--outer {
+  width: 16.7rem;
+  height: 16.7rem;
+  border: 2px dashed rgba(148, 163, 184, 0.18);
+}
+
+.dial-ring--inner {
+  width: 12.5rem;
+  height: 12.5rem;
+  bottom: -6.7rem;
+  border: 1px solid rgba(148, 163, 184, 0.10);
+}
+
+.dial-label {
+  position: absolute;
+  bottom: 0.28rem;
+  font-size: 0.7rem;
+  font-weight: 950;
+}
+
+.dial-label--left { left: 0.3rem; color: rgba(244, 63, 94, 0.68); }
+.dial-label--right { right: 0.3rem; color: rgba(245, 158, 11, 0.72); }
+.dial-label--center {
+  left: 50%;
+  bottom: 2.75rem;
+  transform: translateX(-50%);
+  color: rgba(45, 212, 191, 0.84);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.58rem;
+}
+
+.needle {
+  position: absolute;
+  left: calc(50% - 0.12rem);
+  bottom: 0.15rem;
+  width: 0.24rem;
+  height: 7.8rem;
+  border-radius: 999rem 999rem 0 0;
+  background: #475569;
+  transform-origin: bottom center;
+  transform: rotate(0deg);
+  transition: transform 58ms linear, background-color 120ms ease, box-shadow 120ms ease;
+  will-change: transform;
+}
+
+.needle-pivot {
+  position: absolute;
+  left: calc(50% - 0.45rem);
+  bottom: -0.25rem;
+  width: 0.9rem;
+  height: 0.9rem;
+  border-radius: 999rem;
+  background: #64748b;
+  border: 2px solid #0f172a;
+}
+
+.target-notes {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.42rem;
+  min-height: 2.05rem;
+  padding: 0 0.35rem 0.72rem;
+  margin-bottom: 0.58rem;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.target-note {
+  width: 2.05rem;
+  height: 1.6rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.65rem;
+  color: var(--muted-2);
+  background: rgba(2, 6, 23, 0.28);
+  font-size: 0.7rem;
+  font-weight: 950;
+  letter-spacing: 0.02em;
+  border: 1px solid transparent;
+  transition: color 120ms ease, background-color 120ms ease, border-color 120ms ease, transform 120ms ease;
+}
+
+.target-note.is-current {
+  color: var(--teal);
+  background: rgba(45, 212, 191, 0.1);
+  border-color: rgba(45, 212, 191, 0.34);
+  transform: translateY(-1px);
+}
+
+.readout {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.readout-label,
+.target-readout__label {
+  color: var(--muted-2);
+  font-size: 0.58rem;
+  font-weight: 950;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.detected-note {
+  height: 4.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #334155;
+  font-size: clamp(3.65rem, 17vw, 4.65rem);
+  line-height: 1;
+  font-weight: 950;
+  letter-spacing: -0.075em;
+  transition: color 120ms ease, text-shadow 120ms ease;
+}
+
+.detected-freq {
+  min-height: 1.1rem;
+  color: var(--muted-2);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.72rem;
+}
+
+.target-readout {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 0.24rem 0.75rem;
+  margin-top: 0.85rem;
+  padding: 0.8rem 0.82rem;
+  border: 1px solid rgba(148, 163, 184, 0.13);
+  border-radius: 1rem;
+  background: rgba(2, 6, 23, 0.38);
+}
+
+.target-readout__label { grid-column: 1 / -1; }
+
+.target-readout strong {
+  color: var(--text);
+  font-size: 1.55rem;
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.target-readout span:last-child {
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.25;
+  font-weight: 750;
+}
+
+.cents-deviation {
+  position: relative;
+  z-index: 1;
+  margin-top: 0.72rem;
+  min-height: 2.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-radius: 1rem;
+  padding: 0.68rem 0.8rem;
+  color: var(--muted);
+  background: rgba(2, 6, 23, 0.32);
+  border: 1px solid rgba(148, 163, 184, 0.10);
+  font-size: 0.82rem;
+  font-weight: 950;
+  letter-spacing: -0.01em;
+}
+
+.tuner-card.is-perfect .needle {
+  background: var(--teal);
+  box-shadow: 0 0 24px rgba(45, 212, 191, 0.56);
+}
+
+.tuner-card.is-perfect .detected-note,
+.tuner-card.is-perfect .target-readout strong,
+.cents-deviation.is-perfect {
+  color: var(--teal);
+}
+
+.tuner-card.is-perfect .detected-note {
+  text-shadow: 0 0 26px rgba(45, 212, 191, 0.28);
+}
+
+.tuner-card.is-low .needle { background: var(--amber); }
+.tuner-card.is-low .detected-note,
+.tuner-card.is-low .target-readout strong,
+.cents-deviation.is-low { color: var(--amber); }
+.cents-deviation.is-low { background: var(--amber-soft); border-color: rgba(245, 158, 11, 0.24); }
+
+.tuner-card.is-high .needle { background: var(--rose); }
+.tuner-card.is-high .detected-note,
+.tuner-card.is-high .target-readout strong,
+.cents-deviation.is-high { color: var(--rose); }
+.cents-deviation.is-high { background: var(--rose-soft); border-color: rgba(244, 63, 94, 0.24); }
+
+.cents-deviation.is-perfect { background: var(--teal-soft); border-color: rgba(45, 212, 191, 0.28); }
+
+.history-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.86rem;
+  border-radius: 1rem;
+  box-shadow: none;
+}
+
+.history-card > span {
+  color: var(--muted-2);
+  font-size: 0.62rem;
+  font-weight: 950;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.note-history {
+  min-height: 2.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.42rem;
+}
+
+.note-history em {
+  color: #475569;
+  font-size: 0.78rem;
+  font-style: italic;
+  font-weight: 700;
+}
+
+.history-pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 0.72rem;
+  border: 1px solid rgba(148, 163, 184, 0.17);
+  background: rgba(15, 23, 42, 0.9);
+  color: var(--muted);
+  font-weight: 950;
+  font-size: 0.74rem;
+  animation: slideIn 220ms ease-out both;
+}
+
+.history-pill:first-child {
+  border-color: rgba(45, 212, 191, 0.42);
+  background: rgba(45, 212, 191, 0.10);
+  color: var(--teal);
+  font-size: 0.86rem;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(0.45rem) scale(0.94); }
+  to { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+.diapason-card {
+  padding: 1rem;
+}
+
+.section-title {
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+  margin-bottom: 0.85rem;
+}
+
+.section-title strong {
+  font-size: 1rem;
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+
+.section-title span {
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.35;
+  font-weight: 700;
+}
+
+.section-title--small {
+  margin: 1rem 0 0.75rem;
+}
+
+.field-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.34rem;
+}
+
+.field-stack > span,
+.custom-field span {
+  color: var(--muted-2);
+  font-size: 0.63rem;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+select,
+input {
+  width: 100%;
+  color: var(--text);
+  background: transparent;
+  outline: none;
+}
+
+.field-stack select,
+.custom-grid input {
+  min-height: 3rem;
+  border: 1px solid var(--border);
+  border-radius: 0.9rem;
+  background: rgba(2, 6, 23, 0.58);
+  padding: 0.5rem 0.75rem;
+}
+
+select {
+  font-size: 0.86rem;
+  font-weight: 850;
+}
+
+.strings-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.72rem;
+  margin-top: 1rem;
+}
+
+.string-card {
+  min-height: 5.6rem;
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 0.72rem 0.5rem;
+  background: rgba(2, 6, 23, 0.35);
+  color: var(--text);
+  transition: transform 150ms ease, border-color 150ms ease, background-color 150ms ease;
+}
+
+.string-card:hover,
+.string-card.is-playing,
+.string-card.is-current-target {
+  border-color: rgba(45, 212, 191, 0.42);
+  background: rgba(45, 212, 191, 0.10);
+}
+
+.string-card:active,
+.install-card button:active,
+.mic-permission-card button:active,
+.secondary-action:active {
+  transform: scale(0.98);
+}
+
+.string-note,
+.string-freq,
+.string-label {
+  display: block;
+  text-align: center;
+}
+
+.string-note {
+  color: var(--teal);
+  font-size: 1.18rem;
+  font-weight: 950;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.string-freq {
+  margin-top: 0.25rem;
+  color: var(--muted-2);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.65rem;
+}
+
+.string-label {
+  margin-top: 0.55rem;
+  color: #475569;
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+}
+
+.custom-panel {
+  margin-top: 0.95rem;
+  padding-top: 0.05rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.custom-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.72rem;
+}
+
+.custom-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.secondary-action {
+  width: 100%;
+  border: 0;
+  border-radius: 1rem;
+  padding: 0.9rem 1.1rem;
+  margin-top: 0.95rem;
+  color: #03110f;
+  background: var(--teal);
+  font-weight: 950;
+  transition: transform 150ms ease, background-color 150ms ease;
+}
+
+.app-footer {
+  padding: 0.6rem 0 1rem;
+  color: #475569;
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+@media (max-width: 380px) {
+  .app-shell { padding-left: 0.82rem; padding-right: 0.82rem; }
+  .strings-grid { gap: 0.56rem; }
+  .string-card { min-height: 5.2rem; padding-inline: 0.35rem; }
+  .target-readout { grid-template-columns: 1fr; }
+}
+
+/* TimTuner V5 — mode Oreille, sons de diapason, personnalisation par notes */
+.listening-pill.is-ear {
+  color: #ccfbf1;
+  border-color: rgba(45, 212, 191, 0.34);
+  background: linear-gradient(135deg, rgba(45, 212, 191, 0.14), rgba(15, 23, 42, 0.38));
+}
+
+.cents-deviation.is-ear {
+  color: #ccfbf1;
+  background: rgba(45, 212, 191, 0.10);
+  border-color: rgba(45, 212, 191, 0.22);
+}
+
+.ear-help-card {
+  position: sticky;
+  top: 4.4rem;
+  z-index: 20;
+  border: 1px solid rgba(45, 212, 191, 0.26);
+  background:
+    linear-gradient(135deg, rgba(45, 212, 191, 0.15), rgba(15, 23, 42, 0.94)),
+    radial-gradient(circle at 100% 0%, rgba(45, 212, 191, 0.18), transparent 13rem);
+  border-radius: 1.15rem;
+  padding: 0.78rem 2.35rem 0.82rem 0.88rem;
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.32);
+  touch-action: pan-y;
+  transition: opacity 170ms ease, transform 170ms ease;
+}
+
+.ear-help-card.is-dismissing {
+  opacity: 0;
+  transform: translateY(0.45rem) scale(0.98);
+}
+
+.ear-help-card strong,
+.ear-help-card span {
+  display: block;
+}
+
+.ear-help-card strong {
+  font-size: 0.78rem;
+  letter-spacing: -0.02em;
+}
+
+.ear-help-card span {
+  margin-top: 0.18rem;
+  color: #cbd5e1;
+  font-size: 0.72rem;
+  line-height: 1.35;
+  font-weight: 720;
+}
+
+.ear-help-close {
+  position: absolute;
+  top: 0.52rem;
+  right: 0.55rem;
+  width: 1.58rem;
+  height: 1.58rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: 999rem;
+  color: var(--muted);
+  background: rgba(2, 6, 23, 0.48);
+  font-size: 1.05rem;
+  line-height: 1;
+  font-weight: 800;
+}
+
+.tone-mode {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 0.62rem;
+  margin-top: 0.72rem;
+}
+
+.tone-mode > span {
+  color: var(--muted-2);
+  font-size: 0.63rem;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.segmented-control,
+.custom-mode-toggle {
+  display: grid;
+  gap: 0.24rem;
+  padding: 0.24rem;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  border-radius: 0.92rem;
+  background: rgba(2, 6, 23, 0.45);
+}
+
+.segmented-control { grid-template-columns: repeat(3, 1fr); }
+.custom-mode-toggle {
+  grid-template-columns: repeat(2, 1fr);
+  margin-bottom: 0.8rem;
+}
+
+.tone-mode-button,
+.custom-mode-button {
+  min-height: 2.25rem;
+  border: 0;
+  border-radius: 0.68rem;
+  color: var(--muted);
+  background: transparent;
+  font-size: 0.72rem;
+  font-weight: 950;
+  letter-spacing: -0.01em;
+  transition: transform 150ms ease, background-color 150ms ease, color 150ms ease;
+}
+
+.tone-mode-button.is-active,
+.custom-mode-button.is-active {
+  color: #03110f;
+  background: var(--teal);
+  box-shadow: 0 10px 24px rgba(45, 212, 191, 0.12);
+}
+
+.tone-mode-button:active,
+.custom-mode-button:active {
+  transform: scale(0.98);
+}
+
+.field-stack select,
+.custom-grid input,
+.custom-grid select {
+  min-height: 3rem;
+  border: 1px solid var(--border);
+  border-radius: 0.9rem;
+  background: rgba(2, 6, 23, 0.58);
+  padding: 0.5rem 0.75rem;
+}
+
+.custom-grid select {
+  min-height: 2.8rem;
+  font-size: 0.82rem;
+}
+
+.custom-field small {
+  min-height: 1rem;
+  color: var(--muted-2);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.62rem;
+  font-weight: 800;
+}
+
+.custom-grid--notes {
+  grid-template-columns: 1fr 1fr;
+}
+
+.string-card.is-playing {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 36px rgba(45, 212, 191, 0.10);
+}
+
+.string-card.is-playing .string-label::after {
+  content: " · écoute";
+  color: var(--teal);
+}
+
+select option {
+  color: #f8fafc;
+  background: #0f172a;
+}
+
+@media (max-width: 380px) {
+  .tone-mode { grid-template-columns: 1fr; align-items: stretch; }
+  .custom-grid--notes { grid-template-columns: 1fr 1fr; }
+  .ear-help-card { top: 4rem; }
+}
+
+/* TimTuner V6 — UI nettoyée, accordages sauvegardés, justesse hors accordage */
+:root {
+  --cyan: #38bdf8;
+  --cyan-soft: rgba(56, 189, 248, 0.14);
+}
+
+.tuner-card {
+  padding-top: 1.08rem;
+}
+
+.dial {
+  margin-top: -0.15rem;
+}
+
+.readout {
+  margin-top: 0.58rem;
+}
+
+.heard-readout {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 0.28rem 0.7rem;
+  margin-top: 0.78rem;
+  padding: 0.82rem 0.88rem;
+  border: 1px solid rgba(148, 163, 184, 0.13);
+  border-radius: 1rem;
+  background: rgba(2, 6, 23, 0.38);
+}
+
+.heard-readout__label {
+  grid-column: 1 / -1;
+  color: var(--muted-2);
+  font-size: 0.62rem;
+  font-weight: 950;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.heard-readout strong {
+  color: var(--text);
+  font-size: 1.55rem;
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.heard-readout span {
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.25;
+  font-weight: 760;
+}
+
+.heard-readout small {
+  grid-column: 1 / -1;
+  color: var(--muted-2);
+  font-size: 0.7rem;
+  line-height: 1.25;
+  font-weight: 760;
+}
+
+.heard-readout.is-perfect {
+  border-color: rgba(45, 212, 191, 0.28);
+  background: rgba(45, 212, 191, 0.08);
+}
+
+.heard-readout.is-perfect strong,
+.heard-readout.is-perfect span,
+.heard-readout.is-perfect small {
+  color: var(--teal);
+}
+
+.heard-readout.is-perfect-outside {
+  border-color: rgba(56, 189, 248, 0.34);
+  background: var(--cyan-soft);
+}
+
+.heard-readout.is-perfect-outside strong,
+.heard-readout.is-perfect-outside span,
+.heard-readout.is-perfect-outside small {
+  color: var(--cyan);
+}
+
+.heard-readout.is-low {
+  border-color: rgba(245, 158, 11, 0.24);
+  background: var(--amber-soft);
+}
+
+.heard-readout.is-low strong,
+.heard-readout.is-low span {
+  color: var(--amber);
+}
+
+.heard-readout.is-high {
+  border-color: rgba(244, 63, 94, 0.24);
+  background: var(--rose-soft);
+}
+
+.heard-readout.is-high strong,
+.heard-readout.is-high span {
+  color: var(--rose);
+}
+
+.heard-readout.is-ear {
+  border-color: rgba(45, 212, 191, 0.24);
+  background: rgba(45, 212, 191, 0.09);
+}
+
+.tuner-card.is-perfect-outside .needle {
+  background: var(--cyan);
+  box-shadow: 0 0 24px rgba(56, 189, 248, 0.42);
+}
+
+.tuner-card.is-perfect-outside .detected-note,
+.cents-deviation.is-perfect-outside {
+  color: var(--cyan);
+}
+
+.cents-deviation.is-perfect-outside {
+  background: var(--cyan-soft);
+  border-color: rgba(56, 189, 248, 0.28);
+}
+
+.tuner-card.is-ear .needle {
+  background: var(--teal);
+  box-shadow: 0 0 20px rgba(45, 212, 191, 0.24);
+}
+
+.field-stack input[type="search"],
+.field-stack input[type="text"] {
+  min-height: 3rem;
+  border: 1px solid var(--border);
+  border-radius: 0.9rem;
+  background: rgba(2, 6, 23, 0.58);
+  padding: 0.5rem 0.75rem;
+  color: var(--text);
+}
+
+.saved-search {
+  margin-top: 0.72rem;
+}
+
+.tuning-name-field {
+  margin-bottom: 0.78rem;
+}
+
+.custom-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.62rem;
+  margin-top: 0.95rem;
+}
+
+.custom-actions .secondary-action {
+  margin-top: 0;
+}
+
+.secondary-action--ghost {
+  color: var(--text);
+  background: rgba(2, 6, 23, 0.38);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+}
+
+.secondary-action--danger {
+  color: #fecdd3;
+  background: rgba(244, 63, 94, 0.12);
+  border: 1px solid rgba(244, 63, 94, 0.28);
+}
+
+@media (max-width: 380px) {
+  .heard-readout {
+    grid-template-columns: 1fr;
+    gap: 0.24rem;
+  }
+
+  .custom-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* TimTuner V7 — cadran chromatique rotatif, note entendue dans le cadran */
+.tuner-card {
+  padding-top: 0.95rem;
+}
+
+.dial {
+  height: 10.85rem;
+  margin-bottom: 0.18rem;
+}
+
+.dial-label--center {
+  display: none;
+}
+
+.dial-ring--outer {
+  bottom: -8.55rem;
+  opacity: 0.88;
+}
+
+.dial-ring--inner {
+  bottom: -6.44rem;
+  opacity: 0.72;
+}
+
+.chromatic-wheel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 2.08rem;
+  height: 3.1rem;
+  pointer-events: none;
+  transform: translateZ(0);
+  transition: opacity 140ms ease;
+}
+
+.chromatic-wheel.is-idle {
+  opacity: 0.28;
+}
+
+.chromatic-tick {
+  position: absolute;
+  left: 50%;
+  bottom: 0.05rem;
+  min-width: 2.35rem;
+  height: 2.18rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.02rem;
+  border-radius: 0.78rem;
+  color: rgba(148, 163, 184, 0.62);
+  background: rgba(2, 6, 23, 0.28);
+  border: 1px solid rgba(148, 163, 184, 0.10);
+  font-size: 0.84rem;
+  font-weight: 950;
+  letter-spacing: -0.035em;
+  opacity: var(--opacity);
+  transform:
+    translateX(calc((var(--x) * 1px) - 50%))
+    translateY(calc(var(--y) * 1px))
+    scale(var(--scale));
+  transition: transform 72ms linear, opacity 72ms linear, color 120ms ease, border-color 120ms ease, background-color 120ms ease;
+  will-change: transform, opacity;
+}
+
+.chromatic-tick span {
+  color: rgba(148, 163, 184, 0.44);
+  font-size: 0.57rem;
+  line-height: 1;
+  transform: translateY(0.05rem);
+}
+
+.chromatic-tick.is-nearest {
+  color: var(--text);
+  background: rgba(15, 23, 42, 0.78);
+  border-color: rgba(148, 163, 184, 0.19);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+}
+
+.center-marker {
+  position: absolute;
+  left: calc(50% - 0.055rem);
+  bottom: 1.72rem;
+  width: 0.11rem;
+  height: 3.9rem;
+  border-radius: 999rem;
+  background: rgba(248, 250, 252, 0.72);
+  box-shadow: 0 0 20px rgba(248, 250, 252, 0.16);
+  transform: none !important;
+  pointer-events: none;
+}
+
+.center-marker::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -0.26rem;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999rem;
+  background: currentColor;
+  transform: translateX(-50%);
+  opacity: 0.55;
+}
+
+.center-pivot {
+  left: calc(50% - 0.38rem);
+  bottom: 1.35rem;
+  width: 0.76rem;
+  height: 0.76rem;
+}
+
+.dial-note-readout {
+  position: absolute;
+  left: 50%;
+  bottom: 5.52rem;
+  width: min(15rem, 74%);
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  text-align: center;
+  pointer-events: none;
+}
+
+.dial-note-readout .detected-note,
+.detected-note {
+  height: auto;
+  min-height: 0;
+  display: block;
+  color: #334155;
+  font-size: clamp(2.2rem, 11vw, 3.25rem);
+  line-height: 0.92;
+  font-weight: 950;
+  letter-spacing: -0.07em;
+  transition: color 120ms ease, text-shadow 120ms ease;
+}
+
+.dial-note-readout span {
+  min-height: 1rem;
+  color: var(--muted-2);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.68rem;
+  font-weight: 820;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.readout,
+.heard-readout {
+  display: none !important;
+}
+
+.target-notes {
+  margin-top: 0.18rem;
+  margin-bottom: 0.52rem;
+}
+
+.cents-deviation {
+  margin-top: 0.56rem;
+  min-height: 2.32rem;
+  padding: 0.62rem 0.74rem;
+  font-size: 0.77rem;
+  line-height: 1.22;
+}
+
+.tuner-card.is-perfect .chromatic-tick.is-nearest {
+  color: var(--teal);
+  border-color: rgba(45, 212, 191, 0.42);
+  background: rgba(45, 212, 191, 0.11);
+  box-shadow: 0 14px 36px rgba(45, 212, 191, 0.12);
+}
+
+.tuner-card.is-perfect .center-marker {
+  color: var(--teal);
+  background: var(--teal);
+  box-shadow: 0 0 22px rgba(45, 212, 191, 0.48);
+}
+
+.tuner-card.is-perfect-outside .detected-note,
+.tuner-card.is-perfect-outside .chromatic-tick.is-nearest,
+.cents-deviation.is-perfect-outside {
+  color: #38bdf8;
+}
+
+.tuner-card.is-perfect-outside .chromatic-tick.is-nearest {
+  border-color: rgba(56, 189, 248, 0.42);
+  background: rgba(56, 189, 248, 0.10);
+  box-shadow: 0 14px 36px rgba(56, 189, 248, 0.10);
+}
+
+.tuner-card.is-perfect-outside .center-marker {
+  color: #38bdf8;
+  background: #38bdf8;
+  box-shadow: 0 0 22px rgba(56, 189, 248, 0.42);
+}
+
+.tuner-card.is-low .chromatic-tick.is-nearest {
+  color: var(--amber);
+  border-color: rgba(245, 158, 11, 0.34);
+  background: rgba(245, 158, 11, 0.09);
+}
+
+.tuner-card.is-high .chromatic-tick.is-nearest {
+  color: var(--rose);
+  border-color: rgba(244, 63, 94, 0.34);
+  background: rgba(244, 63, 94, 0.09);
+}
+
+.tuner-card.is-low .center-marker {
+  color: var(--amber);
+  background: var(--amber);
+}
+
+.tuner-card.is-high .center-marker {
+  color: var(--rose);
+  background: var(--rose);
+}
+
+.tuner-card.is-ear .center-marker {
+  color: var(--teal);
+  background: var(--teal);
+  box-shadow: 0 0 22px rgba(45, 212, 191, 0.36);
+}
+
+.tuner-card.is-ear .chromatic-tick.is-nearest {
+  color: var(--teal);
+  border-color: rgba(45, 212, 191, 0.34);
+  background: rgba(45, 212, 191, 0.09);
+}
+
+@media (max-width: 380px) {
+  .dial { height: 10.35rem; }
+  .dial-note-readout { bottom: 5.25rem; }
+  .chromatic-tick { min-width: 2.12rem; font-size: 0.78rem; }
+}
+
+/* TimTuner V9 — carte Diapason compacte + personnalisation en page latérale */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.tuner-card {
+  padding-bottom: 0.92rem;
+}
+
+.diapason-card {
+  padding: 0.86rem;
+  overflow: hidden;
+}
+
+.diapason-card .target-notes {
+  margin: 0 0 0.74rem;
+  padding: 0 0.15rem 0.68rem;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.diapason-card .target-note {
+  width: 2rem;
+  height: 1.55rem;
+  border-radius: 0.62rem;
+}
+
+.diapason-headline {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 0.72rem;
+  margin-bottom: 0.72rem;
+}
+
+.section-title--compact {
+  margin: 0;
+  gap: 0.14rem;
+}
+
+.section-title--compact strong {
+  font-size: 0.96rem;
+}
+
+.section-title--compact span {
+  font-size: 0.7rem;
+  line-height: 1.25;
+}
+
+.custom-swipe-hint,
+.back-to-diapason {
+  min-height: 2.1rem;
+  border: 1px solid rgba(45, 212, 191, 0.24);
+  border-radius: 999rem;
+  padding: 0.48rem 0.68rem;
+  color: #ccfbf1;
+  background: rgba(45, 212, 191, 0.09);
+  font-size: 0.68rem;
+  font-weight: 950;
+  white-space: nowrap;
+  letter-spacing: -0.01em;
+}
+
+.custom-swipe-hint.is-active {
+  color: #03110f;
+  background: var(--teal);
+}
+
+.tuning-swipe-viewport {
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+.tuning-pages {
+  display: flex;
+  align-items: flex-start;
+  transform: translateX(0);
+  transition: transform 240ms cubic-bezier(0.22, 0.8, 0.28, 1);
+  will-change: transform;
+}
+
+.tuning-pages.is-custom {
+  transform: translateX(-100%);
+}
+
+.tuning-page {
+  flex: 0 0 100%;
+  min-width: 100%;
+  transition: opacity 170ms ease;
+}
+
+.tuning-page[aria-hidden="true"] {
+  height: 0;
+  overflow: hidden;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.tuning-control-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 7.25rem;
+  gap: 0.52rem;
+  align-items: stretch;
+}
+
+.compact-search,
+.compact-select,
+.saved-search {
+  margin-top: 0;
+}
+
+.compact-search input[type="search"],
+.compact-select select {
+  min-height: 2.74rem;
+  border-radius: 0.84rem;
+}
+
+.compact-search input[type="search"] {
+  padding-inline: 0.78rem;
+  font-size: 0.8rem;
+  font-weight: 760;
+}
+
+.compact-select select {
+  padding: 0.5rem 1.6rem 0.5rem 0.66rem;
+  color: #ccfbf1;
+  background:
+    linear-gradient(135deg, rgba(45, 212, 191, 0.12), rgba(2, 6, 23, 0.54));
+  border-color: rgba(45, 212, 191, 0.24);
+  font-size: 0.72rem;
+  font-weight: 950;
+  text-overflow: ellipsis;
+}
+
+.tone-mode {
+  margin-top: 0.62rem;
+}
+
+.diapason-card .strings-grid {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-top: 0.72rem;
+}
+
+.diapason-card .string-card {
+  min-height: 3.85rem;
+  border-radius: 0.86rem;
+  padding: 0.58rem 0.35rem;
+}
+
+.diapason-card .string-note {
+  font-size: 1rem;
+}
+
+.diapason-card .string-freq {
+  margin-top: 0.18rem;
+  font-size: 0.58rem;
+}
+
+.diapason-card .string-label {
+  display: none;
+}
+
+.swipe-cue {
+  margin: 0.56rem 0 0;
+  color: rgba(148, 163, 184, 0.58);
+  font-size: 0.68rem;
+  line-height: 1.3;
+  font-weight: 760;
+  text-align: center;
+}
+
+.advanced-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.72rem;
+}
+
+.advanced-card-header span {
+  color: var(--muted);
+  font-size: 0.64rem;
+  font-weight: 950;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.tuning-page--custom {
+  padding-left: 0.02rem;
+}
+
+.tuning-page--custom .custom-panel {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.tuning-page--custom .section-title--small {
+  margin: 0 0 0.72rem;
+}
+
+.tuning-page--custom .custom-grid {
+  gap: 0.58rem;
+}
+
+.tuning-page--custom .custom-grid select,
+.tuning-page--custom .custom-grid input {
+  min-height: 2.65rem;
+  border-radius: 0.8rem;
+}
+
+.tuning-page--custom .custom-field small {
+  font-size: 0.58rem;
+}
+
+@media (max-width: 380px) {
+  .diapason-card { padding: 0.78rem; }
+  .diapason-headline { grid-template-columns: 1fr; gap: 0.5rem; }
+  .custom-swipe-hint { justify-self: start; }
+  .tuning-control-row { grid-template-columns: minmax(0, 1fr) 6.35rem; gap: 0.42rem; }
+  .compact-select select { font-size: 0.66rem; padding-left: 0.52rem; }
+  .diapason-card .strings-grid { gap: 0.42rem; }
+}
+
+/* TimTuner V10 — vrai disque chromatique rotatif */
+.dial {
+  height: 12.15rem;
+  overflow: hidden;
+  margin-bottom: 0.08rem;
+}
+
+.dial-ring,
+.dial-label {
+  display: none !important;
+}
+
+.chromatic-wheel {
+  position: absolute;
+  left: 50%;
+  top: 0.72rem;
+  right: auto;
+  bottom: auto;
+  width: 9.35rem;
+  height: 9.35rem;
+  border-radius: 999rem;
+  pointer-events: none;
+  opacity: 1;
+  transform: translateX(-50%) rotate(var(--wheel-rotation, 0deg));
+  transition: transform 74ms linear, opacity 140ms ease, filter 140ms ease;
+  will-change: transform;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(2, 6, 23, 0.78) 0 31%, transparent 32%),
+    radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.64) 0 52%, rgba(15, 23, 42, 0.22) 53% 66%, transparent 67%),
+    conic-gradient(from -90deg, rgba(45, 212, 191, 0.16), rgba(56, 189, 248, 0.10), rgba(244, 63, 94, 0.11), rgba(245, 158, 11, 0.11), rgba(45, 212, 191, 0.16));
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  box-shadow:
+    inset 0 0 0 1px rgba(248, 250, 252, 0.035),
+    inset 0 0 30px rgba(2, 6, 23, 0.88),
+    0 22px 52px rgba(0, 0, 0, 0.26);
+}
+
+.chromatic-wheel::before,
+.chromatic-wheel::after {
+  content: "";
+  position: absolute;
+  inset: 0.78rem;
+  border-radius: inherit;
+  border: 1px dashed rgba(148, 163, 184, 0.16);
+}
+
+.chromatic-wheel::after {
+  inset: 3.05rem;
+  border-style: solid;
+  border-color: rgba(148, 163, 184, 0.10);
+  background: radial-gradient(circle, rgba(2, 6, 23, 0.74), rgba(2, 6, 23, 0.30));
+}
+
+.chromatic-wheel.is-idle {
+  opacity: 0.52;
+  filter: saturate(0.72);
+}
+
+.chromatic-tick {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  bottom: auto;
+  min-width: 0;
+  width: 0;
+  height: 0;
+  display: block;
+  padding: 0;
+  border-radius: 0;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  opacity: 1;
+  transform: rotate(var(--note-angle)) translateY(-4.12rem);
+  transform-origin: center center;
+  transition: none;
+}
+
+.chromatic-tick .chromatic-tick__label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2.08rem;
+  height: 1.42rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999rem;
+  color: rgba(148, 163, 184, 0.58);
+  background: rgba(2, 6, 23, 0.40);
+  border: 1px solid rgba(148, 163, 184, 0.10);
+  font-size: 0.72rem;
+  font-weight: 950;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  transform: translate(-50%, -50%) rotate(var(--label-rotation));
+  transform-origin: center center;
+  transition: color 120ms ease, background-color 120ms ease, border-color 120ms ease, box-shadow 120ms ease, transform 74ms linear;
+}
+
+.chromatic-tick.is-nearest .chromatic-tick__label {
+  color: var(--text);
+  background: rgba(15, 23, 42, 0.88);
+  border-color: rgba(248, 250, 252, 0.20);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.20);
+}
+
+.center-marker {
+  position: absolute;
+  left: 50%;
+  top: 0.38rem;
+  bottom: auto;
+  width: 0.13rem;
+  height: 2.16rem;
+  border-radius: 999rem;
+  background: rgba(248, 250, 252, 0.80);
+  box-shadow: 0 0 20px rgba(248, 250, 252, 0.18);
+  transform: translateX(-50%) !important;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.center-marker::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -0.22rem;
+  width: 0;
+  height: 0;
+  border-left: 0.34rem solid transparent;
+  border-right: 0.34rem solid transparent;
+  border-top: 0.46rem solid currentColor;
+  border-radius: 0.06rem;
+  background: transparent;
+  transform: translateX(-50%);
+  opacity: 0.86;
+}
+
+.center-pivot {
+  position: absolute;
+  left: calc(50% - 0.32rem);
+  top: 5.05rem;
+  bottom: auto;
+  width: 0.64rem;
+  height: 0.64rem;
+  opacity: 0.72;
+  background: rgba(100, 116, 139, 0.34);
+  border: 1px solid rgba(248, 250, 252, 0.10);
+  z-index: 2;
+}
+
+.dial-note-readout {
+  position: absolute;
+  left: 50%;
+  top: 3.58rem;
+  bottom: auto;
+  width: min(10.8rem, 66%);
+  min-height: 3.35rem;
+  transform: translateX(-50%);
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.18rem;
+  border-radius: 1.35rem;
+  background: radial-gradient(circle at 50% 0%, rgba(15, 23, 42, 0.56), rgba(2, 6, 23, 0.16));
+  text-align: center;
+  pointer-events: none;
+}
+
+.dial-note-readout .detected-note,
+.detected-note {
+  font-size: clamp(2.28rem, 11.4vw, 3.34rem);
+  line-height: 0.86;
+}
+
+.dial-note-readout span {
+  max-width: 9.6rem;
+  color: rgba(148, 163, 184, 0.72);
+  font-size: 0.66rem;
+  line-height: 1.1;
+}
+
+.tuner-card.is-perfect .chromatic-tick.is-nearest .chromatic-tick__label {
+  color: var(--teal);
+  border-color: rgba(45, 212, 191, 0.46);
+  background: rgba(45, 212, 191, 0.13);
+  box-shadow: 0 0 24px rgba(45, 212, 191, 0.20);
+}
+
+.tuner-card.is-perfect-outside .chromatic-tick.is-nearest .chromatic-tick__label {
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.46);
+  background: rgba(56, 189, 248, 0.12);
+  box-shadow: 0 0 24px rgba(56, 189, 248, 0.16);
+}
+
+.tuner-card.is-low .chromatic-tick.is-nearest .chromatic-tick__label {
+  color: var(--amber);
+  border-color: rgba(245, 158, 11, 0.38);
+  background: rgba(245, 158, 11, 0.10);
+}
+
+.tuner-card.is-high .chromatic-tick.is-nearest .chromatic-tick__label {
+  color: var(--rose);
+  border-color: rgba(244, 63, 94, 0.38);
+  background: rgba(244, 63, 94, 0.10);
+}
+
+.tuner-card.is-ear .chromatic-tick.is-nearest .chromatic-tick__label {
+  color: var(--teal);
+  border-color: rgba(45, 212, 191, 0.38);
+  background: rgba(45, 212, 191, 0.10);
+}
+
+@media (max-width: 380px) {
+  .dial { height: 11.72rem; }
+  .chromatic-wheel {
+    width: 8.9rem;
+    height: 8.9rem;
+  }
+  .chromatic-tick { transform: rotate(var(--note-angle)) translateY(-3.92rem); }
+  .dial-note-readout { top: 3.44rem; }
+  .center-pivot { top: 4.82rem; }
+}
+
+/* TimTuner V11 — cartes séparées, gestion des accordages, scroll horizontal naturel */
+body {
+  overflow-x: hidden;
+  background: linear-gradient(180deg, #020617 0%, #030712 100%);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  z-index: 0;
+  pointer-events: none;
+  top: -8rem;
+  left: 50%;
+  width: 160vw;
+  height: 20rem;
+  transform: translateX(-50%);
+  background:
+    radial-gradient(ellipse at 50% 15%, rgba(45, 212, 191, 0.16), rgba(56, 189, 248, 0.07) 28%, transparent 62%),
+    linear-gradient(180deg, rgba(15, 23, 42, 0.44), rgba(2, 6, 23, 0));
+}
+
+.app-shell {
+  position: relative;
+  z-index: 1;
+}
+
+.app-header {
+  background: transparent;
+  backdrop-filter: none;
+}
+
+.tuner-card .target-notes--tuner {
+  margin: 0.72rem 0 0;
+  padding: 0.68rem 0.35rem 0;
+  border-top: 1px solid rgba(148, 163, 184, 0.12);
+  border-bottom: 0;
+}
+
+.tuning-carousel {
+  width: 100%;
+  min-width: 0;
+}
+
+.tuning-scroll {
+  display: flex;
+  align-items: stretch;
+  gap: 0.82rem;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: visible;
+  padding: 0 0 0.2rem;
+  touch-action: pan-x pan-y;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.tuning-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.tuning-card {
+  flex: 0 0 100%;
+  min-width: 0;
+  border: 1px solid var(--border);
+  background:
+    linear-gradient(180deg, rgba(15, 23, 42, 0.98), rgba(8, 13, 26, 0.98)),
+    radial-gradient(circle at 50% 0%, rgba(45, 212, 191, 0.11), transparent 22rem);
+  border-radius: 1.45rem;
+  box-shadow: var(--shadow);
+  padding: 0.86rem;
+}
+
+.custom-tuning-card {
+  padding: 1rem;
+}
+
+.diapason-card {
+  overflow: visible;
+}
+
+.diapason-headline {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  margin-bottom: 0.72rem;
+}
+
+.custom-swipe-hint {
+  min-height: 0;
+  margin: 0;
+  padding: 0.15rem 0 0;
+  border: 0;
+  border-radius: 0;
+  color: #ccfbf1;
+  background: transparent;
+  font-size: 0.68rem;
+  font-weight: 850;
+  line-height: 1.1;
+  white-space: normal;
+  text-align: right;
+  letter-spacing: -0.01em;
+}
+
+.custom-swipe-hint strong,
+.custom-swipe-hint span {
+  display: block;
+}
+
+.custom-swipe-hint strong {
+  font-size: 0.76rem;
+  font-weight: 950;
+}
+
+.custom-swipe-hint span {
+  max-width: 8.4rem;
+  margin-top: 0.18rem;
+  color: rgba(148, 163, 184, 0.72);
+  font-size: 0.62rem;
+  line-height: 1.22;
+  font-weight: 760;
+}
+
+.custom-swipe-hint.is-hidden {
+  display: none !important;
+}
+
+.manage-saved-toggle {
+  width: 100%;
+  min-height: 2.15rem;
+  margin: 0.54rem 0 0;
+  border: 0;
+  border-radius: 0.72rem;
+  color: rgba(203, 213, 225, 0.82);
+  background: transparent;
+  font-size: 0.68rem;
+  font-weight: 850;
+  text-align: left;
+  text-decoration: underline;
+  text-decoration-color: rgba(148, 163, 184, 0.22);
+  text-underline-offset: 0.22rem;
+}
+
+.saved-manager {
+  margin-top: 0.58rem;
+  padding: 0.72rem;
+  border: 1px solid rgba(148, 163, 184, 0.13);
+  border-radius: 1rem;
+  background: rgba(2, 6, 23, 0.38);
+}
+
+.saved-manager__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.7rem;
+  margin-bottom: 0.58rem;
+}
+
+.saved-manager__head strong {
+  font-size: 0.82rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.saved-manager__head button {
+  width: 1.7rem;
+  height: 1.7rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: 999rem;
+  color: var(--muted);
+  background: rgba(15, 23, 42, 0.62);
+  font-size: 1rem;
+  line-height: 1;
+  font-weight: 900;
+}
+
+.saved-manager-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.saved-empty {
+  margin: 0;
+  color: var(--muted-2);
+  font-size: 0.72rem;
+  line-height: 1.32;
+  font-weight: 760;
+}
+
+.saved-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.48rem;
+  padding: 0.64rem;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  border-radius: 0.9rem;
+  background: rgba(15, 23, 42, 0.42);
+}
+
+.saved-item__main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.64rem;
+}
+
+.saved-item__title {
+  min-width: 0;
+}
+
+.saved-item__title strong,
+.saved-item__title span {
+  display: block;
+}
+
+.saved-item__title strong {
+  overflow: hidden;
+  color: var(--text);
+  font-size: 0.8rem;
+  line-height: 1.15;
+  font-weight: 920;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.saved-item__title span {
+  margin-top: 0.18rem;
+  color: var(--muted-2);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.62rem;
+  font-weight: 800;
+}
+
+.saved-item__use,
+.saved-item__actions button {
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: 999rem;
+  color: #ccfbf1;
+  background: rgba(45, 212, 191, 0.08);
+  font-size: 0.64rem;
+  font-weight: 950;
+  white-space: nowrap;
+}
+
+.saved-item__use {
+  padding: 0.44rem 0.62rem;
+}
+
+.saved-item__actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.36rem;
+}
+
+.saved-item__actions button {
+  min-height: 1.9rem;
+  padding: 0.36rem 0.48rem;
+  color: rgba(226, 232, 240, 0.88);
+  background: rgba(2, 6, 23, 0.32);
+}
+
+.saved-item__actions button[data-action="delete"] {
+  color: #fecdd3;
+  border-color: rgba(244, 63, 94, 0.24);
+  background: rgba(244, 63, 94, 0.10);
+}
+
+.custom-panel {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.section-title--custom-editor {
+  margin: 0 0 0.86rem;
+}
+
+.custom-actions {
+  grid-template-columns: 1fr;
+}
+
+.secondary-action:disabled,
+.secondary-action[disabled] {
+  cursor: not-allowed;
+  color: rgba(148, 163, 184, 0.52);
+  background: rgba(15, 23, 42, 0.54);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  box-shadow: none;
+  transform: none;
+}
+
+@media (max-width: 380px) {
+  body::before { width: 190vw; }
+  .diapason-headline { grid-template-columns: 1fr; }
+  .custom-swipe-hint { text-align: left; }
+  .custom-swipe-hint span { max-width: none; }
+}
+
+/* TimTuner V12 — scroll snap + tiroir élégant pour les accordages enregistrés */
+.app-header {
+  justify-content: space-between;
+  isolation: isolate;
+}
+
+.library-menu-button {
+  width: 2.65rem;
+  height: 2.65rem;
+  flex: 0 0 auto;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.24rem;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  border-radius: 0.95rem;
+  color: var(--text);
+  background: rgba(15, 23, 42, 0.44);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.045), 0 14px 36px rgba(0,0,0,0.16);
+}
+
+.library-menu-button span {
+  width: 1.02rem;
+  height: 0.1rem;
+  border-radius: 999rem;
+  background: rgba(226, 232, 240, 0.78);
+  transition: transform 160ms ease, opacity 160ms ease, background 160ms ease;
+}
+
+.library-menu-button:active span,
+.library-menu-button[aria-expanded="true"] span {
+  background: #ccfbf1;
+}
+
+.tuning-scroll {
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 0;
+}
+
+.tuning-card {
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+}
+
+.saved-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  pointer-events: none;
+}
+
+.saved-drawer.is-open {
+  pointer-events: auto;
+}
+
+.saved-drawer__backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  padding: 0;
+  background: rgba(2, 6, 23, 0.16);
+  opacity: 0;
+  transition: opacity 190ms ease;
+  backdrop-filter: blur(0px);
+}
+
+.saved-drawer.is-open .saved-drawer__backdrop {
+  opacity: 1;
+  backdrop-filter: blur(2px);
+}
+
+.saved-drawer__panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(92vw, 25.5rem);
+  padding: calc(env(safe-area-inset-top) + 1rem) 1rem calc(env(safe-area-inset-bottom) + 1rem);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  transform: translateX(105%);
+  transition: transform 250ms cubic-bezier(0.22, 0.8, 0.28, 1);
+  background:
+    radial-gradient(circle at 50% -8%, rgba(45, 212, 191, 0.15), transparent 16rem),
+    linear-gradient(180deg, rgba(15, 23, 42, 0.985), rgba(2, 6, 23, 0.995));
+  border-left: 1px solid rgba(148, 163, 184, 0.15);
+  box-shadow: -22px 0 70px rgba(0, 0, 0, 0.36);
+}
+
+.saved-drawer.is-open .saved-drawer__panel {
+  transform: translateX(0);
+}
+
+.saved-drawer__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.92rem;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.11);
+}
+
+.saved-drawer__head strong,
+.saved-drawer__head span {
+  display: block;
+}
+
+.saved-drawer__head strong {
+  color: var(--text);
+  font-size: 1.16rem;
+  line-height: 1;
+  letter-spacing: -0.045em;
+}
+
+.saved-drawer__head span {
+  max-width: 18rem;
+  margin-top: 0.42rem;
+  color: var(--muted-2);
+  font-size: 0.74rem;
+  line-height: 1.35;
+  font-weight: 760;
+}
+
+.saved-drawer__head button {
+  width: 2.28rem;
+  height: 2.28rem;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  border-radius: 999rem;
+  color: rgba(226, 232, 240, 0.82);
+  background: rgba(2, 6, 23, 0.32);
+  font-size: 1.25rem;
+  line-height: 1;
+  font-weight: 820;
+}
+
+.saved-drawer-search {
+  margin: 1rem 0 0.42rem;
+}
+
+.saved-drawer-search input[type="search"] {
+  min-height: 2.8rem;
+  border-radius: 0.95rem;
+  background: rgba(2, 6, 23, 0.34);
+}
+
+.saved-manager-list--drawer {
+  gap: 0;
+}
+
+.saved-manager-list--drawer .saved-empty {
+  padding: 1rem 0.15rem;
+}
+
+.saved-manager-list--drawer .saved-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.5rem;
+  padding: 0.98rem 0.08rem;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.105);
+}
+
+.saved-manager-list--drawer .saved-item:last-child {
+  border-bottom: 0;
+}
+
+.saved-manager-list--drawer .saved-item.is-active .saved-item__title strong::after {
+  content: "Actif";
+  display: inline-flex;
+  margin-left: 0.46rem;
+  transform: translateY(-0.06rem);
+  padding: 0.14rem 0.42rem;
+  border-radius: 999rem;
+  color: #03110f;
+  background: var(--teal);
+  font-size: 0.54rem;
+  font-weight: 980;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.saved-manager-list--drawer .saved-item__main {
+  gap: 0.9rem;
+}
+
+.saved-manager-list--drawer .saved-item__title strong {
+  font-size: 0.9rem;
+  line-height: 1.15;
+  white-space: normal;
+  letter-spacing: -0.02em;
+}
+
+.saved-manager-list--drawer .saved-item__title span {
+  margin-top: 0.28rem;
+  color: rgba(148, 163, 184, 0.74);
+  font-size: 0.66rem;
+  letter-spacing: 0.015em;
+}
+
+.saved-manager-list--drawer .saved-item__use,
+.saved-manager-list--drawer .saved-item__actions button {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.saved-manager-list--drawer .saved-item__use {
+  padding: 0.42rem 0;
+  color: #ccfbf1;
+  font-size: 0.7rem;
+  font-weight: 980;
+  text-decoration: underline;
+  text-decoration-color: rgba(45, 212, 191, 0.28);
+  text-underline-offset: 0.22rem;
+}
+
+.saved-manager-list--drawer .saved-item__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.82rem;
+}
+
+.saved-manager-list--drawer .saved-item__actions button {
+  min-height: auto;
+  padding: 0.15rem 0;
+  color: rgba(203, 213, 225, 0.64);
+  font-size: 0.65rem;
+  font-weight: 850;
+}
+
+.saved-manager-list--drawer .saved-item__actions button[data-action="delete"] {
+  color: rgba(251, 113, 133, 0.82);
+}
+
+body.drawer-open {
+  overflow: hidden;
+  touch-action: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .saved-drawer__panel,
+  .saved-drawer__backdrop {
+    transition: none;
+  }
+}
+
+.saved-manager-list--drawer .saved-item__title-button {
+  width: 100%;
+  min-width: 0;
+  display: block;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  color: inherit;
+  background: transparent;
+  text-align: left;
+}
+
+.saved-manager-list--drawer .saved-item__title-button:active strong {
+  color: #ccfbf1;
+}
+
+body.drawer-open {
+  overflow: hidden;
+  touch-action: auto;
+}
+
+.saved-drawer__panel {
+  touch-action: pan-y;
+}
+
+
+/* TimTuner V13 — disque chromatique zoomé, labels fixés au disque */
+.dial {
+  height: 13.35rem !important;
+  overflow: hidden;
+  margin-bottom: 0.04rem;
+}
+
+.chromatic-wheel {
+  --wheel-size: clamp(22rem, 124vw, 30rem);
+  --note-radius: clamp(9.95rem, 55vw, 13.45rem);
+  left: 50% !important;
+  top: 0.06rem !important;
+  width: var(--wheel-size) !important;
+  height: var(--wheel-size) !important;
+  transform: translateX(-50%) rotate(var(--wheel-rotation, 0deg)) !important;
+  transform-origin: 50% 50%;
+  transition: transform 92ms linear, opacity 140ms ease, filter 140ms ease !important;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(2, 6, 23, 0.82) 0 41%, transparent 41.6%),
+    radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.54) 0 60%, rgba(15, 23, 42, 0.28) 60.5% 72%, transparent 72.8%),
+    conic-gradient(from -90deg,
+      rgba(45, 212, 191, 0.15),
+      rgba(56, 189, 248, 0.10),
+      rgba(148, 163, 184, 0.10),
+      rgba(245, 158, 11, 0.10),
+      rgba(45, 212, 191, 0.15));
+  border-color: rgba(226, 232, 240, 0.22);
+  box-shadow:
+    inset 0 0 0 1px rgba(248, 250, 252, 0.04),
+    inset 0 0 54px rgba(2, 6, 23, 0.9),
+    0 24px 68px rgba(0, 0, 0, 0.30);
+}
+
+.chromatic-wheel::before,
+.chromatic-wheel::after {
+  z-index: 0;
+  pointer-events: none;
+}
+
+.chromatic-wheel::before {
+  inset: clamp(0.86rem, 3.6vw, 1.22rem) !important;
+  border: 1px solid rgba(226, 232, 240, 0.18) !important;
+}
+
+.chromatic-wheel::after {
+  inset: clamp(6.2rem, 27vw, 8.35rem) !important;
+  border: 1px solid rgba(148, 163, 184, 0.10) !important;
+  background: radial-gradient(circle, rgba(2, 6, 23, 0.86), rgba(2, 6, 23, 0.46)) !important;
+}
+
+.chromatic-tick {
+  z-index: 2;
+  transform: rotate(var(--note-angle)) translateY(calc(-1 * var(--note-radius))) !important;
+  transform-origin: center center;
+}
+
+.chromatic-tick .chromatic-tick__label {
+  width: 2.65rem !important;
+  height: 1.76rem !important;
+  border-radius: 1rem !important;
+  font-size: 0.96rem !important;
+  letter-spacing: -0.055em;
+  color: rgba(226, 232, 240, 0.48);
+  background: rgba(2, 6, 23, 0.20) !important;
+  border-color: rgba(148, 163, 184, 0.08) !important;
+  transform: translate(-50%, -50%) !important;
+  transform-origin: center center;
+  transition: color 120ms ease, background-color 120ms ease, border-color 120ms ease, box-shadow 120ms ease, transform 92ms linear !important;
+}
+
+.chromatic-tick.is-nearest .chromatic-tick__label {
+  transform: translate(-50%, -50%) scale(1.13) !important;
+  font-size: 1.08rem !important;
+  color: var(--text);
+  background: rgba(15, 23, 42, 0.62) !important;
+  border-color: rgba(248, 250, 252, 0.18) !important;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.18) !important;
+}
+
+.center-marker {
+  top: 1.28rem !important;
+  height: 4.35rem !important;
+  width: 0.12rem !important;
+  background: rgba(248, 250, 252, 0.72) !important;
+  box-shadow: 0 0 22px rgba(248, 250, 252, 0.16) !important;
+}
+
+.center-marker::before {
+  top: -0.18rem !important;
+  border-left-width: 0.28rem !important;
+  border-right-width: 0.28rem !important;
+  border-top-width: 0.38rem !important;
+  opacity: 0.78 !important;
+}
+
+.center-pivot {
+  top: 5.58rem !important;
+  opacity: 0.48;
+}
+
+.dial-note-readout {
+  top: 4.22rem !important;
+  width: min(11.8rem, 72%) !important;
+  min-height: 3.6rem;
+  background: radial-gradient(circle at 50% 0%, rgba(15, 23, 42, 0.48), rgba(2, 6, 23, 0.10)) !important;
+}
+
+.dial-note-readout .detected-note,
+.detected-note {
+  font-size: clamp(2.55rem, 12.2vw, 3.72rem) !important;
+}
+
+.dial-note-readout span {
+  font-size: 0.68rem !important;
+}
+
+@media (max-width: 380px) {
+  .dial { height: 12.95rem !important; }
+  .chromatic-wheel {
+    --wheel-size: clamp(21rem, 126vw, 28.4rem);
+    --note-radius: clamp(9.45rem, 56vw, 12.75rem);
+    top: 0.1rem !important;
+  }
+  .chromatic-tick .chromatic-tick__label {
+    width: 2.42rem !important;
+    height: 1.62rem !important;
+    font-size: 0.88rem !important;
+  }
+  .chromatic-tick.is-nearest .chromatic-tick__label {
+    font-size: 1rem !important;
+  }
+  .dial-note-readout { top: 4rem !important; }
+  .center-marker { top: 1.16rem !important; }
+  .center-pivot { top: 5.34rem !important; }
+}
+
+/* TimTuner V14 — polish UI, textures subtiles, contrôles adoucis */
+:root {
+  --grain-soft: rgba(248, 250, 252, 0.035);
+  --grain-warm: rgba(251, 191, 36, 0.030);
+  --control-bg: rgba(2, 6, 23, 0.44);
+  --control-bg-soft: rgba(15, 23, 42, 0.44);
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.38;
+  background-image:
+    radial-gradient(circle at 18% 22%, rgba(255,255,255,0.055) 0 0.45px, transparent 0.55px),
+    radial-gradient(circle at 70% 38%, rgba(45,212,191,0.038) 0 0.5px, transparent 0.6px),
+    radial-gradient(circle at 42% 78%, rgba(245,158,11,0.030) 0 0.55px, transparent 0.65px);
+  background-size: 8px 10px, 13px 15px, 17px 19px;
+}
+
+.tuner-card,
+.tuning-card,
+.install-card,
+.mic-permission-card,
+.ear-help-card,
+.saved-drawer__panel {
+  position: relative;
+  isolation: isolate;
+}
+
+.tuner-card::after,
+.tuning-card::after,
+.saved-drawer__panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: 0.46;
+  mix-blend-mode: screen;
+  background-image:
+    linear-gradient(105deg, transparent 0 24%, rgba(255,255,255,0.028) 24.4%, transparent 25.2% 58%, rgba(255,255,255,0.020) 58.4%, transparent 59.4%),
+    radial-gradient(circle at 14% 24%, var(--grain-soft) 0 0.6px, transparent 0.72px),
+    radial-gradient(circle at 74% 62%, var(--grain-warm) 0 0.66px, transparent 0.78px);
+  background-size: 280px 100%, 9px 11px, 14px 16px;
+}
+
+.tuning-control-row {
+  align-items: stretch !important;
+  gap: 0.55rem !important;
+}
+
+.field-stack input,
+.field-stack select,
+.custom-grid input,
+.custom-grid select {
+  border-color: rgba(148, 163, 184, 0.13) !important;
+  background-color: var(--control-bg) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.035),
+    0 10px 28px rgba(0, 0, 0, 0.10);
+}
+
+.field-stack input:focus,
+.field-stack select:focus,
+.custom-grid input:focus,
+.custom-grid select:focus {
+  border-color: rgba(45, 212, 191, 0.35) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 0 0 3px rgba(45, 212, 191, 0.08),
+    0 12px 30px rgba(0, 0, 0, 0.14);
+}
+
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 2.35rem !important;
+  background-image:
+    linear-gradient(45deg, transparent 50%, rgba(203, 213, 225, 0.74) 50%),
+    linear-gradient(135deg, rgba(203, 213, 225, 0.74) 50%, transparent 50%);
+  background-position:
+    calc(100% - 1.12rem) 50%,
+    calc(100% - 0.82rem) 50%;
+  background-size: 0.34rem 0.34rem, 0.34rem 0.34rem;
+  background-repeat: no-repeat;
+}
+
+.compact-select {
+  flex: 0 0 34% !important;
+  min-width: 7rem;
+}
+
+.compact-search {
+  flex: 1 1 auto !important;
+  min-width: 0;
+}
+
+.compact-select select,
+.compact-search input {
+  min-height: 2.76rem !important;
+  border-radius: 0.86rem !important;
+}
+
+.compact-select select {
+  font-size: 0.74rem !important;
+  padding-left: 0.7rem !important;
+  text-overflow: ellipsis;
+}
+
+.tone-mode {
+  grid-template-columns: auto minmax(0, 1fr) !important;
+  gap: 0.7rem !important;
+  margin-top: 0.92rem !important;
+}
+
+.segmented-control {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 0.3rem !important;
+  padding: 0.28rem !important;
+  border-color: rgba(148, 163, 184, 0.12) !important;
+  background:
+    linear-gradient(180deg, rgba(15, 23, 42, 0.50), rgba(2, 6, 23, 0.40)),
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.035), transparent 3rem) !important;
+}
+
+.tone-mode-button,
+.custom-mode-button {
+  min-height: 2.18rem !important;
+  border-radius: 0.72rem !important;
+  letter-spacing: 0.005em !important;
+}
+
+.tone-mode-button.is-active,
+.custom-mode-button.is-active,
+.secondary-action,
+.install-card button,
+.mic-permission-card button {
+  background:
+    linear-gradient(135deg, rgba(45, 212, 191, 0.97), rgba(47, 211, 190, 0.90)),
+    radial-gradient(circle at 26% 16%, rgba(255,255,255,0.24), transparent 4rem) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.20),
+    inset 0 -1px 0 rgba(2,6,23,0.12),
+    0 14px 34px rgba(45, 212, 191, 0.10) !important;
+}
+
+.string-card {
+  min-height: 5.05rem !important;
+  border-color: rgba(148, 163, 184, 0.12) !important;
+  background:
+    linear-gradient(180deg, rgba(15, 23, 42, 0.48), rgba(2, 6, 23, 0.36)),
+    radial-gradient(circle at 20% 18%, rgba(255,255,255,0.035), transparent 4rem) !important;
+}
+
+.string-card.is-playing,
+.string-card.is-current-target {
+  background:
+    linear-gradient(180deg, rgba(45, 212, 191, 0.15), rgba(15, 23, 42, 0.38)),
+    radial-gradient(circle at 20% 18%, rgba(255,255,255,0.05), transparent 4rem) !important;
+}
+
+.string-note {
+  font-size: 1.1rem !important;
+}
+
+.string-freq {
+  margin-top: 0.22rem !important;
+  font-size: 0.62rem !important;
+}
+
+.saved-drawer__panel {
+  background:
+    linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(3, 7, 18, 0.98)),
+    radial-gradient(circle at 12% 0%, rgba(45, 212, 191, 0.09), transparent 16rem) !important;
+}
+
+.saved-manager-list--drawer .saved-item {
+  padding: 0.92rem 0 !important;
+  border-bottom-color: rgba(148, 163, 184, 0.095) !important;
+}
+
+.saved-manager-list--drawer .saved-item__title strong {
+  font-size: 0.94rem !important;
+}
+
+.saved-manager-list--drawer .saved-item__actions {
+  gap: 1rem !important;
+  padding-top: 0.08rem;
+}
+
+.saved-manager-list--drawer .saved-item__actions button,
+.saved-manager-list--drawer .saved-item__use {
+  min-height: 1.9rem !important;
+}
+
+.library-menu-button {
+  margin-left: auto;
+  border-color: rgba(148, 163, 184, 0.12) !important;
+  background:
+    linear-gradient(180deg, rgba(15, 23, 42, 0.50), rgba(2, 6, 23, 0.30)),
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,0.04), transparent 3rem) !important;
+}
+
+.custom-swipe-hint {
+  opacity: 0.82;
+}
+
+@media (max-width: 380px) {
+  .tuning-control-row {
+    gap: 0.45rem !important;
+  }
+  .compact-select {
+    flex-basis: 37% !important;
+    min-width: 6.6rem;
+  }
+  .compact-select select,
+  .compact-search input {
+    min-height: 2.68rem !important;
+  }
+  .tone-mode {
+    grid-template-columns: 1fr !important;
+    gap: 0.45rem !important;
+  }
+}
+
+
+/* TimTuner V15 — stabilisation visuelle du feedback et rotation plus douce */
+.tuner-card {
+  contain: paint;
+}
+
+.cents-deviation {
+  height: 3.24rem !important;
+  min-height: 3.24rem !important;
+  max-height: 3.24rem !important;
+  overflow: hidden !important;
+  margin-top: 0.74rem !important;
+  padding: 0.54rem 0.86rem !important;
+  line-height: 1.16 !important;
+  font-size: 0.78rem !important;
+  letter-spacing: -0.012em !important;
+  transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease !important;
+  will-change: color, background-color;
+}
+
+.chromatic-wheel {
+  transition: transform 138ms cubic-bezier(0.22, 0.76, 0.26, 1), opacity 160ms ease, filter 160ms ease !important;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+
+.chromatic-tick .chromatic-tick__label {
+  transition: color 170ms ease, background-color 170ms ease, border-color 170ms ease, box-shadow 170ms ease, transform 170ms ease !important;
+  backface-visibility: hidden;
+}
+
+.dial-note-readout,
+.detected-note,
+#heard-note-detail {
+  transition: color 170ms ease, opacity 170ms ease, text-shadow 170ms ease !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chromatic-wheel,
+  .chromatic-tick .chromatic-tick__label,
+  .cents-deviation {
+    transition: none !important;
+  }
+}
+
+/* V17 — résultats de morceaux cliquables, sauvegarde en icône */
+.song-tuning-results {
+  margin-top: 0.68rem;
+  padding: 0.7rem 0 0.15rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.10);
+}
+
+.song-tuning-results.is-hidden {
+  display: none;
+}
+
+.song-results-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.8rem;
+  margin-bottom: 0.34rem;
+  padding: 0 0.1rem;
+}
+
+.song-results-head strong {
+  color: rgba(226, 232, 240, 0.88);
+  font-size: 0.68rem;
+  font-weight: 980;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.song-results-head span,
+.song-result-empty {
+  color: rgba(148, 163, 184, 0.60);
+  font-size: 0.62rem;
+  font-weight: 740;
+  line-height: 1.35;
+}
+
+.song-result-empty {
+  margin: 0;
+  padding: 0.36rem 0.1rem 0.48rem;
+}
+
+.song-result-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 2.65rem;
+  align-items: stretch;
+  gap: 0.5rem;
+  min-height: 4.7rem;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.09);
+}
+
+.song-result-item:last-child {
+  border-bottom: 0;
+}
+
+.song-result-main {
+  display: grid;
+  align-content: center;
+  gap: 0.18rem;
+  min-width: 0;
+  width: 100%;
+  min-height: 4.7rem;
+  padding: 0.72rem 0.08rem 0.72rem 0.1rem;
+  border: 0;
+  border-radius: 1rem;
+  background: transparent;
+  box-shadow: none;
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.song-result-main:active {
+  background: rgba(45, 212, 191, 0.055);
+  transform: translateY(1px);
+}
+
+.song-result-main strong {
+  color: rgba(248, 250, 252, 0.96);
+  font-size: 0.98rem;
+  font-weight: 940;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.song-result-main span {
+  color: rgba(204, 251, 241, 0.78);
+  font-size: 0.72rem;
+  font-weight: 850;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.song-result-main small {
+  color: rgba(148, 163, 184, 0.62);
+  font-size: 0.62rem;
+  font-weight: 760;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.song-result-save {
+  align-self: center;
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.55rem;
+  height: 2.55rem;
+  min-height: 2.55rem;
+  padding: 0;
+  border: 1px solid rgba(45, 212, 191, 0.20);
+  border-radius: 999px;
+  background:
+    linear-gradient(145deg, rgba(45, 212, 191, 0.12), rgba(15, 23, 42, 0.26)),
+    rgba(2, 6, 23, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+  color: rgba(94, 234, 212, 0.96);
+  font-size: 1.15rem;
+  font-weight: 900;
+  line-height: 1;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.song-result-save:active {
+  transform: scale(0.96);
+  background: rgba(45, 212, 191, 0.17);
+}
+
+@media (max-width: 420px) {
+  .song-results-head {
+    flex-direction: column;
+    gap: 0.12rem;
+  }
+
+  .song-result-item {
+    grid-template-columns: minmax(0, 1fr) 2.5rem;
+    gap: 0.42rem;
+    min-height: 4.85rem;
+  }
+
+  .song-result-main {
+    min-height: 4.85rem;
+    padding-left: 0.08rem;
+  }
+
+  .song-result-save {
+    width: 2.42rem;
+    height: 2.42rem;
+    min-height: 2.42rem;
+  }
+}
+
+
+/* TimTuner V19 — épure accordeur, diapason en 6 cordes, aide liquid glass, édition note|Hz */
+.cents-deviation {
+  display: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  max-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  overflow: hidden !important;
+}
+
+.tuner-card {
+  padding: 1.02rem 1rem 1.05rem !important;
+  overflow: hidden;
+}
+
+.dial {
+  height: clamp(14.4rem, 54vw, 16rem) !important;
+  margin-bottom: 0 !important;
+}
+
+.dial-note-readout {
+  top: 4.56rem !important;
+  min-height: 3rem !important;
+  width: min(10.2rem, 62%) !important;
+  background: radial-gradient(circle at 50% 0%, rgba(15, 23, 42, 0.34), rgba(2, 6, 23, 0.04)) !important;
+}
+
+.dial-note-readout .detected-note,
+.detected-note {
+  font-size: clamp(2.3rem, 11vw, 3.45rem) !important;
+  opacity: 0.92;
+}
+
+.dial-note-readout span {
+  font-size: 0.64rem !important;
+  opacity: 0.74;
+}
+
+.center-pivot {
+  top: 5.93rem !important;
+}
+
+.tuner-card .target-notes--tuner,
+.target-notes--tuner {
+  display: none !important;
+}
+
+.diapason-card {
+  position: relative;
+  padding: 0.96rem !important;
+}
+
+.diapason-headline {
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  align-items: center !important;
+  margin-bottom: 0.72rem !important;
+}
+
+.section-title--with-help {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 0.46rem;
+  min-width: 0;
+}
+
+.section-title--compact span,
+.section-title--custom-editor span {
+  display: none !important;
+}
+
+.help-toggle {
+  width: 1.64rem;
+  height: 1.64rem;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999rem;
+  border: 1px solid rgba(148, 163, 184, 0.20);
+  color: rgba(204, 251, 241, 0.86);
+  background: rgba(2, 6, 23, 0.28);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.045), 0 8px 18px rgba(0,0,0,0.10);
+  font-size: 0.78rem;
+  font-weight: 980;
+  line-height: 1;
+}
+
+.help-toggle:active {
+  transform: translateY(1px) scale(0.98);
+  background: rgba(45, 212, 191, 0.10);
+}
+
+.glass-help-popover {
+  position: absolute;
+  z-index: 40;
+  top: 0.84rem;
+  left: 0.84rem;
+  right: 0.84rem;
+  padding: 0.9rem 2.5rem 0.92rem 0.98rem;
+  border-radius: 1.16rem;
+  border: 1px solid rgba(226, 232, 240, 0.16);
+  background:
+    linear-gradient(135deg, rgba(15, 23, 42, 0.64), rgba(2, 6, 23, 0.42)),
+    radial-gradient(circle at 20% 0%, rgba(255,255,255,0.11), transparent 8rem);
+  -webkit-backdrop-filter: blur(22px) saturate(145%);
+  backdrop-filter: blur(22px) saturate(145%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    inset 0 -1px 0 rgba(2,6,23,0.26),
+    0 24px 72px rgba(0,0,0,0.34);
+}
+
+.glass-help-popover strong,
+.glass-help-popover span {
+  display: block;
+}
+
+.glass-help-popover strong {
+  color: rgba(248, 250, 252, 0.96);
+  font-size: 0.86rem;
+  font-weight: 950;
+  letter-spacing: -0.01em;
+}
+
+.glass-help-popover span {
+  margin-top: 0.28rem;
+  color: rgba(203, 213, 225, 0.84);
+  font-size: 0.74rem;
+  line-height: 1.38;
+  font-weight: 680;
+}
+
+.glass-help-close {
+  position: absolute;
+  top: 0.48rem;
+  right: 0.52rem;
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 999rem;
+  border: 0;
+  color: rgba(226, 232, 240, 0.86);
+  background: rgba(255,255,255,0.06);
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.strings-grid--inline,
+.diapason-card .strings-grid {
+  display: grid !important;
+  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  gap: 0.36rem !important;
+  margin: 0 0 0.82rem !important;
+  padding: 0 0 0.72rem !important;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.10);
+}
+
+.diapason-card .string-card {
+  min-height: 3.18rem !important;
+  padding: 0.46rem 0.18rem !important;
+  border-radius: 0.82rem !important;
+  gap: 0.16rem;
+}
+
+.diapason-card .string-note {
+  font-size: clamp(0.86rem, 4.1vw, 1.08rem) !important;
+  line-height: 1;
+}
+
+.diapason-card .string-freq {
+  max-width: 100%;
+  font-size: clamp(0.52rem, 2.7vw, 0.62rem) !important;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0.72;
+}
+
+.tuning-control-row {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(8.7rem, 38%) !important;
+  gap: 0.56rem !important;
+  margin-top: 0 !important;
+}
+
+.compact-search {
+  position: relative;
+}
+
+.compact-search::before {
+  content: "⌕";
+  position: absolute;
+  z-index: 2;
+  left: 0.82rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(148, 163, 184, 0.72);
+  font-size: 1.02rem;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.compact-search input[type="search"] {
+  padding-left: 2.18rem !important;
+  border-radius: 0.98rem !important;
+  background:
+    linear-gradient(180deg, rgba(15,23,42,0.68), rgba(2,6,23,0.40)),
+    radial-gradient(circle at 10% 15%, rgba(255,255,255,0.035), transparent 4rem) !important;
+}
+
+.compact-search input[type="search"]::placeholder {
+  color: rgba(148, 163, 184, 0.70);
+  font-weight: 740;
+}
+
+.compact-select {
+  min-width: 0 !important;
+  flex: initial !important;
+}
+
+.compact-select select {
+  width: 100%;
+  min-width: 0;
+  padding-left: 0.78rem !important;
+  padding-right: 2.15rem !important;
+  border-radius: 0.98rem !important;
+  font-size: 0.78rem !important;
+  letter-spacing: -0.015em;
+}
+
+.tone-mode {
+  display: block !important;
+  margin-top: 0.74rem !important;
+}
+
+.tone-mode > span {
+  display: none !important;
+}
+
+.tone-mode .segmented-control {
+  width: 100%;
+}
+
+.tone-mode-button {
+  min-height: 2.34rem !important;
+  font-size: 0.82rem !important;
+}
+
+.custom-swipe-hint {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0.14rem 0.04rem !important;
+  min-height: 0 !important;
+  color: rgba(94, 234, 212, 0.86) !important;
+  text-align: right;
+}
+
+.custom-swipe-hint strong,
+.custom-swipe-hint span {
+  display: block;
+}
+
+.custom-swipe-hint strong {
+  font-size: 0.7rem;
+}
+
+.custom-swipe-hint span {
+  margin-top: 0.08rem;
+  color: rgba(148, 163, 184, 0.68);
+  font-size: 0.58rem;
+  font-weight: 760;
+}
+
+.custom-tuning-card {
+  position: relative;
+}
+
+.section-title--custom-editor {
+  margin-bottom: 0.74rem !important;
+}
+
+.custom-mode-toggle,
+#custom-hz-grid {
+  display: none !important;
+}
+
+.custom-grid--dual,
+.custom-grid--notes {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 0.66rem 0.72rem !important;
+}
+
+.custom-field--dual {
+  display: grid;
+  gap: 0.36rem;
+}
+
+.custom-field--dual > span {
+  color: rgba(148, 163, 184, 0.72);
+  font-size: 0.66rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.custom-dual-input {
+  display: grid;
+  grid-template-columns: minmax(4.1rem, 0.86fr) minmax(4.25rem, 1fr);
+  align-items: stretch;
+  min-height: 3.1rem;
+  overflow: hidden;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  border-radius: 0.96rem;
+  background:
+    linear-gradient(180deg, rgba(15,23,42,0.62), rgba(2,6,23,0.42)),
+    radial-gradient(circle at 12% 12%, rgba(255,255,255,0.038), transparent 4rem);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 10px 28px rgba(0,0,0,0.12);
+}
+
+.custom-dual-input select,
+.custom-dual-input input {
+  width: 100%;
+  min-width: 0;
+  min-height: 3.1rem !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.custom-dual-input select {
+  padding: 0.5rem 1.7rem 0.5rem 0.74rem !important;
+  color: rgba(248, 250, 252, 0.96);
+  font-size: 0.96rem !important;
+  font-weight: 930;
+  letter-spacing: -0.035em;
+}
+
+.custom-dual-input input {
+  border-left: 1px solid rgba(148, 163, 184, 0.12) !important;
+  padding: 0.5rem 0.48rem 0.5rem 0.58rem !important;
+  color: rgba(148, 163, 184, 0.90);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.74rem !important;
+  font-weight: 760;
+  letter-spacing: -0.045em;
+  text-align: left;
+}
+
+.custom-dual-input:focus-within {
+  border-color: rgba(45, 212, 191, 0.36);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 0 0 3px rgba(45, 212, 191, 0.08);
+}
+
+.custom-actions {
+  margin-top: 0.88rem !important;
+}
+
+.secondary-action:disabled,
+.secondary-action[disabled] {
+  color: rgba(148, 163, 184, 0.38) !important;
+  background: linear-gradient(180deg, rgba(15,23,42,0.36), rgba(2,6,23,0.24)) !important;
+  border: 1px solid rgba(148, 163, 184, 0.10) !important;
+  box-shadow: none !important;
+  opacity: 0.58 !important;
+  filter: saturate(0.62) brightness(0.82);
+}
+
+.secondary-action:not(:disabled) {
+  color: #03110f !important;
+  opacity: 1 !important;
+}
+
+@media (max-width: 420px) {
+  .tuning-control-row {
+    grid-template-columns: minmax(0, 1fr) minmax(7.9rem, 40%) !important;
+    gap: 0.46rem !important;
+  }
+
+  .strings-grid--inline,
+  .diapason-card .strings-grid {
+    gap: 0.28rem !important;
+  }
+
+  .diapason-card .string-card {
+    min-height: 3rem !important;
+    padding-inline: 0.12rem !important;
+  }
+
+  .custom-grid--dual,
+  .custom-grid--notes {
+    gap: 0.56rem 0.5rem !important;
+  }
+
+  .custom-dual-input {
+    grid-template-columns: minmax(3.65rem, 0.82fr) minmax(3.72rem, 1fr);
+  }
+
+  .custom-dual-input select {
+    font-size: 0.88rem !important;
+    padding-left: 0.58rem !important;
+  }
+
+  .custom-dual-input input {
+    font-size: 0.66rem !important;
+    padding-left: 0.42rem !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .tuning-control-row {
+    grid-template-columns: 1fr !important;
+  }
+
+  .compact-select select {
+    min-height: 2.58rem !important;
+  }
+
+  .strings-grid--inline,
+  .diapason-card .strings-grid {
+    grid-template-columns: repeat(6, minmax(2.55rem, 1fr)) !important;
+    overflow-x: auto;
+    padding-bottom: 0.64rem !important;
+  }
+}
+
+
+.brand-mark--image {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+.brand-mark--image::before {
+  display: none;
+}
+
+.brand-mark--image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.28));
+}
+
+
+/* Peach V22 — breathing room, display typography, drawer/card edge fixes */
+:root {
+  --font-display: "Boldonse", "Big Shoulders", "Big Shoulders Display", Impact, Haettenschweiler, "Arial Narrow", sans-serif;
+  --font-ui: "Mona Sans", "Hubot Sans", "Helvetica Neue", Helvetica, Arial, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+:focus-visible {
+  outline: 2px solid rgba(45, 212, 191, 0.95);
+  outline-offset: 3px;
+}
+
+body {
+  font-family: var(--font-ui) !important;
+  font-weight: 450;
+  letter-spacing: -0.012em;
+}
+
+button,
+select,
+input {
+  font-family: var(--font-ui) !important;
+  font-weight: 560;
+}
+
+.app-shell {
+  overflow: visible !important;
+  padding-left: max(1rem, env(safe-area-inset-left)) !important;
+  padding-right: max(1rem, env(safe-area-inset-right)) !important;
+}
+
+.app-main {
+  gap: 1.18rem !important;
+  padding-top: 0.34rem !important;
+}
+
+.brand h1,
+.section-title strong,
+.saved-drawer__head strong,
+.dial-note-readout .detected-note,
+.detected-note {
+  font-family: var(--font-display) !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.018em !important;
+}
+
+.brand h1 {
+  font-size: 1.28rem !important;
+  line-height: 1.02 !important;
+}
+
+.brand p {
+  font-family: var(--font-ui) !important;
+  font-size: 0.68rem !important;
+  font-weight: 620 !important;
+  letter-spacing: 0.18em !important;
+}
+
+.section-title strong {
+  font-size: 1.18rem !important;
+  line-height: 1.02 !important;
+}
+
+.tuner-card,
+.tuning-card,
+.saved-drawer__panel {
+  border-radius: 1.62rem !important;
+}
+
+.tuner-card {
+  contain: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  padding: 1.18rem 1.08rem 1.24rem !important;
+  border-color: rgba(148, 163, 184, 0.14) !important;
+}
+
+.dial {
+  height: clamp(15.6rem, 61vw, 17.2rem) !important;
+  overflow: hidden !important;
+  margin-inline: -0.04rem !important;
+}
+
+.chromatic-wheel {
+  --wheel-size: clamp(23.6rem, 132vw, 32.5rem) !important;
+  --note-radius: clamp(10.55rem, 58vw, 14.55rem) !important;
+  top: 0.14rem !important;
+}
+
+.center-marker {
+  top: 1.46rem !important;
+  height: 4.78rem !important;
+}
+
+.center-pivot {
+  top: 6.12rem !important;
+}
+
+.dial-note-readout {
+  top: 6.15rem !important;
+  width: min(13.2rem, 78%) !important;
+  min-height: 4.2rem !important;
+  gap: 0.24rem !important;
+  background: radial-gradient(circle at 50% 0%, rgba(15, 23, 42, 0.28), rgba(2, 6, 23, 0.02)) !important;
+}
+
+.dial-note-readout .detected-note,
+.detected-note {
+  font-size: clamp(3.2rem, 15vw, 4.95rem) !important;
+  line-height: 0.9 !important;
+  opacity: 0.96 !important;
+}
+
+.dial-note-readout span {
+  max-width: 12rem !important;
+  font-family: var(--font-ui) !important;
+  font-size: 0.72rem !important;
+  font-weight: 440 !important;
+  line-height: 1.22 !important;
+  letter-spacing: 0.01em !important;
+  opacity: 0.70 !important;
+}
+
+.tuning-scroll {
+  gap: 1.08rem !important;
+  padding-bottom: 0.36rem !important;
+}
+
+.tuning-card {
+  padding: 1.18rem !important;
+  border-color: rgba(148, 163, 184, 0.14) !important;
+}
+
+.diapason-headline,
+.advanced-card-header,
+.saved-drawer__head {
+  margin-bottom: 1.06rem !important;
+}
+
+.strings-grid--inline,
+.diapason-card .strings-grid {
+  margin-bottom: 1.02rem !important;
+  padding-bottom: 0.94rem !important;
+  gap: 0.42rem !important;
+}
+
+.diapason-card .string-card {
+  min-height: 3.34rem !important;
+  padding-block: 0.54rem !important;
+}
+
+.string-card,
+.custom-dual-input,
+.field-stack input,
+.field-stack select,
+.compact-search input[type="search"],
+.compact-select select {
+  border-radius: 1.05rem !important;
+}
+
+.string-note,
+.custom-dual-input select {
+  font-weight: 640 !important;
+}
+
+.string-freq,
+.custom-dual-input input,
+.detected-freq,
+.dial-note-readout span,
+.saved-item__title span {
+  font-family: var(--font-ui) !important;
+  font-weight: 420 !important;
+  letter-spacing: 0.01em !important;
+}
+
+.tuning-control-row {
+  gap: 0.72rem !important;
+  margin-top: 0.18rem !important;
+}
+
+.compact-search input[type="search"],
+.compact-select select,
+.field-stack input[type="text"],
+.saved-drawer-search input[type="search"] {
+  min-height: 3.06rem !important;
+  font-size: 0.88rem !important;
+  font-weight: 450 !important;
+}
+
+.compact-select select {
+  font-size: 0.82rem !important;
+  font-weight: 560 !important;
+}
+
+.tone-mode {
+  margin-top: 0.96rem !important;
+}
+
+.segmented-control {
+  padding: 0.34rem !important;
+}
+
+.tone-mode-button,
+.custom-mode-button {
+  min-height: 2.5rem !important;
+  font-size: 0.86rem !important;
+  font-weight: 560 !important;
+}
+
+.section-title--with-help {
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+}
+
+.custom-tuning-card {
+  position: relative !important;
+  padding-top: 1.22rem !important;
+}
+
+.custom-tuning-card .section-title--custom-editor {
+  padding-right: 2.6rem !important;
+  margin-bottom: 1.14rem !important;
+}
+
+.custom-tuning-card .section-title--custom-editor .help-toggle {
+  position: absolute !important;
+  top: 1.12rem !important;
+  right: 1.12rem !important;
+}
+
+.help-toggle {
+  width: 1.82rem !important;
+  height: 1.82rem !important;
+  font-size: 0.78rem !important;
+  font-weight: 560 !important;
+  border-color: rgba(148, 163, 184, 0.16) !important;
+  background: rgba(2, 6, 23, 0.22) !important;
+}
+
+.glass-help-popover {
+  top: 1rem !important;
+  left: 1rem !important;
+  right: 1rem !important;
+  border-radius: 1.34rem !important;
+}
+
+.glass-help-popover strong {
+  font-family: var(--font-display) !important;
+  font-weight: 400 !important;
+}
+
+.glass-help-popover span,
+.section-title span,
+.saved-drawer__head span,
+.saved-empty {
+  font-weight: 430 !important;
+}
+
+.tuning-name-field {
+  margin-bottom: 1.08rem !important;
+}
+
+.field-stack {
+  gap: 0.46rem !important;
+}
+
+.field-stack > span,
+.custom-field--dual > span {
+  font-size: 0.68rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.16em !important;
+}
+
+.custom-grid--dual,
+.custom-grid--notes {
+  gap: 0.88rem 0.84rem !important;
+}
+
+.custom-field--dual {
+  gap: 0.5rem !important;
+}
+
+.custom-dual-input {
+  min-height: 3.28rem !important;
+}
+
+.custom-dual-input select,
+.custom-dual-input input {
+  min-height: 3.28rem !important;
+}
+
+.custom-dual-input select {
+  font-size: 1rem !important;
+}
+
+.custom-dual-input input {
+  font-size: 0.82rem !important;
+}
+
+.custom-actions {
+  margin-top: 1.22rem !important;
+}
+
+.secondary-action {
+  min-height: 3.32rem !important;
+  border-radius: 1.15rem !important;
+  font-size: 1rem !important;
+  font-weight: 650 !important;
+}
+
+.secondary-action:disabled,
+.secondary-action[disabled] {
+  color: rgba(148, 163, 184, 0.34) !important;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.30), rgba(2, 6, 23, 0.20)) !important;
+  border-color: rgba(148, 163, 184, 0.09) !important;
+  opacity: 0.48 !important;
+}
+
+.saved-drawer {
+  overflow: hidden !important;
+}
+
+.saved-drawer__panel {
+  top: max(0.78rem, env(safe-area-inset-top)) !important;
+  right: 0.78rem !important;
+  bottom: max(0.78rem, env(safe-area-inset-bottom)) !important;
+  width: min(calc(100vw - 1.56rem), 26.25rem) !important;
+  padding: 1.18rem 1.1rem 1.25rem !important;
+  border: 1px solid rgba(148, 163, 184, 0.15) !important;
+  border-radius: 1.55rem !important;
+  transform: translateX(calc(100% + 1.2rem)) !important;
+  box-shadow: -18px 0 70px rgba(0, 0, 0, 0.36), 0 24px 80px rgba(0, 0, 0, 0.26) !important;
+}
+
+.saved-drawer.is-open .saved-drawer__panel {
+  transform: translateX(0) !important;
+}
+
+.saved-drawer__head {
+  padding-bottom: 1.12rem !important;
+}
+
+.saved-drawer__head strong {
+  font-size: 1.45rem !important;
+}
+
+.saved-drawer__head span {
+  margin-top: 0.58rem !important;
+  font-size: 0.82rem !important;
+  line-height: 1.42 !important;
+}
+
+.saved-drawer__head button {
+  width: 2.48rem !important;
+  height: 2.48rem !important;
+  font-weight: 500 !important;
+}
+
+.saved-drawer-search {
+  margin: 1.18rem 0 0.72rem !important;
+}
+
+.saved-manager-list--drawer .saved-item {
+  padding: 1.18rem 0 !important;
+}
+
+.saved-manager-list--drawer .saved-item__title strong {
+  font-size: 1rem !important;
+  font-weight: 620 !important;
+}
+
+.saved-manager-list--drawer .saved-item__title span {
+  margin-top: 0.42rem !important;
+  font-size: 0.72rem !important;
+}
+
+.saved-manager-list--drawer .saved-item__main {
+  gap: 1.05rem !important;
+}
+
+.saved-manager-list--drawer .saved-item__actions {
+  gap: 1.08rem !important;
+  padding-top: 0.2rem !important;
+}
+
+.saved-manager-list--drawer .saved-item__actions button,
+.saved-manager-list--drawer .saved-item__use {
+  font-size: 0.72rem !important;
+  font-weight: 560 !important;
+}
+
+.library-menu-button {
+  margin-right: 0.04rem !important;
+}
+
+@media (max-width: 420px) {
+  .app-shell {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  .tuner-card,
+  .tuning-card {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  .dial-note-readout {
+    top: 6rem !important;
+  }
+
+  .detected-note,
+  .dial-note-readout .detected-note {
+    font-size: clamp(3.05rem, 15.2vw, 4.45rem) !important;
+  }
+
+  .custom-grid--dual,
+  .custom-grid--notes {
+    gap: 0.78rem 0.62rem !important;
+  }
+
+  .custom-dual-input {
+    grid-template-columns: minmax(3.85rem, 0.82fr) minmax(4.1rem, 1fr) !important;
+  }
+
+  .saved-drawer__panel {
+    right: 0.62rem !important;
+    width: min(calc(100vw - 1.24rem), 26rem) !important;
+  }
+}
+
+/* V24 production refinements */
+:root {
+  --font-ui: "Helvetica Neue", Helvetica, Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: "BoldonseLocal", "Boldonse", Georgia, serif;
+}
+
+html, body { overflow-x: hidden !important; }
+body, button, input, select, textarea { font-family: var(--font-ui) !important; }
+.app-shell { overflow-x: clip; }
+.app-main { gap: 1.15rem !important; }
+
+.brand h1,
+.section-title strong,
+.saved-drawer__head strong,
+.dial-note-readout .detected-note,
+.detected-note {
+  font-family: var(--font-display) !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.01em !important;
+}
+
+.brand h1 { font-size: 1.08rem !important; }
+.brand p,
+.app-footer,
+.field-stack > span,
+.custom-field--dual > span,
+.saved-item__title span,
+.saved-drawer__head span,
+.glass-help-popover span,
+.song-result-item span,
+.song-result-item small,
+.tone-mode-button,
+.secondary-action,
+.compact-select select,
+.compact-search input[type="search"],
+.field-stack input[type="text"],
+.saved-drawer-search input[type="search"] { font-weight: 430 !important; }
+
+.tuner-card,
+.tuning-card,
+.saved-drawer__panel { border-radius: 1.65rem !important; }
+.tuner-card { padding: 1.2rem 1.18rem 1.28rem !important; }
+.dial { margin-inline: 0.08rem !important; height: clamp(16rem, 63vw, 17.6rem) !important; }
+.chromatic-wheel { --wheel-size: clamp(24rem, 134vw, 33rem) !important; --note-radius: clamp(10.9rem, 59.5vw, 14.8rem) !important; }
+.center-marker { top: 1.48rem !important; height: 4.92rem !important; }
+.center-pivot { top: 6.28rem !important; }
+.dial-note-readout { top: 7.05rem !important; width: min(14.2rem, 82%) !important; min-height: 4.9rem !important; gap: 0.32rem !important; background: radial-gradient(circle at 50% 0%, rgba(15,23,42,0.12), rgba(2,6,23,0.01)) !important; }
+.dial-note-readout .detected-note,
+.detected-note { font-size: clamp(3.45rem, 15.6vw, 5.1rem) !important; line-height: 0.86 !important; }
+.dial-note-readout span { font-size: 0.76rem !important; font-weight: 420 !important; line-height: 1.28 !important; }
+.cents-deviation { display: none !important; }
+
+.strings-grid--inline,
+.diapason-card .strings-grid { margin-bottom: 1.15rem !important; padding-bottom: 1.05rem !important; gap: 0.5rem !important; }
+.diapason-card .string-card { min-height: 3.55rem !important; }
+.string-card { gap: 0.28rem !important; }
+.string-note { font-size: 1.08rem !important; font-weight: 620 !important; }
+.string-freq { font-size: 0.73rem !important; }
+
+.tuning-card { padding: 1.28rem !important; }
+.diapason-headline,
+.saved-drawer__head,
+.custom-tuning-card .section-title--custom-editor { margin-bottom: 1.22rem !important; }
+.section-title--with-help,
+.custom-tuning-card .section-title--custom-editor { position: relative; display: flex !important; justify-content: space-between !important; align-items: flex-start !important; gap: 0.9rem !important; }
+.custom-tuning-card .section-title--custom-editor { padding-right: 2.8rem !important; }
+.help-toggle { flex: 0 0 auto; width: 1.95rem !important; height: 1.95rem !important; margin-left: auto !important; border-radius: 999rem !important; }
+.custom-tuning-card .section-title--custom-editor .help-toggle { top: 0 !important; right: 0 !important; }
+
+.tuning-control-row { gap: 0.8rem !important; margin-top: 0.35rem !important; margin-bottom: 0.2rem !important; }
+.compact-search, .compact-select, .saved-drawer-search { position: relative; }
+.compact-search::before,
+.saved-drawer-search::before { content: '⌕'; position: absolute; left: 0.95rem; top: 50%; transform: translateY(-50%); color: rgba(148,163,184,0.62); font-size: 1rem; pointer-events: none; z-index: 2; }
+.compact-search input[type="search"],
+.saved-drawer-search input[type="search"] { padding-left: 2.45rem !important; }
+.compact-select select { padding-right: 2.15rem !important; }
+.tone-mode { margin-top: 1.08rem !important; }
+.segmented-control { padding: 0.36rem !important; }
+.tone-mode-button,
+.secondary-action,
+.saved-item__menu button,
+.saved-item__more,
+.song-result-save { font-weight: 500 !important; }
+
+.field-stack,
+.custom-field--dual { gap: 0.56rem !important; }
+.tuning-name-field { margin-bottom: 1.2rem !important; }
+.custom-grid--dual,
+.custom-grid--notes { gap: 1rem 0.92rem !important; }
+.custom-field--dual > span { margin-bottom: 0.02rem; }
+.custom-dual-input { min-height: 3.42rem !important; overflow: hidden; }
+.custom-dual-input select,
+.custom-dual-input input { min-height: 3.42rem !important; }
+.custom-dual-input select { font-size: 1.02rem !important; font-weight: 620 !important; }
+.custom-dual-input input { font-size: 0.88rem !important; font-weight: 430 !important; }
+.custom-actions { margin-top: 1.34rem !important; }
+.secondary-action { min-height: 3.38rem !important; }
+
+.saved-drawer__panel { overflow: hidden !important; }
+.saved-drawer__head { gap: 1rem !important; }
+.saved-drawer-search { margin: 1.26rem 0 0.9rem !important; }
+.saved-manager-list--drawer { padding-right: 0.1rem; }
+.saved-manager-list--drawer .saved-item { padding: 1.1rem 0 !important; }
+.saved-item__top { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.9rem; align-items: start; }
+.saved-manager-list--drawer .saved-item__main { display: block !important; }
+.saved-manager-list--drawer .saved-item__title-button { display: block; width: 100%; text-align: left; padding: 0; background: transparent; border: 0; }
+.saved-manager-list--drawer .saved-item__title strong { display: block; font-size: 1.06rem !important; line-height: 1.22; }
+.saved-manager-list--drawer .saved-item__title span { display: block; margin-top: 0.52rem !important; line-height: 1.5; }
+.saved-item__more { align-self: start; min-width: 2.15rem; height: 2.15rem; padding: 0; border-radius: 999rem; border: 1px solid rgba(148,163,184,0.14); background: rgba(15,23,42,0.42); color: rgba(248,250,252,0.82); font-size: 1.35rem !important; line-height: 1; }
+.saved-item__menu { display: flex; flex-wrap: wrap; gap: 0.6rem; padding-top: 0.85rem; }
+.saved-item__menu button { border: 0; padding: 0.18rem 0; background: transparent; color: rgba(226,232,240,0.88); font-size: 0.82rem !important; }
+.saved-item__menu button[data-action="delete"] { color: #fb7185; }
+.saved-item__title-button:active strong,
+.saved-item__menu button:active,
+.saved-item__more:active { opacity: 0.76; }
+.saved-item.is-active .saved-item__title strong::after { content: ' · actif'; font-family: var(--font-ui) !important; font-size: 0.75rem; font-weight: 520; color: rgba(45,212,191,0.92); }
+.library-menu-button { margin-left: auto !important; }
+.app-footer { padding-top: 0.45rem; }
+
+.saved-item__more:focus-visible,
+.saved-item__menu button:focus-visible,
+.saved-item__title-button:focus-visible,
+.help-toggle:focus-visible,
+.library-menu-button:focus-visible,
+.tone-mode-button:focus-visible,
+.secondary-action:focus-visible,
+input:focus-visible,
+select:focus-visible,
+button:focus-visible { outline: 2px solid rgba(45,212,191,0.95) !important; outline-offset: 2px !important; }
+
+@media (max-width: 420px) {
+  .dial-note-readout { top: 6.7rem !important; width: 84% !important; }
+  .dial-note-readout .detected-note,
+  .detected-note { font-size: clamp(3.16rem, 15.6vw, 4.5rem) !important; }
+  .tuning-card,
+  .tuner-card { padding-left: 1.04rem !important; padding-right: 1.04rem !important; }
+  .saved-drawer__panel { width: min(calc(100vw - 1.14rem), 26rem) !important; right: 0.57rem !important; }
+}
+
+/* V25 — universal responsive layout */
+html,
+body {
+  width: 100%;
+  overflow-x: hidden !important;
+}
+
+.app-shell {
+  width: min(100%, 31rem);
+  max-width: none !important;
+  overflow-x: clip !important;
+}
+
+.tuning-scroll {
+  scroll-snap-type: x mandatory;
+}
+
+.tuning-card {
+  scroll-snap-align: start;
+}
+
+.saved-drawer__panel {
+  max-width: calc(100vw - 1.2rem) !important;
+}
+
+/* large phones / small tablets: keep the mobile flow but make it breathe */
+@media (min-width: 600px) {
+  .app-shell {
+    width: min(100%, 38rem) !important;
+    padding-left: max(1.25rem, env(safe-area-inset-left)) !important;
+    padding-right: max(1.25rem, env(safe-area-inset-right)) !important;
+  }
+
+  .tuner-card,
+  .tuning-card {
+    padding: 1.34rem !important;
+  }
+
+  .dial {
+    height: clamp(17.1rem, 49vw, 19.2rem) !important;
+  }
+
+  .chromatic-wheel {
+    --wheel-size: clamp(26rem, 96vw, 34rem) !important;
+    --note-radius: clamp(11.8rem, 42vw, 15rem) !important;
+  }
+
+  .dial-note-readout {
+    top: 7.15rem !important;
+  }
+}
+
+/* tablet / laptop / desktop: stop looking like a tiny phone in the middle */
+@media (min-width: 820px) {
+  .app-shell {
+    width: min(calc(100vw - 3rem), 70rem) !important;
+    min-height: 100dvh;
+    padding-left: max(1.5rem, env(safe-area-inset-left)) !important;
+    padding-right: max(1.5rem, env(safe-area-inset-right)) !important;
+  }
+
+  .app-header {
+    padding-top: clamp(1rem, 2.2vh, 1.8rem) !important;
+    padding-bottom: 1rem !important;
+  }
+
+  .app-main {
+    display: grid !important;
+    grid-template-columns: minmax(22rem, 0.94fr) minmax(23rem, 1.06fr);
+    grid-template-areas:
+      "install install"
+      "mic mic"
+      "ear ear"
+      "tuner tuning";
+    gap: clamp(1rem, 2vw, 1.45rem) !important;
+    align-items: start;
+    justify-content: stretch !important;
+    padding-bottom: 1.2rem !important;
+  }
+
+  #install-card { grid-area: install; }
+  #mic-permission-card { grid-area: mic; }
+  #ear-help-card { grid-area: ear; }
+  .tuner-card { grid-area: tuner; }
+  .tuning-carousel { grid-area: tuning; align-self: start; min-width: 0; }
+
+  .tuner-card {
+    position: sticky;
+    top: clamp(4.8rem, 9vh, 6.4rem);
+    padding: clamp(1.18rem, 1.7vw, 1.45rem) !important;
+  }
+
+  .dial {
+    height: clamp(18rem, 36vw, 23rem) !important;
+  }
+
+  .chromatic-wheel {
+    --wheel-size: clamp(30rem, 62vw, 43rem) !important;
+    --note-radius: clamp(13.6rem, 27vw, 19.2rem) !important;
+    top: clamp(-0.18rem, -0.4vw, 0.1rem) !important;
+  }
+
+  .center-marker {
+    top: clamp(1.3rem, 2vw, 1.9rem) !important;
+    height: clamp(5.1rem, 8vw, 6.5rem) !important;
+  }
+
+  .center-pivot {
+    top: clamp(6.1rem, 9.3vw, 7.95rem) !important;
+  }
+
+  .dial-note-readout {
+    top: clamp(7.05rem, 10.4vw, 9.2rem) !important;
+    width: min(16rem, 78%) !important;
+  }
+
+  .dial-note-readout .detected-note,
+  .detected-note {
+    font-size: clamp(4rem, 7.2vw, 5.8rem) !important;
+  }
+
+  .tuning-scroll {
+    gap: 1rem !important;
+    overflow-x: auto !important;
+    padding-bottom: 0.2rem !important;
+  }
+
+  .tuning-card {
+    flex-basis: 100% !important;
+    padding: clamp(1.22rem, 1.55vw, 1.5rem) !important;
+  }
+
+  .strings-grid--inline,
+  .diapason-card .strings-grid {
+    gap: 0.58rem !important;
+  }
+
+  .compact-search input[type="search"],
+  .compact-select select,
+  .field-stack input[type="text"],
+  .saved-drawer-search input[type="search"] {
+    min-height: 3.15rem !important;
+  }
+
+  .saved-drawer__panel {
+    width: min(30rem, calc(100vw - 2.4rem)) !important;
+    right: max(1.2rem, env(safe-area-inset-right)) !important;
+    top: max(1.2rem, env(safe-area-inset-top)) !important;
+    bottom: max(1.2rem, env(safe-area-inset-bottom)) !important;
+  }
+}
+
+/* wide desktop: show the tuner and both working cards as a proper console */
+@media (min-width: 1160px) {
+  .app-shell {
+    width: min(calc(100vw - 4rem), 88rem) !important;
+  }
+
+  .app-main {
+    grid-template-columns: minmax(30rem, 0.9fr) minmax(42rem, 1.1fr);
+  }
+
+  .tuning-scroll {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1rem, 1.5vw, 1.3rem) !important;
+    overflow: visible !important;
+    scroll-snap-type: none !important;
+  }
+
+  .tuning-card {
+    flex: initial !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    scroll-snap-align: none !important;
+  }
+
+  .custom-swipe-hint {
+    display: none !important;
+  }
+}
+
+/* very wide monitors: keep a premium instrument scale, not a wall of UI */
+@media (min-width: 1500px) {
+  .app-shell {
+    width: min(calc(100vw - 6rem), 96rem) !important;
+  }
+
+  .dial {
+    height: clamp(21rem, 28vw, 25rem) !important;
+  }
+
+  .chromatic-wheel {
+    --wheel-size: clamp(39rem, 47vw, 49rem) !important;
+    --note-radius: clamp(17.2rem, 20.5vw, 21.8rem) !important;
+  }
+}
+
+/* Logic/plugin windows, phones in landscape, and short browser windows */
+@media (orientation: landscape) and (max-height: 620px), (max-height: 620px) and (min-width: 720px) {
+  .app-shell {
+    width: min(calc(100vw - 1.4rem), 76rem) !important;
+    min-height: 100dvh;
+    padding-left: max(0.7rem, env(safe-area-inset-left)) !important;
+    padding-right: max(0.7rem, env(safe-area-inset-right)) !important;
+  }
+
+  .app-header {
+    position: static !important;
+    padding: 0.55rem 0 0.45rem !important;
+  }
+
+  .brand-mark {
+    width: 1.95rem !important;
+    height: 1.95rem !important;
+  }
+
+  .brand h1 {
+    font-size: 1rem !important;
+  }
+
+  .brand p {
+    font-size: 0.58rem !important;
+  }
+
+  .library-menu-button {
+    width: 2.2rem !important;
+    height: 2.2rem !important;
+  }
+
+  .app-main {
+    display: grid !important;
+    grid-template-columns: minmax(18rem, 0.95fr) minmax(20rem, 1.05fr);
+    grid-template-areas:
+      "install install"
+      "mic mic"
+      "ear ear"
+      "tuner tuning";
+    gap: 0.72rem !important;
+    align-items: start;
+    padding: 0 0 0.55rem !important;
+  }
+
+  #install-card { grid-area: install; }
+  #mic-permission-card { grid-area: mic; }
+  #ear-help-card { grid-area: ear; }
+  .tuner-card { grid-area: tuner; position: relative !important; top: auto !important; }
+  .tuning-carousel { grid-area: tuning; min-width: 0; }
+
+  .tuner-card,
+  .tuning-card {
+    padding: 0.84rem !important;
+    border-radius: 1.24rem !important;
+  }
+
+  .dial {
+    height: min(64dvh, 15.6rem) !important;
+  }
+
+  .chromatic-wheel {
+    --wheel-size: min(33rem, 74vw) !important;
+    --note-radius: min(14.6rem, 32vw) !important;
+    top: -0.4rem !important;
+  }
+
+  .center-marker {
+    top: 1.2rem !important;
+    height: 4.1rem !important;
+  }
+
+  .center-pivot { top: 5.15rem !important; }
+
+  .dial-note-readout {
+    top: 5.8rem !important;
+    min-height: 3.5rem !important;
+  }
+
+  .dial-note-readout .detected-note,
+  .detected-note {
+    font-size: clamp(2.65rem, 6vw, 4.1rem) !important;
+  }
+
+  .dial-note-readout span {
+    font-size: 0.68rem !important;
+  }
+
+  .diapason-headline,
+  .custom-tuning-card .section-title--custom-editor {
+    margin-bottom: 0.72rem !important;
+  }
+
+  .strings-grid--inline,
+  .diapason-card .strings-grid {
+    margin-bottom: 0.7rem !important;
+    padding-bottom: 0.7rem !important;
+    gap: 0.38rem !important;
+  }
+
+  .diapason-card .string-card {
+    min-height: 2.84rem !important;
+    padding-block: 0.38rem !important;
+  }
+
+  .string-note { font-size: 0.96rem !important; }
+  .string-freq { font-size: 0.62rem !important; }
+
+  .tuning-control-row {
+    gap: 0.56rem !important;
+  }
+
+  .compact-search input[type="search"],
+  .compact-select select,
+  .field-stack input[type="text"],
+  .saved-drawer-search input[type="search"] {
+    min-height: 2.62rem !important;
+    font-size: 0.78rem !important;
+  }
+
+  .tone-mode { margin-top: 0.64rem !important; }
+  .tone-mode-button { min-height: 2.22rem !important; font-size: 0.78rem !important; }
+
+  .custom-grid--dual,
+  .custom-grid--notes {
+    gap: 0.58rem 0.52rem !important;
+  }
+
+  .custom-dual-input,
+  .custom-dual-input select,
+  .custom-dual-input input {
+    min-height: 2.7rem !important;
+  }
+
+  .custom-dual-input select { font-size: 0.9rem !important; }
+  .custom-dual-input input { font-size: 0.72rem !important; }
+
+  .secondary-action {
+    min-height: 2.75rem !important;
+    font-size: 0.88rem !important;
+  }
+
+  .app-footer {
+    display: none !important;
+  }
+}
+
+/* tiny phones: favor touch comfort and prevent horizontal leakage */
+@media (max-width: 360px) {
+  .app-shell {
+    padding-left: 0.78rem !important;
+    padding-right: 0.78rem !important;
+  }
+
+  .tuner-card,
+  .tuning-card {
+    padding-left: 0.86rem !important;
+    padding-right: 0.86rem !important;
+  }
+
+  .tuning-control-row {
+    grid-template-columns: 1fr !important;
+  }
+
+  .compact-select {
+    width: 100% !important;
+  }
+
+  .strings-grid--inline,
+  .diapason-card .strings-grid {
+    gap: 0.34rem !important;
+  }
+
+  .string-note { font-size: 0.92rem !important; }
+  .string-freq { font-size: 0.58rem !important; }
+}
+
+
+/* V26 — drawer must never appear on first paint unless explicitly opened */
+#saved-drawer[aria-hidden="true"],
+#saved-drawer:not(.is-open) {
+  pointer-events: none !important;
+}
+
+#saved-drawer[aria-hidden="true"] .saved-drawer__backdrop,
+#saved-drawer:not(.is-open) .saved-drawer__backdrop {
+  opacity: 0 !important;
+  backdrop-filter: blur(0px) !important;
+}
+
+#saved-drawer[aria-hidden="true"] .saved-drawer__panel,
+#saved-drawer:not(.is-open) .saved-drawer__panel {
+  transform: translateX(calc(100% + max(2rem, env(safe-area-inset-right)))) !important;
+  visibility: hidden !important;
+}
+
+#saved-drawer.is-open .saved-drawer__panel {
+  visibility: visible !important;
+}
+
+/* V27 — drawer positioning hard fix: never let texture/card rules turn the panel into document flow */
+#saved-drawer {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100dvh !important;
+  z-index: 1200 !important;
+  pointer-events: none !important;
+  overflow: hidden !important;
+}
+
+#saved-drawer.is-open {
+  pointer-events: auto !important;
+}
+
+#saved-drawer .saved-drawer__backdrop {
+  position: fixed !important;
+  inset: 0 !important;
+}
+
+#saved-drawer .saved-drawer__panel {
+  position: fixed !important;
+  left: auto !important;
+  top: max(0.75rem, env(safe-area-inset-top)) !important;
+  right: max(0.75rem, env(safe-area-inset-right)) !important;
+  bottom: max(0.75rem, env(safe-area-inset-bottom)) !important;
+  width: min(30rem, calc(100vw - 1.5rem)) !important;
+  max-width: calc(100vw - 1.5rem) !important;
+  max-height: calc(100dvh - 1.5rem) !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  transform: translate3d(calc(100% + 2rem), 0, 0) !important;
+  transition: transform 260ms cubic-bezier(0.22, 0.8, 0.28, 1), visibility 0s linear 260ms !important;
+  visibility: hidden !important;
+}
+
+#saved-drawer.is-open .saved-drawer__panel {
+  transform: translate3d(0, 0, 0) !important;
+  visibility: visible !important;
+  transition: transform 260ms cubic-bezier(0.22, 0.8, 0.28, 1), visibility 0s !important;
+}
+
+@media (min-width: 820px) {
+  #saved-drawer .saved-drawer__panel {
+    width: min(31rem, calc(100vw - 2.4rem)) !important;
+    top: max(1.2rem, env(safe-area-inset-top)) !important;
+    right: max(1.2rem, env(safe-area-inset-right)) !important;
+    bottom: max(1.2rem, env(safe-area-inset-bottom)) !important;
+    max-height: calc(100dvh - 2.4rem) !important;
+  }
+}
+
+
+/* V28 — desktop / responsive hardening */
+body:not(.drawer-open) #saved-drawer,
+#saved-drawer[aria-hidden="true"],
+#saved-drawer:not(.is-open) {
+  display: none !important;
+}
+
+body.drawer-open #saved-drawer.is-open,
+#saved-drawer.is-open[aria-hidden="false"] {
+  display: block !important;
+}
+
+#saved-drawer {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 9999 !important;
+  width: 100vw !important;
+  height: 100dvh !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+}
+
+#saved-drawer.is-open {
+  pointer-events: auto !important;
+}
+
+#saved-drawer .saved-drawer__backdrop {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100dvh !important;
+  opacity: 1 !important;
+}
+
+#saved-drawer .saved-drawer__panel {
+  position: fixed !important;
+  left: auto !important;
+  top: max(0.9rem, env(safe-area-inset-top)) !important;
+  right: max(0.9rem, env(safe-area-inset-right)) !important;
+  bottom: max(0.9rem, env(safe-area-inset-bottom)) !important;
+  width: min(31rem, calc(100vw - 1.8rem)) !important;
+  max-width: calc(100vw - 1.8rem) !important;
+  max-height: calc(100dvh - 1.8rem) !important;
+  margin: 0 !important;
+  transform: translate3d(0, 0, 0) !important;
+  visibility: visible !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+/* Pull desktop layouts to the top instead of centering the “phone app” vertically */
+@media (min-width: 820px) {
+  .app-shell {
+    width: min(calc(100vw - 3rem), 92rem) !important;
+    min-height: 100dvh !important;
+    padding-top: max(1rem, env(safe-area-inset-top)) !important;
+  }
+
+  .app-header {
+    position: relative !important;
+    top: auto !important;
+    z-index: 20 !important;
+    padding-top: 0 !important;
+    padding-bottom: 1.1rem !important;
+  }
+
+  .app-main {
+    align-content: start !important;
+    align-items: start !important;
+    justify-content: stretch !important;
+    justify-items: stretch !important;
+    min-height: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  #install-card,
+  #mic-permission-card,
+  #ear-help-card {
+    align-self: start !important;
+  }
+
+  .tuner-card {
+    top: 1rem !important;
+  }
+
+  .tuning-carousel {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .tuning-scroll {
+    width: 100% !important;
+  }
+}
+
+/* True wide-screen console: one instrument column + two control cards */
+@media (min-width: 1180px) {
+  .app-shell {
+    width: min(calc(100vw - 5rem), 100rem) !important;
+  }
+
+  .app-main {
+    grid-template-columns: minmax(31rem, 0.92fr) minmax(42rem, 1.08fr) !important;
+    grid-template-areas:
+      "install install"
+      "mic mic"
+      "ear ear"
+      "tuner tuning" !important;
+    gap: clamp(1.1rem, 1.55vw, 1.55rem) !important;
+  }
+
+  #install-card {
+    min-height: 3.35rem !important;
+    padding: 0.85rem 1rem !important;
+  }
+
+  .tuning-scroll {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(20rem, 1fr)) !important;
+    gap: clamp(1rem, 1.4vw, 1.35rem) !important;
+    overflow: visible !important;
+    scroll-snap-type: none !important;
+  }
+
+  .tuning-card {
+    min-width: 0 !important;
+    width: 100% !important;
+    min-height: 100% !important;
+  }
+
+  .tuner-card {
+    min-height: min(37rem, calc(100dvh - 14rem)) !important;
+  }
+
+  .dial {
+    height: clamp(22rem, 31vw, 28rem) !important;
+  }
+
+  .dial-note-readout {
+    top: clamp(7.9rem, 10vw, 10.2rem) !important;
+  }
+}
+
+/* Very wide monitors: keep the controls reachable, not stretched */
+@media (min-width: 1540px) {
+  .app-shell {
+    width: min(calc(100vw - 6rem), 104rem) !important;
+  }
+
+  .app-main {
+    grid-template-columns: minmax(34rem, 0.88fr) minmax(46rem, 1.12fr) !important;
+  }
+
+  .dial {
+    height: clamp(23rem, 28vw, 29rem) !important;
+  }
+}
+
+/* Desktop browser narrowed to tablet size: card stack stays clean */
+@media (min-width: 820px) and (max-width: 1179px) {
+  .app-shell {
+    width: min(calc(100vw - 2.25rem), 72rem) !important;
+  }
+
+  .app-main {
+    grid-template-columns: minmax(25rem, 1fr) minmax(23rem, 0.85fr) !important;
+  }
+
+  .tuning-scroll {
+    display: flex !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+  }
+
+  .tuning-card {
+    flex: 0 0 min(100%, 27rem) !important;
+  }
+}
+
+/* Small landscape / plugin windows: no giant centered card, no hidden right edge */
+@media (orientation: landscape) and (max-height: 620px), (max-height: 620px) and (min-width: 720px) {
+  .app-shell {
+    width: min(calc(100vw - 1.25rem), 84rem) !important;
+  }
+
+  .app-main {
+    align-content: start !important;
+    grid-template-columns: minmax(19rem, 0.9fr) minmax(28rem, 1.1fr) !important;
+  }
+
+  .tuning-scroll {
+    display: flex !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+  }
+
+  .tuning-card {
+    flex: 0 0 min(100%, 24rem) !important;
+  }
+}
+
+/* V29 — three-card rhythm and card system normalization */
+:root {
+  --card-pad: clamp(1.08rem, 1.8vw, 1.34rem);
+  --card-gap: clamp(1rem, 1.6vw, 1.24rem);
+  --section-gap: clamp(1rem, 1.55vw, 1.18rem);
+  --field-height: 3.12rem;
+  --card-radius: 1.65rem;
+}
+
+.tuning-card,
+.library-card,
+.diapason-card,
+.custom-tuning-card {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: var(--section-gap) !important;
+  padding: var(--card-pad) !important;
+  border-radius: var(--card-radius) !important;
+}
+
+.section-title,
+.section-title--with-help,
+.section-title--custom-editor,
+.diapason-headline {
+  min-height: 2.1rem !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  gap: 0.92rem !important;
+}
+
+.section-title strong,
+.saved-drawer__head strong {
+  font-family: var(--font-display) !important;
+  font-weight: 400 !important;
+  line-height: 1.03 !important;
+  letter-spacing: -0.02em !important;
+}
+
+.section-title strong {
+  font-size: clamp(1.22rem, 2.1vw, 1.55rem) !important;
+}
+
+.help-toggle,
+.custom-tuning-card .section-title--custom-editor .help-toggle {
+  position: relative !important;
+  top: auto !important;
+  right: auto !important;
+  flex: 0 0 auto !important;
+  margin-left: auto !important;
+  align-self: flex-start !important;
+}
+
+.card-body-stack,
+.library-card__body,
+.custom-panel {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: var(--section-gap) !important;
+  min-height: 0 !important;
+}
+
+.library-card__body,
+.custom-panel,
+.diapason-card .strings-grid--strings {
+  flex: 1 1 auto !important;
+}
+
+.field-stack,
+.custom-field--dual {
+  gap: 0.5rem !important;
+}
+
+.field-stack > span,
+.custom-field--dual > span {
+  font-size: 0.66rem !important;
+  line-height: 1.05 !important;
+  font-weight: 580 !important;
+  letter-spacing: 0.15em !important;
+  color: rgba(148, 163, 184, 0.72) !important;
+}
+
+.tuning-control-row {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.25fr) minmax(7.5rem, 0.75fr) !important;
+  gap: 0.72rem !important;
+  margin: 0 !important;
+}
+
+.compact-search input[type="search"],
+.compact-select select,
+.field-stack input[type="text"],
+.saved-drawer-search input[type="search"] {
+  min-height: var(--field-height) !important;
+  height: var(--field-height) !important;
+  font-size: 0.86rem !important;
+  line-height: 1.2 !important;
+  font-weight: 430 !important;
+}
+
+.library-save-block {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 0.78rem !important;
+  margin-top: auto !important;
+}
+
+.library-save-block .secondary-action {
+  min-height: 3.16rem !important;
+  font-size: 0.92rem !important;
+  line-height: 1 !important;
+  font-weight: 560 !important;
+}
+
+/* Diapason: the six strings become the card's visual core */
+.diapason-card {
+  min-height: clamp(19rem, 35vw, 27rem) !important;
+}
+
+.diapason-card .strings-grid--strings,
+.strings-grid--inline.strings-grid--strings {
+  display: grid !important;
+  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  gap: clamp(0.48rem, 1vw, 0.76rem) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  min-height: 13.5rem !important;
+}
+
+.diapason-card .string-card {
+  position: relative !important;
+  min-height: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 0.32rem !important;
+  overflow: hidden !important;
+  padding: 0.86rem 0.34rem !important;
+  border-radius: 1.18rem !important;
+  background:
+    linear-gradient(180deg, rgba(15, 23, 42, 0.56), rgba(2, 6, 23, 0.42)),
+    radial-gradient(circle at 50% 22%, rgba(45, 212, 191, 0.10), transparent 58%) !important;
+  border: 1px solid rgba(148, 163, 184, 0.13) !important;
+}
+
+.diapason-card .string-card::before {
+  content: "";
+  position: absolute;
+  top: 0.72rem;
+  bottom: 0.72rem;
+  left: 50%;
+  width: 2px;
+  transform: translateX(-50%);
+  border-radius: 99rem;
+  background: linear-gradient(180deg, rgba(207, 174, 116, 0.18), rgba(226, 199, 143, 0.70), rgba(207, 174, 116, 0.18));
+  box-shadow: 0 0 18px rgba(226, 199, 143, 0.08);
+  opacity: 0.78;
+  pointer-events: none;
+}
+
+.diapason-card .string-card::after {
+  content: "";
+  position: absolute;
+  inset: 0.65rem 0.32rem;
+  border-radius: 999rem;
+  border-left: 1px solid rgba(45, 212, 191, 0.10);
+  border-right: 1px solid rgba(45, 212, 191, 0.05);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.diapason-card .string-card.is-playing,
+.diapason-card .string-card:active {
+  border-color: rgba(45, 212, 191, 0.34) !important;
+  background:
+    linear-gradient(180deg, rgba(45, 212, 191, 0.16), rgba(2, 6, 23, 0.42)),
+    radial-gradient(circle at 50% 50%, rgba(45, 212, 191, 0.16), transparent 68%) !important;
+}
+
+.diapason-card .string-card.is-playing::before,
+.diapason-card .string-card:active::before {
+  animation: peachStringVibrate 0.16s linear infinite;
+  opacity: 1;
+}
+
+.diapason-card .string-card.is-playing::after,
+.diapason-card .string-card:active::after {
+  opacity: 1;
+}
+
+@keyframes peachStringVibrate {
+  0%, 100% { transform: translateX(-50%) rotate(0deg); }
+  25% { transform: translateX(calc(-50% - 1px)) rotate(-0.7deg); }
+  50% { transform: translateX(-50%) rotate(0.4deg); }
+  75% { transform: translateX(calc(-50% + 1px)) rotate(0.7deg); }
+}
+
+.diapason-card .string-note,
+.diapason-card .string-freq {
+  position: relative !important;
+  z-index: 1 !important;
+  text-shadow: 0 8px 22px rgba(0, 0, 0, 0.28) !important;
+}
+
+.diapason-card .string-note {
+  font-size: clamp(1.02rem, 2.1vw, 1.38rem) !important;
+  font-weight: 640 !important;
+  line-height: 1 !important;
+}
+
+.diapason-card .string-freq {
+  font-size: clamp(0.62rem, 1.05vw, 0.78rem) !important;
+  line-height: 1 !important;
+  opacity: 0.68 !important;
+}
+
+.diapason-card .custom-swipe-hint {
+  margin: 0 !important;
+  padding: 0.78rem 0.92rem !important;
+  min-height: auto !important;
+  border-radius: 1.05rem !important;
+  font-size: 0.76rem !important;
+  line-height: 1.25 !important;
+}
+
+.tone-mode,
+.segmented-control,
+.tone-mode-button {
+  display: none !important;
+}
+
+.custom-tuning-card .tuning-name-field,
+.custom-tuning-card .custom-actions {
+  display: none !important;
+}
+
+.custom-grid--dual,
+.custom-grid--notes {
+  gap: var(--card-gap) 0.92rem !important;
+  margin: 0 !important;
+}
+
+.custom-dual-input {
+  min-height: var(--field-height) !important;
+  height: var(--field-height) !important;
+}
+
+.custom-dual-input select,
+.custom-dual-input input {
+  min-height: var(--field-height) !important;
+  height: var(--field-height) !important;
+}
+
+/* Dial cleanup: fewer stacked labels, wider calmer wheel */
+.tuner-card {
+  padding: var(--card-pad) !important;
+}
+
+.dial {
+  height: clamp(16.8rem, 62vw, 18.6rem) !important;
+  margin-inline: 0 !important;
+}
+
+.chromatic-wheel {
+  --wheel-size: clamp(27rem, 148vw, 37rem) !important;
+  --note-radius: clamp(12.1rem, 66vw, 16.8rem) !important;
+  top: -0.28rem !important;
+}
+
+.center-marker {
+  top: 1.42rem !important;
+  height: 5.2rem !important;
+}
+
+.center-pivot {
+  top: 6.46rem !important;
+}
+
+.dial-note-readout {
+  top: auto !important;
+  bottom: clamp(2.48rem, 7.5vw, 3.25rem) !important;
+  width: min(14.5rem, 82%) !important;
+  min-height: 5.25rem !important;
+  display: grid !important;
+  grid-template-rows: auto auto !important;
+  place-items: center !important;
+  gap: 0.4rem !important;
+  background: radial-gradient(circle at 50% 0%, rgba(2, 6, 23, 0.42), rgba(2, 6, 23, 0.03) 74%) !important;
+}
+
+.dial-note-readout .detected-note,
+.detected-note {
+  font-size: clamp(3.65rem, 16vw, 5.35rem) !important;
+  line-height: 0.82 !important;
+}
+
+.dial-note-readout span {
+  display: block !important;
+  max-width: 12rem !important;
+  min-height: 1.08rem !important;
+  font-size: 0.72rem !important;
+  line-height: 1.22 !important;
+  font-weight: 420 !important;
+  white-space: nowrap !important;
+  text-align: center !important;
+}
+
+.cents-deviation {
+  display: none !important;
+}
+
+@media (min-width: 1180px) {
+  .app-main {
+    grid-template-columns: minmax(31rem, 0.9fr) minmax(45rem, 1.1fr) !important;
+  }
+
+  .tuning-scroll {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(12rem, 1fr)) !important;
+    gap: var(--card-gap) !important;
+    overflow: visible !important;
+    scroll-snap-type: none !important;
+  }
+
+  .tuning-card {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  .diapason-card {
+    min-height: 100% !important;
+  }
+
+  .diapason-card .strings-grid--strings {
+    min-height: 15rem !important;
+  }
+
+  .tuning-control-row {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (min-width: 820px) and (max-width: 1179px) {
+  .tuning-card {
+    flex: 0 0 min(100%, 25.5rem) !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .tuning-control-row {
+    grid-template-columns: 1fr !important;
+  }
+
+  .diapason-card .strings-grid--strings {
+    min-height: 14.5rem !important;
+  }
+
+  .dial-note-readout {
+    bottom: 2.2rem !important;
+  }
+}
+
+/* V30 — Hubot system, physical dial object */
+:root {
+  --font-ui: "Hubot Sans", "Helvetica Neue", Helvetica, Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: "Hubot Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --display-wdth: 125;
+  --display-wght: 900;
+}
+
+body,
+button,
+input,
+select,
+textarea,
+.app-shell {
+  font-family: var(--font-ui) !important;
+  font-variation-settings: "wdth" 100, "wght" 430;
+}
+
+.brand h1,
+.section-title strong,
+.saved-drawer__head strong,
+.glass-help-popover strong,
+.dial-note-readout .detected-note,
+.detected-note {
+  font-family: var(--font-display) !important;
+}
+
+.brand h1,
+.section-title strong,
+.saved-drawer__head strong,
+.glass-help-popover strong {
+  font-weight: 740 !important;
+  font-stretch: 106% !important;
+  font-variation-settings: "wdth" 106, "wght" 740 !important;
+  letter-spacing: -0.035em !important;
+  line-height: 0.98 !important;
+}
+
+.section-title strong {
+  font-size: clamp(1.34rem, 2.2vw, 1.7rem) !important;
+}
+
+.brand p,
+.field-stack > span,
+.custom-field--dual > span,
+.app-footer {
+  font-weight: 520 !important;
+  font-stretch: 88% !important;
+  font-variation-settings: "wdth" 88, "wght" 520 !important;
+  letter-spacing: 0.125em !important;
+}
+
+p,
+span,
+small,
+input,
+select,
+button,
+.saved-item__title span,
+.song-result-item small,
+.glass-help-popover span {
+  font-weight: 430 !important;
+  font-stretch: 96% !important;
+  font-variation-settings: "wdth" 96, "wght" 430;
+}
+
+.string-note,
+.custom-dual-input select,
+.compact-select select {
+  font-weight: 650 !important;
+  font-stretch: 102% !important;
+  font-variation-settings: "wdth" 102, "wght" 650 !important;
+}
+
+.secondary-action,
+.tone-mode-button,
+.song-result-save,
+.saved-item__more {
+  font-weight: 560 !important;
+  font-stretch: 98% !important;
+  font-variation-settings: "wdth" 98, "wght" 560 !important;
+}
+
+.tuner-card {
+  background:
+    radial-gradient(circle at 50% -12%, rgba(255, 255, 255, 0.045), transparent 16rem),
+    radial-gradient(circle at 50% 15%, rgba(45, 212, 191, 0.10), transparent 16rem),
+    linear-gradient(180deg, rgba(15, 23, 42, 0.98), rgba(5, 10, 20, 0.985)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.055),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.35),
+    0 24px 80px rgba(0, 0, 0, 0.36) !important;
+}
+
+.dial {
+  height: clamp(17.2rem, 64vw, 19.4rem) !important;
+  border-radius: 1.45rem !important;
+  background:
+    radial-gradient(ellipse at 50% 18%, rgba(255,255,255,0.07), transparent 11.5rem),
+    radial-gradient(circle at 50% 42%, rgba(45, 212, 191, 0.055), transparent 13rem),
+    linear-gradient(180deg, rgba(2, 6, 23, 0.06), rgba(2, 6, 23, 0.25)) !important;
+}
+
+.dial::before {
+  content: "";
+  position: absolute;
+  inset: 0.58rem 0.42rem 0.22rem;
+  border-radius: 1.35rem;
+  pointer-events: none;
+  background:
+    linear-gradient(112deg, transparent 0%, rgba(255,255,255,0.04) 33%, transparent 52%),
+    radial-gradient(circle at 50% 10%, rgba(255,255,255,0.03), transparent 8rem);
+  mix-blend-mode: screen;
+  opacity: 0.72;
+  z-index: 5;
+}
+
+.dial::after {
+  content: "";
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  top: 0.78rem;
+  height: 1px;
+  border-radius: 999rem;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+  opacity: 0.55;
+  pointer-events: none;
+  z-index: 6;
+}
+
+.dial-ring--outer,
+.dial-ring--inner {
+  opacity: 0.45 !important;
+  border-style: solid !important;
+  box-shadow:
+    inset 0 1px 8px rgba(255,255,255,0.035),
+    inset 0 -8px 20px rgba(0,0,0,0.22) !important;
+}
+
+.chromatic-wheel {
+  --wheel-size: clamp(30.5rem, 164vw, 42rem) !important;
+  --note-radius: clamp(13.9rem, 73vw, 19.05rem) !important;
+  top: -1.55rem !important;
+  filter: drop-shadow(0 24px 55px rgba(0,0,0,0.28));
+  transition: transform 0.22s cubic-bezier(.16,.84,.22,1) !important;
+}
+
+.chromatic-wheel::before {
+  background:
+    radial-gradient(circle at 50% 50%, rgba(2,6,23,0.02) 0 45%, transparent 46%),
+    conic-gradient(from 12deg, rgba(255,255,255,0.06), rgba(45,212,191,0.035), rgba(0,0,0,0.10), rgba(255,255,255,0.045), rgba(0,0,0,0.12), rgba(255,255,255,0.06)),
+    radial-gradient(circle, rgba(18, 27, 45, 0.96), rgba(5, 10, 20, 0.98) 64%, rgba(2, 6, 23, 1) 100%) !important;
+  border: 1px solid rgba(148, 163, 184, 0.22) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.035),
+    inset 0 24px 70px rgba(255,255,255,0.025),
+    inset 0 -38px 75px rgba(0,0,0,0.34),
+    0 20px 80px rgba(0,0,0,0.35) !important;
+}
+
+.chromatic-wheel::after {
+  background:
+    conic-gradient(from 0deg, transparent 0deg 17deg, rgba(45,212,191,0.075) 18deg 19deg, transparent 20deg 47deg, rgba(148,163,184,0.055) 48deg 49deg, transparent 50deg 360deg),
+    radial-gradient(circle at 50% 8%, rgba(255,255,255,0.09), transparent 16% 100%) !important;
+  opacity: 0.86 !important;
+  mix-blend-mode: screen;
+}
+
+.chromatic-tick {
+  min-width: 3.25rem !important;
+}
+
+.chromatic-tick .chromatic-tick__label {
+  color: rgba(226, 232, 240, 0.50) !important;
+  font-family: var(--font-ui) !important;
+  font-size: clamp(0.82rem, 2.6vw, 1.08rem) !important;
+  font-weight: 650 !important;
+  font-stretch: 112% !important;
+  font-variation-settings: "wdth" 112, "wght" 650 !important;
+  letter-spacing: 0.03em !important;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.045), 0 12px 26px rgba(0,0,0,0.38) !important;
+  padding: 0.28rem 0.44rem !important;
+  border-radius: 0.65rem !important;
+}
+
+.chromatic-tick.is-nearest .chromatic-tick__label {
+  transform: scale(1.18) !important;
+  color: rgba(248,250,252,0.96) !important;
+  background:
+    linear-gradient(180deg, rgba(15,23,42,0.50), rgba(2,6,23,0.18)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.06),
+    0 14px 34px rgba(0,0,0,0.28) !important;
+}
+
+.center-marker {
+  top: 1.18rem !important;
+  height: 5.82rem !important;
+  width: 0.14rem !important;
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(45,212,191,0.88), rgba(255,255,255,0.10)) !important;
+  box-shadow: 0 0 18px rgba(45,212,191,0.16), 0 12px 28px rgba(0,0,0,0.32) !important;
+  z-index: 7 !important;
+}
+
+.center-marker::before {
+  content: "";
+  position: absolute;
+  top: -0.18rem;
+  left: 50%;
+  width: 0.68rem;
+  height: 0.68rem;
+  transform: translateX(-50%) rotate(45deg);
+  border-radius: 0.12rem;
+  background: rgba(45, 212, 191, 0.92);
+  box-shadow: 0 0 22px rgba(45,212,191,0.20);
+}
+
+.center-pivot {
+  top: 6.68rem !important;
+  width: 0.56rem !important;
+  height: 0.56rem !important;
+  background: radial-gradient(circle, #f8fafc 0%, rgba(45,212,191,0.92) 40%, rgba(15,23,42,0.35) 100%) !important;
+  box-shadow: 0 0 24px rgba(45, 212, 191, 0.18) !important;
+  z-index: 8 !important;
+}
+
+.dial-note-readout {
+  bottom: clamp(2.08rem, 6.5vw, 2.85rem) !important;
+  width: min(16rem, 84%) !important;
+  min-height: 5.45rem !important;
+  gap: 0.48rem !important;
+  border-radius: 1.35rem !important;
+  background:
+    linear-gradient(180deg, rgba(2,6,23,0.38), rgba(2,6,23,0.10)),
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,0.035), transparent 70%) !important;
+  backdrop-filter: blur(4px);
+  z-index: 9 !important;
+}
+
+.dial-note-readout .detected-note,
+.detected-note {
+  font-size: clamp(3.85rem, 17.5vw, 5.85rem) !important;
+  font-weight: 900 !important;
+  font-stretch: 125% !important;
+  font-variation-settings: "wdth" var(--display-wdth), "wght" var(--display-wght) !important;
+  letter-spacing: -0.055em !important;
+  line-height: 0.78 !important;
+}
+
+.dial-note-readout span {
+  font-size: 0.76rem !important;
+  font-weight: 520 !important;
+  font-stretch: 92% !important;
+  font-variation-settings: "wdth" 92, "wght" 520 !important;
+  letter-spacing: 0.035em !important;
+  opacity: 0.76 !important;
+}
+
+.tuner-card.is-perfect .center-marker,
+.tuner-card.is-perfect-outside .center-marker {
+  box-shadow: 0 0 26px rgba(45,212,191,0.28), 0 0 2px rgba(255,255,255,0.2) !important;
+}
+
+.tuner-card.is-perfect .dial-note-readout .detected-note,
+.tuner-card.is-perfect-outside .dial-note-readout .detected-note {
+  text-shadow: 0 0 22px rgba(45,212,191,0.16) !important;
+}
+
+@media (min-width: 1180px) {
+  .chromatic-wheel {
+    --wheel-size: clamp(32rem, 43vw, 45rem) !important;
+    --note-radius: clamp(14.6rem, 19.2vw, 20.4rem) !important;
+    top: -2.05rem !important;
+  }
+
+  .dial {
+    height: clamp(18.5rem, 34vw, 22rem) !important;
+  }
+
+  .dial-note-readout {
+    bottom: clamp(2.25rem, 4vw, 3.15rem) !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .chromatic-wheel {
+    --wheel-size: clamp(30rem, 174vw, 38rem) !important;
+    --note-radius: clamp(13.7rem, 77vw, 17.2rem) !important;
+    top: -1.42rem !important;
+  }
+
+  .dial-note-readout {
+    bottom: 1.95rem !important;
+  }
+
+  .dial-note-readout .detected-note,
+  .detected-note {
+    font-size: clamp(3.55rem, 18vw, 4.75rem) !important;
+  }
+}
+
+/* V31 — calmer premium analogue dial + aligned card actions */
+:root {
+  --card-pad: clamp(1.35rem, 4.8vw, 1.7rem);
+  --card-title-space: clamp(1.55rem, 5vw, 2rem);
+}
+
+.tuning-card {
+  position: relative !important;
+  padding: var(--card-pad) !important;
+}
+
+.tuning-card > .section-title,
+.tuning-card .section-title--custom-editor {
+  min-height: 2.1rem !important;
+  margin: 0 0 var(--card-title-space) !important;
+  padding-right: 3rem !important;
+  display: flex !important;
+  align-items: flex-start !important;
+}
+
+.tuning-card > .section-title .help-toggle,
+.tuning-card .section-title--custom-editor .help-toggle,
+.diapason-card .section-title .help-toggle,
+.library-card .section-title .help-toggle,
+.custom-tuning-card .section-title .help-toggle {
+  position: absolute !important;
+  top: var(--card-pad) !important;
+  right: var(--card-pad) !important;
+  margin: 0 !important;
+  width: 2.1rem !important;
+  height: 2.1rem !important;
+  display: grid !important;
+  place-items: center !important;
+  border-radius: 999rem !important;
+  color: rgba(226, 232, 240, 0.74) !important;
+  background: rgba(2, 6, 23, 0.22) !important;
+  border: 1px solid rgba(148, 163, 184, 0.13) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04) !important;
+}
+
+.glass-help-popover {
+  top: calc(var(--card-pad) + 2.6rem) !important;
+  left: auto !important;
+  right: var(--card-pad) !important;
+  width: min(18.5rem, calc(100% - (var(--card-pad) * 2))) !important;
+  padding: 0.94rem 2.25rem 1rem 1rem !important;
+  border-radius: 1.2rem !important;
+  background: linear-gradient(180deg, rgba(10, 18, 32, 0.82), rgba(3, 7, 18, 0.70)) !important;
+  border: 1px solid rgba(148, 163, 184, 0.14) !important;
+  backdrop-filter: blur(18px) saturate(1.12) !important;
+  box-shadow: 0 22px 60px rgba(0,0,0,0.36), inset 0 1px 0 rgba(255,255,255,0.055) !important;
+  z-index: 40 !important;
+}
+
+.glass-help-popover strong {
+  font-size: 0.92rem !important;
+  line-height: 1.05 !important;
+}
+
+.glass-help-popover span {
+  margin-top: 0.42rem !important;
+  font-size: 0.76rem !important;
+  line-height: 1.42 !important;
+  color: rgba(203, 213, 225, 0.82) !important;
+}
+
+.glass-help-close {
+  top: 0.56rem !important;
+  right: 0.58rem !important;
+  width: 1.52rem !important;
+  height: 1.52rem !important;
+  background: rgba(2, 6, 23, 0.34) !important;
+}
+
+.ear-help-card {
+  position: fixed !important;
+  top: max(0.86rem, env(safe-area-inset-top)) !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: min(calc(100vw - 2rem), 22rem) !important;
+  z-index: 80 !important;
+  border-radius: 1.15rem !important;
+  padding: 0.72rem 2.2rem 0.76rem 0.86rem !important;
+  background: linear-gradient(180deg, rgba(10, 18, 32, 0.76), rgba(3, 7, 18, 0.62)) !important;
+  border: 1px solid rgba(45, 212, 191, 0.18) !important;
+  backdrop-filter: blur(18px) saturate(1.08) !important;
+  box-shadow: 0 18px 60px rgba(0,0,0,0.34) !important;
+}
+
+.ear-help-card strong { font-size: 0.78rem !important; }
+.ear-help-card span {
+  font-size: 0.68rem !important;
+  line-height: 1.34 !important;
+  font-weight: 430 !important;
+  color: rgba(203, 213, 225, 0.76) !important;
+}
+
+.ear-help-card.is-dismissing { transform: translateX(-50%) translateY(-0.25rem) scale(0.98) !important; }
+
+.tuner-card {
+  padding: clamp(1.02rem, 3.9vw, 1.35rem) !important;
+  background:
+    radial-gradient(circle at 50% -10%, rgba(255,255,255,0.04), transparent 14rem),
+    radial-gradient(circle at 50% 16%, rgba(45,212,191,0.055), transparent 17rem),
+    linear-gradient(180deg, rgba(14, 24, 39, 0.96), rgba(5, 9, 18, 0.985)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.055),
+    inset 0 -12px 42px rgba(0,0,0,0.20),
+    0 24px 80px rgba(0,0,0,0.32) !important;
+}
+
+.dial {
+  height: clamp(16.9rem, 63vw, 19.5rem) !important;
+  border-radius: 1.45rem !important;
+  overflow: hidden !important;
+  background:
+    radial-gradient(ellipse at 50% 20%, rgba(255,255,255,0.055), transparent 11rem),
+    radial-gradient(circle at 50% 64%, rgba(0,0,0,0.30), transparent 13rem),
+    linear-gradient(180deg, rgba(13, 23, 37, 0.54), rgba(2,6,23,0.14)) !important;
+}
+
+.dial::before {
+  inset: 0.58rem 0.62rem 0.42rem !important;
+  border-radius: 1.28rem !important;
+  background:
+    linear-gradient(115deg, transparent 0 30%, rgba(255,255,255,0.035) 43%, transparent 57% 100%),
+    radial-gradient(circle at 50% 12%, rgba(255,255,255,0.05), transparent 8rem) !important;
+  opacity: 0.62 !important;
+}
+
+.dial::after {
+  left: 9% !important;
+  right: 9% !important;
+  top: 0.75rem !important;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.14), transparent) !important;
+  opacity: 0.45 !important;
+}
+
+.dial-ring--outer {
+  opacity: 0.34 !important;
+  border-color: rgba(148, 163, 184, 0.16) !important;
+  box-shadow: inset 0 6px 28px rgba(255,255,255,0.03), inset 0 -20px 44px rgba(0,0,0,0.28) !important;
+}
+
+.dial-ring--inner {
+  opacity: 0.22 !important;
+  border-color: rgba(148, 163, 184, 0.12) !important;
+}
+
+.chromatic-wheel {
+  --wheel-size: clamp(33rem, 184vw, 44rem) !important;
+  --note-radius: clamp(14.8rem, 82vw, 20rem) !important;
+  top: -0.68rem !important;
+  background: transparent !important;
+  filter: drop-shadow(0 30px 58px rgba(0,0,0,0.38)) !important;
+  transition: transform 0.28s cubic-bezier(.12,.82,.18,1) !important;
+}
+
+.chromatic-wheel::before {
+  inset: 0 !important;
+  background:
+    radial-gradient(circle at 50% 50%, transparent 0 47.5%, rgba(5,10,20,0.82) 48.2% 55%, rgba(24,34,52,0.78) 56% 70%, rgba(4,8,18,0.96) 71% 100%),
+    conic-gradient(from -72deg, rgba(255,255,255,0.055), rgba(45,212,191,0.025), rgba(0,0,0,0.10), rgba(255,255,255,0.035), rgba(0,0,0,0.16), rgba(255,255,255,0.055)) !important;
+  border: 1px solid rgba(148, 163, 184, 0.16) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.025),
+    inset 0 34px 80px rgba(255,255,255,0.018),
+    inset 0 -46px 88px rgba(0,0,0,0.36),
+    0 22px 92px rgba(0,0,0,0.40) !important;
+}
+
+.chromatic-wheel::after {
+  inset: 0.92rem !important;
+  background:
+    conic-gradient(from -4deg, transparent 0deg 14deg, rgba(255,255,255,0.035) 15deg, transparent 16deg 44deg, rgba(45,212,191,0.052) 45deg, transparent 46deg 360deg),
+    radial-gradient(circle at 50% 7%, rgba(255,255,255,0.055), transparent 14% 100%) !important;
+  opacity: 0.58 !important;
+}
+
+.chromatic-tick {
+  min-width: 2.6rem !important;
+}
+
+.chromatic-tick .chromatic-tick__label {
+  min-width: 2.55rem !important;
+  height: 1.58rem !important;
+  padding: 0.2rem 0.42rem !important;
+  border-radius: 0.58rem !important;
+  color: rgba(226,232,240,0.40) !important;
+  background: rgba(2,6,23,0.14) !important;
+  border: 1px solid rgba(148,163,184,0.055) !important;
+  font-size: clamp(0.78rem, 2.4vw, 1.03rem) !important;
+  font-weight: 680 !important;
+  font-variation-settings: "wdth" 112, "wght" 680 !important;
+  letter-spacing: 0.015em !important;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.035), 0 12px 22px rgba(0,0,0,0.46) !important;
+}
+
+.chromatic-tick.is-nearest .chromatic-tick__label {
+  color: rgba(248,250,252,0.94) !important;
+  background: linear-gradient(180deg, rgba(13, 20, 34, 0.70), rgba(2,6,23,0.30)) !important;
+  border-color: rgba(148,163,184,0.16) !important;
+  transform: scale(1.12) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.055), 0 16px 36px rgba(0,0,0,0.32) !important;
+}
+
+.center-marker {
+  top: 1.38rem !important;
+  height: 5.5rem !important;
+  width: 0.12rem !important;
+  background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(45,212,191,0.68) 28% 82%, rgba(255,255,255,0.12)) !important;
+  box-shadow: 0 0 15px rgba(45,212,191,0.13), 0 12px 26px rgba(0,0,0,0.35) !important;
+}
+
+.center-marker::before {
+  top: -0.26rem !important;
+  width: 0.72rem !important;
+  height: 0.72rem !important;
+  border-radius: 0.12rem !important;
+  background: linear-gradient(135deg, #2dd4bf 0 54%, rgba(248,250,252,0.82) 55% 100%) !important;
+  box-shadow: 0 0 18px rgba(45,212,191,0.16), 0 8px 18px rgba(0,0,0,0.32) !important;
+}
+
+.center-pivot {
+  top: 6.78rem !important;
+  width: 0.52rem !important;
+  height: 0.52rem !important;
+  background: radial-gradient(circle, rgba(248,250,252,0.74), rgba(45,212,191,0.72) 45%, rgba(15,23,42,0.28) 100%) !important;
+}
+
+.dial-note-readout {
+  bottom: clamp(1.72rem, 5.8vw, 2.46rem) !important;
+  width: min(15rem, 76%) !important;
+  min-height: 5.05rem !important;
+  padding: 0.78rem 1.1rem 0.82rem !important;
+  border-radius: 1.32rem !important;
+  background:
+    linear-gradient(180deg, rgba(2,6,23,0.36), rgba(2,6,23,0.08)),
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,0.025), transparent 70%) !important;
+  border: 1px solid rgba(148,163,184,0.055) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.026), 0 18px 42px rgba(0,0,0,0.10) !important;
+}
+
+.dial-note-readout .detected-note,
+.detected-note {
+  font-size: clamp(3.5rem, 16.2vw, 5.2rem) !important;
+  line-height: 0.8 !important;
+  letter-spacing: -0.06em !important;
+  opacity: 0.90 !important;
+}
+
+.dial-note-readout span {
+  margin-top: 0.1rem !important;
+  font-size: 0.74rem !important;
+  line-height: 1.05 !important;
+  letter-spacing: 0.018em !important;
+  white-space: nowrap !important;
+  opacity: 0.66 !important;
+}
+
+.tuner-card.is-high .dial-note-readout .detected-note { color: #f43f5e !important; }
+.tuner-card.is-low .dial-note-readout .detected-note { color: #f59e0b !important; }
+.tuner-card.is-perfect .dial-note-readout .detected-note,
+.tuner-card.is-perfect-outside .dial-note-readout .detected-note { color: #2dd4bf !important; }
+
+.library-card .card-body-stack {
+  gap: 1.06rem !important;
+}
+
+.library-card .tuning-control-row {
+  gap: 0.82rem !important;
+}
+
+.library-card .field-stack input,
+.library-card .field-stack select,
+.library-card .secondary-action {
+  min-height: 3.34rem !important;
+  border-radius: 1.08rem !important;
+}
+
+.library-save-block {
+  gap: 1.08rem !important;
+}
+
+.diapason-card .strings-grid--strings {
+  min-height: clamp(16.5rem, 58vw, 21rem) !important;
+  gap: 0.72rem !important;
+}
+
+.diapason-card .string-card {
+  border-radius: 1.25rem !important;
+  background:
+    linear-gradient(180deg, rgba(15,23,42,0.64), rgba(2,6,23,0.36)),
+    radial-gradient(circle at 50% 8%, rgba(45,212,191,0.055), transparent 7rem) !important;
+  border-color: rgba(148,163,184,0.12) !important;
+}
+
+.diapason-card .string-card::before {
+  opacity: 0.42 !important;
+  background: linear-gradient(180deg, transparent, rgba(205,181,124,0.52), transparent) !important;
+}
+
+.diapason-card .string-note {
+  font-size: clamp(1rem, 3vw, 1.25rem) !important;
+}
+
+.diapason-card .string-freq {
+  font-size: 0.68rem !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  opacity: 0.58 !important;
+}
+
+@media (max-width: 560px) {
+  .tuning-card > .section-title,
+  .tuning-card .section-title--custom-editor {
+    margin-bottom: 1.62rem !important;
+  }
+
+  .chromatic-wheel {
+    --wheel-size: clamp(33rem, 188vw, 42rem) !important;
+    --note-radius: clamp(14.8rem, 83vw, 18.8rem) !important;
+    top: -0.54rem !important;
+  }
+
+  .dial-note-readout {
+    bottom: 1.6rem !important;
+    width: 74% !important;
+    min-height: 4.65rem !important;
+  }
+
+  .dial-note-readout .detected-note,
+  .detected-note {
+    font-size: clamp(3.35rem, 17vw, 4.5rem) !important;
+  }
+
+  .dial-note-readout span {
+    font-size: 0.7rem !important;
+  }
+}
+
+@media (min-width: 1180px) {
+  .chromatic-wheel {
+    --wheel-size: clamp(36rem, 46vw, 47rem) !important;
+    --note-radius: clamp(16.4rem, 20.8vw, 21.4rem) !important;
+    top: -1.1rem !important;
+  }
+
+  .dial-note-readout {
+    bottom: clamp(1.9rem, 3.2vw, 2.7rem) !important;
+  }
+}
+
+
+/* V32 — restore chromatic wheel precision after larger radius */
+.chromatic-wheel {
+  transition: transform 90ms cubic-bezier(.18,.86,.22,1) !important;
+}
+
+.chromatic-tick {
+  transform: rotate(var(--note-angle)) translateY(calc(-1 * var(--note-radius))) !important;
+  transform-origin: center center !important;
+}
+
+.chromatic-tick .chromatic-tick__label {
+  transform: translate(-50%, -50%) !important;
+  transform-origin: center center !important;
+}
+
+.chromatic-tick.is-nearest .chromatic-tick__label {
+  transform: translate(-50%, -50%) scale(1.12) !important;
+}
+
+.tuner-card.is-perfect .chromatic-tick.is-nearest .chromatic-tick__label,
+.tuner-card.is-perfect-outside .chromatic-tick.is-nearest .chromatic-tick__label {
+  transform: translate(-50%, -50%) scale(1.14) !important;
+}
+
+/* V33 — smoked glass analogue dial, corrected card actions, footer removed */
+.peach-filter-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.app-footer { display: none !important; }
+
+:root {
+  --dial-glass: rgba(11, 19, 31, 0.30);
+  --dial-glass-edge: rgba(209, 224, 235, 0.13);
+  --dial-glass-highlight: rgba(255, 255, 255, 0.105);
+}
+
+.tuning-card,
+.library-card,
+.diapason-card,
+.custom-tuning-card {
+  position: relative !important;
+}
+
+.tuning-card .help-toggle,
+.library-card .help-toggle,
+.diapason-card .help-toggle,
+.custom-tuning-card .help-toggle,
+.tuning-card > .section-title .help-toggle,
+.tuning-card .section-title--custom-editor .help-toggle {
+  position: absolute !important;
+  top: clamp(1rem, 3.5vw, 1.34rem) !important;
+  right: clamp(1rem, 3.5vw, 1.34rem) !important;
+  margin: 0 !important;
+  width: 2.08rem !important;
+  height: 2.08rem !important;
+  transform: none !important;
+}
+
+.tuning-card > .section-title,
+.tuning-card .section-title--custom-editor {
+  min-height: 2.6rem !important;
+  padding-right: 3.15rem !important;
+  align-items: flex-start !important;
+}
+
+.glass-help-popover {
+  top: clamp(3.65rem, 10vw, 4.25rem) !important;
+  right: clamp(1rem, 3.5vw, 1.34rem) !important;
+}
+
+.secondary-action:disabled,
+.secondary-action[disabled],
+.secondary-action.is-disabled,
+#save-custom:disabled,
+#save-custom[aria-disabled="true"] {
+  color: rgba(148, 163, 184, 0.34) !important;
+  background: linear-gradient(180deg, rgba(18, 26, 40, 0.24), rgba(3, 7, 18, 0.20)) !important;
+  border-color: rgba(148, 163, 184, 0.08) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.025) !important;
+  opacity: 0.52 !important;
+  cursor: default !important;
+}
+
+.tuner-card {
+  background:
+    linear-gradient(180deg, rgba(13, 23, 38, 0.96), rgba(4, 8, 17, 0.985)) !important;
+}
+
+.dial {
+  isolation: isolate;
+  height: clamp(17.4rem, 65vw, 20rem) !important;
+  border-radius: 1.55rem !important;
+  background:
+    radial-gradient(ellipse at 50% 72%, rgba(0,0,0,0.36), transparent 13rem),
+    linear-gradient(180deg, rgba(12, 22, 36, 0.68), rgba(2,6,23,0.16)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.045),
+    inset 0 -28px 64px rgba(0,0,0,0.34) !important;
+}
+
+.dial::before,
+.dial::after {
+  display: none !important;
+}
+
+.dial-ring--outer {
+  opacity: 0.26 !important;
+  border-color: rgba(148,163,184,0.13) !important;
+  box-shadow: inset 0 12px 34px rgba(255,255,255,0.025), inset 0 -28px 58px rgba(0,0,0,0.36) !important;
+  z-index: 1 !important;
+}
+
+.dial-ring--inner {
+  opacity: 0.16 !important;
+  border-color: rgba(148,163,184,0.10) !important;
+  z-index: 1 !important;
+}
+
+.chromatic-wheel {
+  --wheel-size: clamp(35rem, 198vw, 46rem) !important;
+  --note-radius: clamp(15.7rem, 88vw, 20.8rem) !important;
+  top: -1.18rem !important;
+  z-index: 2 !important;
+  filter: drop-shadow(0 34px 70px rgba(0,0,0,0.46)) !important;
+}
+
+.chromatic-wheel::before {
+  background:
+    radial-gradient(circle at 50% 50%, transparent 0 48%, rgba(7,12,21,0.78) 48.7% 57%, rgba(22,32,50,0.66) 58% 70%, rgba(3,7,16,0.97) 71% 100%),
+    conic-gradient(from -78deg, rgba(255,255,255,0.038), rgba(45,212,191,0.025), rgba(0,0,0,0.14), rgba(255,255,255,0.020), rgba(0,0,0,0.20), rgba(255,255,255,0.038)) !important;
+  border-color: rgba(148,163,184,0.115) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.018),
+    inset 0 36px 84px rgba(255,255,255,0.012),
+    inset 0 -54px 98px rgba(0,0,0,0.42),
+    0 24px 100px rgba(0,0,0,0.42) !important;
+}
+
+.chromatic-wheel::after {
+  opacity: 0.18 !important;
+  background:
+    conic-gradient(from 0deg, transparent 0deg 28deg, rgba(255,255,255,0.018) 29deg 30deg, transparent 31deg 360deg) !important;
+}
+
+.chromatic-tick .chromatic-tick__label {
+  background: rgba(2,6,23,0.11) !important;
+  border-color: rgba(148,163,184,0.045) !important;
+  color: rgba(226,232,240,0.36) !important;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.025), 0 12px 26px rgba(0,0,0,0.52) !important;
+}
+
+.chromatic-tick.is-nearest .chromatic-tick__label {
+  background: linear-gradient(180deg, rgba(13,20,34,0.66), rgba(2,6,23,0.28)) !important;
+  border-color: rgba(148,163,184,0.14) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.045), 0 16px 38px rgba(0,0,0,0.34) !important;
+}
+
+.dial-glass,
+.dial-glass-reflection,
+.dial-bezel-light {
+  position: absolute;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.dial-glass--smoked {
+  inset: 0.7rem 0.7rem 0.58rem;
+  border-radius: 1.32rem;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.030), transparent 36%),
+    radial-gradient(ellipse at 50% 9%, rgba(255,255,255,0.058), transparent 34%),
+    linear-gradient(120deg, rgba(255,255,255,0.018), transparent 26% 72%, rgba(45,212,191,0.026));
+  border: 1px solid var(--dial-glass-edge);
+  backdrop-filter: blur(5.5px) saturate(1.12) contrast(1.06);
+  -webkit-backdrop-filter: blur(5.5px) saturate(1.12) contrast(1.06);
+  filter: url(#peach-smoked-glass-warp);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.070),
+    inset 0 -1px 0 rgba(0,0,0,0.26),
+    inset 0 0 42px rgba(45,212,191,0.025),
+    0 16px 50px rgba(0,0,0,0.16);
+  opacity: 0.96;
+}
+
+.dial-glass-reflection {
+  left: 12%;
+  right: 12%;
+  top: 1.04rem;
+  height: 3.1rem;
+  border-radius: 50% 50% 42% 42%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.125), rgba(255,255,255,0.035) 42%, transparent 72%);
+  transform: perspective(24rem) rotateX(66deg);
+  filter: blur(0.35px);
+  opacity: 0.32;
+  mix-blend-mode: screen;
+}
+
+.dial-bezel-light {
+  inset: 0.7rem 0.7rem 0.58rem;
+  border-radius: 1.32rem;
+  border-top: 1px solid rgba(255,255,255,0.12);
+  border-left: 1px solid rgba(255,255,255,0.035);
+  border-right: 1px solid rgba(45,212,191,0.028);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.016);
+  opacity: 0.7;
+}
+
+.center-marker {
+  z-index: 5 !important;
+  top: 1.42rem !important;
+  height: 5.55rem !important;
+  width: 0.105rem !important;
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(45,212,191,0.76) 24% 84%, rgba(255,255,255,0.08)) !important;
+}
+
+.center-marker::before {
+  top: -0.36rem !important;
+  width: 0.82rem !important;
+  height: 0.98rem !important;
+  border-radius: 0.42rem 0.42rem 0.62rem 0.62rem !important;
+  background: linear-gradient(145deg, rgba(45,212,191,0.95), rgba(34, 183, 171, 0.92) 54%, rgba(230,246,243,0.78) 55% 100%) !important;
+  clip-path: polygon(50% 0%, 91% 36%, 70% 100%, 30% 100%, 9% 36%);
+  transform: translateX(-50%) !important;
+  box-shadow: 0 10px 22px rgba(0,0,0,0.34), 0 0 20px rgba(45,212,191,0.16) !important;
+  opacity: 1 !important;
+}
+
+.center-pivot {
+  z-index: 5 !important;
+}
+
+.dial-note-readout {
+  z-index: 4 !important;
+  bottom: clamp(1.78rem, 5.9vw, 2.55rem) !important;
+  width: min(14.2rem, 72%) !important;
+  min-height: 4.7rem !important;
+  padding: 0.72rem 1.05rem 0.76rem !important;
+  background:
+    linear-gradient(180deg, rgba(2,6,23,0.30), rgba(2,6,23,0.08)) !important;
+  border: 1px solid rgba(148,163,184,0.040) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.018), 0 18px 38px rgba(0,0,0,0.08) !important;
+}
+
+.dial-note-readout .detected-note,
+.detected-note {
+  font-size: clamp(3.52rem, 16vw, 5.05rem) !important;
+  line-height: 0.82 !important;
+}
+
+.dial-note-readout span {
+  font-size: 0.72rem !important;
+  line-height: 1.08 !important;
+  opacity: 0.62 !important;
+}
+
+@media (max-width: 560px) {
+  .chromatic-wheel {
+    --wheel-size: clamp(34.6rem, 196vw, 43.6rem) !important;
+    --note-radius: clamp(15.45rem, 86.5vw, 19.4rem) !important;
+    top: -1rem !important;
+  }
+
+  .dial {
+    height: clamp(17.25rem, 65vw, 19.1rem) !important;
+  }
+
+  .dial-glass-reflection {
+    left: 13%;
+    right: 13%;
+    top: 1rem;
+    height: 2.75rem;
+  }
+
+  .dial-note-readout {
+    width: 72% !important;
+    min-height: 4.45rem !important;
+    bottom: 1.65rem !important;
+  }
+
+  .dial-note-readout .detected-note,
+  .detected-note {
+    font-size: clamp(3.22rem, 16.6vw, 4.42rem) !important;
+  }
+}
+
+/* V34 — GSAP-ready physical engraving pass for chromatic disk */
+.chromatic-wheel {
+  --wheel-rotation: 0deg;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,0.055), transparent 34%),
+    radial-gradient(circle at 50% 45%, rgba(3, 7, 18, 0.18), rgba(2, 6, 23, 0.82) 62%, rgba(0, 0, 0, 0.96) 100%),
+    repeating-conic-gradient(from -1deg,
+      rgba(255,255,255,0.026) 0deg 1.3deg,
+      rgba(0,0,0,0.18) 1.3deg 2.2deg,
+      transparent 2.2deg 30deg),
+    conic-gradient(from 210deg,
+      rgba(255,255,255,0.03),
+      rgba(45,212,191,0.018),
+      rgba(0,0,0,0.16),
+      rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.055) !important;
+  box-shadow:
+    inset 0 1.5rem 3rem rgba(255,255,255,0.026),
+    inset 0 -2.25rem 4rem rgba(0,0,0,0.56),
+    inset 0 0 0 1px rgba(0,0,0,0.52),
+    0 2rem 5rem rgba(0,0,0,0.34) !important;
+  will-change: transform;
+}
+
+.chromatic-wheel::before {
+  background:
+    radial-gradient(circle at 50% 50%, transparent 58%, rgba(0,0,0,0.5) 59.5%, rgba(255,255,255,0.045) 60%, transparent 62%),
+    repeating-conic-gradient(from 0deg,
+      rgba(255,255,255,0.12) 0deg 0.34deg,
+      rgba(0,0,0,0.34) 0.34deg 0.72deg,
+      transparent 0.72deg 7.5deg) !important;
+  opacity: 0.42 !important;
+  mix-blend-mode: soft-light;
+}
+
+.chromatic-wheel::after {
+  background:
+    radial-gradient(circle at 50% 50%, transparent 46%, rgba(255,255,255,0.05) 47%, rgba(0,0,0,0.42) 48%, transparent 50%),
+    radial-gradient(circle at 50% 49%, rgba(0,0,0,0.52), transparent 58%) !important;
+  opacity: 0.72 !important;
+}
+
+.chromatic-tick {
+  transform: rotate(var(--note-angle)) translateY(calc(var(--wheel-size) * -0.445)) !important;
+}
+
+.chromatic-tick .chromatic-tick__label {
+  position: relative;
+  isolation: isolate;
+  padding: 0.1rem 0.32rem 0.12rem;
+  border-radius: 0.36rem;
+  color: rgba(5, 12, 24, 0.74) !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.045), rgba(0,0,0,0.13));
+  -webkit-text-stroke: 0.25px rgba(255,255,255,0.08);
+  text-shadow:
+    0 -0.8px 0 rgba(255,255,255,0.11),
+    0 1.1px 0 rgba(0,0,0,0.82),
+    0 0 1.5px rgba(0,0,0,0.58) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.04),
+    inset 0 -1px 1px rgba(0,0,0,0.36);
+  opacity: 0.86 !important;
+}
+
+.chromatic-tick .chromatic-tick__label::before {
+  content: attr(data-label);
+  position: absolute;
+  inset: 0.1rem 0.32rem 0.12rem;
+  color: rgba(255,255,255,0.105);
+  transform: translateY(-0.9px);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.chromatic-tick .chromatic-tick__label::after {
+  content: attr(data-label);
+  position: absolute;
+  inset: 0.1rem 0.32rem 0.12rem;
+  color: rgba(0,0,0,0.42);
+  transform: translateY(1px);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.chromatic-tick.is-nearest .chromatic-tick__label {
+  color: rgba(226, 252, 248, 0.96) !important;
+  background:
+    linear-gradient(180deg, rgba(45,212,191,0.13), rgba(45,212,191,0.045));
+  -webkit-text-stroke: 0;
+  text-shadow:
+    0 0 0.4px rgba(255,255,255,0.7),
+    0 0 12px rgba(45,212,191,0.34),
+    0 1px 1px rgba(0,0,0,0.86) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.16),
+    inset 0 -1px 0 rgba(0,0,0,0.38),
+    0 0 16px rgba(45,212,191,0.16);
+  opacity: 1 !important;
+}
+
+.tuner-card.is-low .chromatic-tick.is-nearest .chromatic-tick__label {
+  color: rgba(255, 241, 211, 0.94) !important;
+  background: linear-gradient(180deg, rgba(245,158,11,0.12), rgba(245,158,11,0.035));
+  text-shadow: 0 0 10px rgba(245,158,11,0.22), 0 1px 1px rgba(0,0,0,0.84) !important;
+}
+
+.tuner-card.is-high .chromatic-tick.is-nearest .chromatic-tick__label {
+  color: rgba(255, 226, 232, 0.95) !important;
+  background: linear-gradient(180deg, rgba(244,63,94,0.12), rgba(244,63,94,0.035));
+  text-shadow: 0 0 10px rgba(244,63,94,0.22), 0 1px 1px rgba(0,0,0,0.84) !important;
+}
+
+.dial::after {
+  background:
+    linear-gradient(118deg, transparent 0 26%, rgba(255,255,255,0.07) 31%, transparent 38% 100%),
+    radial-gradient(ellipse at 50% 7%, rgba(255,255,255,0.12), transparent 31%),
+    linear-gradient(180deg, rgba(255,255,255,0.035), rgba(0,0,0,0.05)) !important;
+  opacity: 0.62 !important;
+}
+
+.center-marker::before {
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.42));
+}

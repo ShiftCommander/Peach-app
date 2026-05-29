@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#020617" />
+  <meta name="description" content="Peach, guitar tuner premium installable sur Android." />
+
+  <title>Peach - Guitar Tuner</title>
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <svg class="peach-filter-defs" aria-hidden="true" focusable="false" width="0" height="0">
+    <filter id="peach-smoked-glass-warp" x="-8%" y="-8%" width="116%" height="116%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.012 0.028" numOctaves="2" seed="13" result="noise" />
+      <feGaussianBlur in="noise" stdDeviation="0.65" result="softNoise" />
+      <feDisplacementMap in="SourceGraphic" in2="softNoise" scale="1.35" xChannelSelector="R" yChannelSelector="G" />
+    </filter>
+  </svg>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-mark brand-mark--image" aria-hidden="true">
+          <img src="icons/apple-touch-icon.png" alt="" />
+        </div>
+        <div>
+          <h1>Peach</h1>
+          <p>Guitar Tuner</p>
+        </div>
+      </div>
+
+      <button id="library-menu-button" class="library-menu-button" type="button" aria-label="Ouvrir mes accordages" aria-controls="saved-drawer" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </header>
+
+    <main class="app-main">
+      <section id="install-card" class="install-card is-hidden" aria-label="Installer Peach">
+        <div>
+          <strong id="install-title">Installer Peach</strong>
+          <span id="install-text">Ajoute Peach à ton écran d’accueil Android.</span>
+        </div>
+        <button id="install-button" type="button">Installer</button>
+      </section>
+
+      <section id="mic-permission-card" class="mic-permission-card is-hidden" aria-live="polite">
+        <div>
+          <strong id="mic-permission-title">Micro en attente</strong>
+          <span id="mic-permission-text">Autorise le micro pour que l’accordeur écoute automatiquement.</span>
+        </div>
+        <button id="mic-permission-button" type="button">Autoriser</button>
+      </section>
+
+      <section id="ear-help-card" class="ear-help-card is-hidden" aria-live="polite">
+        <button id="ear-help-close" class="ear-help-close" type="button" aria-label="Fermer l’aide">×</button>
+        <strong>Mode Oreille</strong>
+        <span>Écoute la vague entre le diapason et ta corde. Plus elle ralentit, plus tu t’approches. Si elle accélère, tourne dans l’autre sens.</span>
+      </section>
+
+      <section class="tuner-card" aria-label="Accordeur automatique">
+        <div class="dial" aria-label="Cadran chromatique">
+          <div class="dial-ring dial-ring--outer"></div>
+          <div class="dial-ring dial-ring--inner"></div>
+          <span class="dial-label dial-label--left">-50</span>
+          <span class="dial-label dial-label--right">+50</span>
+
+          <div id="chromatic-wheel" class="chromatic-wheel" aria-hidden="true"></div>
+          <div class="dial-glass dial-glass--smoked" aria-hidden="true"></div>
+          <div class="dial-glass-reflection" aria-hidden="true"></div>
+          <div class="dial-bezel-light" aria-hidden="true"></div>
+          <div id="tuner-needle" class="center-marker" aria-hidden="true"></div>
+          <div class="needle-pivot center-pivot" aria-hidden="true"></div>
+
+          <div class="dial-note-readout" aria-live="polite">
+            <strong id="detected-note" class="detected-note">--</strong>
+            <span id="heard-note-detail">En attente d’une corde…</span>
+          </div>
+        </div>
+
+        <div id="cents-deviation" class="cents-deviation" aria-hidden="true">Joue une corde pour commencer.</div>
+        <div id="target-notes-ui" class="target-notes target-notes--tuner is-hidden" aria-hidden="true"></div>
+      </section>
+
+      <section class="tuning-carousel" aria-label="Bibliothèque, diapason et accordage libre">
+        <div id="tuning-scroll" class="tuning-scroll" aria-label="Cartes d’accordage">
+          <article id="tuning-card-library" class="tuning-card library-card" aria-label="Bibliothèque d’accordages">
+            <div class="section-title section-title--with-help">
+              <strong>Bibliothèque</strong>
+              <button class="help-toggle" type="button" aria-label="Aide sur la bibliothèque" data-help-target="library-help">?</button>
+            </div>
+
+            <div id="library-help" class="glass-help-popover is-hidden" role="dialog" aria-label="Aide sur la bibliothèque">
+              <button class="glass-help-close" type="button" aria-label="Fermer l’aide">×</button>
+              <strong>Bibliothèque</strong>
+              <span>Choisis un accordage standard, retrouve un accordage sauvegardé ou cherche un morceau dans la base embarquée.</span>
+            </div>
+
+            <div class="library-card__body card-body-stack">
+              <div class="tuning-control-row">
+                <label class="field-stack saved-search compact-search">
+                  <span class="sr-only">Rechercher un morceau ou un accordage</span>
+                  <input id="saved-tuning-search" type="search" placeholder="Chercher morceau ou accordage…" autocomplete="off" />
+                </label>
+
+                <label class="field-stack compact-select">
+                  <span class="sr-only">Accordage</span>
+                  <select id="tuning-select" aria-label="Choisir l’accordage"></select>
+                </label>
+              </div>
+
+              <div id="song-tuning-results" class="song-tuning-results is-hidden" aria-live="polite"></div>
+
+              <div class="library-save-block">
+                <label class="field-stack tuning-name-field">
+                  <span>Nom libre</span>
+                  <input id="custom-tuning-name" type="text" placeholder="Ex : Iris — Goo Goo Dolls" autocomplete="off" maxlength="80" />
+                </label>
+                <button id="save-custom" type="button" class="secondary-action">Sauvegarder</button>
+              </div>
+            </div>
+          </article>
+
+          <article id="tuning-card-diapason" class="tuning-card diapason-card" aria-label="Diapason">
+            <div class="section-title section-title--with-help">
+              <strong>Diapason</strong>
+              <button class="help-toggle" type="button" aria-label="Aide sur le diapason" data-help-target="diapason-help">?</button>
+            </div>
+
+            <div id="diapason-help" class="glass-help-popover is-hidden" role="dialog" aria-label="Aide sur le diapason">
+              <button class="glass-help-close" type="button" aria-label="Fermer l’aide">×</button>
+              <strong>Diapason</strong>
+              <span>Touche une corde pour jouer une référence. Le micro se met en pause pendant que la note sonne, puis reprend automatiquement.</span>
+            </div>
+
+            <div id="strings-grid" class="strings-grid strings-grid--inline strings-grid--strings" aria-label="Cordes du diapason"></div>
+
+            <p id="custom-swipe-hint" class="custom-swipe-hint" aria-live="polite">
+              <strong>Accordage libre →</strong>
+              <span>Swipe à gauche pour personnaliser les cordes.</span>
+            </p>
+          </article>
+
+          <article id="tuning-card-custom" class="tuning-card custom-tuning-card" aria-label="Accordage libre">
+            <div id="custom-panel" class="custom-panel">
+              <div class="section-title section-title--custom-editor section-title--with-help">
+                <strong>Accordage libre</strong>
+                <button class="help-toggle" type="button" aria-label="Aide sur l’accordage libre" data-help-target="custom-help">?</button>
+              </div>
+
+              <div id="custom-help" class="glass-help-popover is-hidden" role="dialog" aria-label="Aide sur l’accordage libre">
+                <button class="glass-help-close" type="button" aria-label="Fermer l’aide">×</button>
+                <strong>Accordage libre</strong>
+                <span>Choisis les notes ou ajuste les fréquences. Le nom et la sauvegarde vivent dans la Bibliothèque.</span>
+              </div>
+
+              <div id="custom-note-grid" class="custom-grid custom-grid--notes custom-grid--dual"></div>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <aside id="saved-drawer" class="saved-drawer" aria-hidden="true">
+      <button id="saved-drawer-backdrop" class="saved-drawer__backdrop" type="button" aria-label="Fermer mes accordages"></button>
+      <div class="saved-drawer__panel" role="dialog" aria-modal="true" aria-labelledby="saved-drawer-title">
+        <div class="saved-drawer__head">
+          <div>
+            <strong id="saved-drawer-title">Mes accordages</strong>
+            <span>Utilise, renomme, duplique ou supprime tes réglages sauvegardés.</span>
+          </div>
+          <button id="saved-drawer-close" type="button" aria-label="Fermer">×</button>
+        </div>
+
+        <label class="field-stack saved-drawer-search">
+          <span class="sr-only">Filtrer mes accordages</span>
+          <input id="saved-manager-search" type="search" placeholder="Filtrer mes accordages…" autocomplete="off" />
+        </label>
+
+        <div id="saved-manager-list" class="saved-manager-list saved-manager-list--drawer"></div>
+      </div>
+    </aside>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+  <script src="app.js" defer></script>
+</body>
+</html>
