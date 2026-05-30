@@ -6485,3 +6485,72 @@ body::before {
     background: transparent !important;
   }
 }
+
+/* V41 — needle cleanup + convex lens focus window for chromatic note readability */
+.dial-glass--smoked {
+  overflow: visible !important;
+}
+
+.dial-glass--smoked::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 1.18rem;
+  width: clamp(5.1rem, 18vw, 6.8rem);
+  height: clamp(2rem, 6.2vw, 2.55rem);
+  transform: translateX(-50%);
+  border-radius: 999rem;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 170% at 50% 30%, rgba(255,255,255,0.34), rgba(255,255,255,0.06) 48%, rgba(255,255,255,0) 72%),
+    linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.03));
+  border: 1px solid rgba(255,255,255,0.28);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.72),
+    inset 0 -1px 0 rgba(99,112,141,0.28),
+    0 10px 22px rgba(37,49,78,0.26),
+    0 0 0 1px rgba(108,123,156,0.22);
+  backdrop-filter: blur(0.35px) saturate(1.06) contrast(1.1);
+  -webkit-backdrop-filter: blur(0.35px) saturate(1.06) contrast(1.1);
+}
+
+.chromatic-tick {
+  z-index: 2 !important;
+}
+
+.chromatic-tick.is-nearest {
+  z-index: 8 !important;
+}
+
+.chromatic-tick.is-nearest .chromatic-tick__label {
+  z-index: 8 !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+.center-marker {
+  top: 2.22rem !important;
+  height: 3.85rem !important;
+  width: 0.12rem !important;
+  border-radius: 999rem !important;
+  background: linear-gradient(180deg, rgba(255,255,255,0.1), rgba(87,103,132,0.95)) !important;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 8px 14px rgba(28,36,56,0.28) !important;
+}
+
+.center-marker::before {
+  content: "" !important;
+  top: -0.22rem !important;
+  width: 0.36rem !important;
+  height: 0.36rem !important;
+  border-radius: 999rem !important;
+  clip-path: none !important;
+  background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.95), rgba(171,184,210,0.88) 52%, rgba(88,102,132,0.96) 100%) !important;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.28),
+    0 4px 9px rgba(27,36,58,0.32) !important;
+  transform: translateX(-50%) !important;
+}
+
+.center-pivot {
+  top: 6.28rem !important;
+}
