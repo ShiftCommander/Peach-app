@@ -227,6 +227,7 @@ window.addEventListener('DOMContentLoaded', () => {
   renderTargetNotes();
   renderStringsGrid();
   renderCustomInputs();
+  setTuningPage('diapason', { scroll: true, smooth: false });
   updateToneModeButtons();
   updateCustomActionState();
   updateCustomSwipeHint();
@@ -648,7 +649,7 @@ function positionTuningScrollOnDiapason() {
   }, 0);
 }
 
-function setTuningPage(page, { scroll = true } = {}) {
+function setTuningPage(page, { scroll = true, smooth = true } = {}) {
   const nextPage = page === 'custom' ? 'custom' : 'diapason';
   tuningPage = nextPage;
 
@@ -662,7 +663,7 @@ function setTuningPage(page, { scroll = true } = {}) {
     const targetLeft = nextPage === 'custom'
       ? (customCard?.offsetLeft || 0)
       : (diapasonCard?.offsetLeft || 0);
-    scrollEl.scrollTo({ left: targetLeft, behavior: 'smooth' });
+    scrollEl.scrollTo({ left: targetLeft, behavior: smooth ? 'smooth' : 'auto' });
   }
 
   updateCustomSwipeHint();
@@ -1235,12 +1236,25 @@ function updateCustomActionState() {
   const save = $('#save-custom');
   if (!save) return;
 
-  const name = getTuningNameInputValue().trim();
+  const rawName = ($('#custom-tuning-name')?.value || '').trim();
+  const fallbackName = (activeCustomName || '').trim();
+  const name = rawName || fallbackName;
   const tuning = readCustomUnifiedFromUI();
   const selectedSaved = activeSavedTuningId ? savedTunings.find((item) => item.id === activeSavedTuningId) : null;
-  const sameAsSavedWithoutNameChange = selectedSaved && arraysEqual(tuning.notes, selectedSaved.notes) && name === selectedSaved.name;
-  const duplicateNameAndNotes = savedTunings.some((item) => item.id !== activeSavedTuningId && item.name === name && arraysEqual(item.notes, tuning.notes));
-  const disabled = !name || duplicateNameAndNotes || Boolean(sameAsSavedWithoutNameChange);
+  const baseline = selectedSaved
+    ? { name: selectedSaved.name, notes: selectedSaved.notes, freqs: selectedSaved.freqs }
+    : { name: fallbackName, notes: currentNotes, freqs: currentFreqs };
+
+  const normalizedCurrentFreqs = tuning.freqs.map((value) => Number(value.toFixed(2)));
+  const normalizedBaselineFreqs = baseline.freqs.map((value) => Number(Number(value).toFixed(2)));
+
+  const hasPitchChanges = !arraysEqual(tuning.notes, baseline.notes) || !arraysEqual(normalizedCurrentFreqs, normalizedBaselineFreqs);
+  const hasNameChanges = rawName.length > 0 && rawName !== baseline.name;
+  const hasChanges = hasPitchChanges || hasNameChanges;
+
+  const duplicateNameAndNotes = Boolean(name) && savedTunings.some((item) => item.id !== activeSavedTuningId && item.name === name && arraysEqual(item.notes, tuning.notes));
+  const canResolveName = Boolean(name);
+  const disabled = !hasChanges || !canResolveName || duplicateNameAndNotes;
 
   save.innerText = 'Sauvegarder';
   save.disabled = disabled;

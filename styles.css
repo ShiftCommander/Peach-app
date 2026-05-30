@@ -6047,3 +6047,114 @@ button,
 .center-marker::before {
   filter: drop-shadow(0 4px 8px rgba(0,0,0,0.42));
 }
+
+/* V36 — wide layout balance + default focus on Diapason */
+@media (min-width: 1180px) {
+  .app-main {
+    grid-template-columns: minmax(33rem, 0.94fr) minmax(48rem, 1.06fr) !important;
+    align-items: start !important;
+  }
+
+  .tuning-scroll {
+    grid-template-columns: repeat(3, minmax(14.8rem, 1fr)) !important;
+    align-items: start !important;
+    gap: clamp(1rem, 1.2vw, 1.25rem) !important;
+  }
+
+  .tuning-card {
+    min-height: 0 !important;
+    align-self: start !important;
+  }
+
+  #tuning-card-diapason { order: 1; }
+  #tuning-card-library { order: 2; }
+  #tuning-card-custom { order: 3; }
+
+  .diapason-card .strings-grid--strings {
+    min-height: clamp(14rem, 32vh, 19rem) !important;
+  }
+}
+
+/* V37 — desktop usability hotfixes */
+@media (min-width: 1180px) {
+  .tuning-scroll {
+    grid-template-columns: minmax(22rem, 1.32fr) minmax(18rem, 1fr) minmax(22rem, 1.08fr) !important;
+    align-items: stretch !important;
+  }
+
+  .tuning-card,
+  .library-card,
+  .diapason-card,
+  .custom-tuning-card {
+    position: relative !important;
+    min-height: 34rem !important;
+    padding-top: 1.25rem !important;
+  }
+
+  .tuning-card > .section-title,
+  .tuning-card .section-title--custom-editor {
+    min-height: 2.2rem !important;
+    padding-right: 2.9rem !important;
+    margin-bottom: 1rem !important;
+    position: relative !important;
+  }
+
+  .tuning-card > .section-title .help-toggle,
+  .tuning-card .section-title--custom-editor .help-toggle,
+  .diapason-card .section-title .help-toggle,
+  .library-card .section-title .help-toggle,
+  .custom-tuning-card .section-title .help-toggle {
+    position: absolute !important;
+    top: 0 !important;
+    right: 0 !important;
+    margin: 0 !important;
+    transform: none !important;
+  }
+
+  #tuning-card-diapason .strings-grid--strings {
+    grid-template-columns: repeat(6, minmax(3rem, 1fr)) !important;
+    min-height: 18rem !important;
+    gap: 0.7rem !important;
+  }
+
+  #tuning-card-diapason .string-card {
+    min-height: 16.8rem !important;
+    padding: 1rem 0.5rem !important;
+    border-radius: 1rem !important;
+  }
+
+  #tuning-card-diapason .string-note {
+    font-size: 2rem !important;
+    line-height: 1 !important;
+  }
+
+  #tuning-card-diapason .string-freq {
+    font-size: 0.8rem !important;
+    opacity: 0.85 !important;
+  }
+
+  #tuning-card-custom .custom-grid--dual,
+  #tuning-card-custom .custom-grid--notes {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0.9rem !important;
+  }
+
+  #tuning-card-custom .custom-dual-input {
+    grid-template-columns: minmax(5.2rem, 0.9fr) minmax(6rem, 1.1fr) !important;
+    min-height: 3.2rem !important;
+    overflow: visible !important;
+  }
+
+  #tuning-card-custom .custom-dual-input select,
+  #tuning-card-custom .custom-dual-input input {
+    min-height: 3.2rem !important;
+    height: 3.2rem !important;
+  }
+
+  #tuning-card-custom .custom-dual-input input {
+    color: rgba(226, 232, 240, 0.9) !important;
+    font-size: 0.9rem !important;
+    letter-spacing: 0 !important;
+  }
+}
