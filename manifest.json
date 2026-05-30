@@ -11,8 +11,8 @@
     "minimal-ui",
     "browser"
   ],
-  "background_color": "#020617",
-  "theme_color": "#020617",
+  "background_color": "#d7d9df",
+  "theme_color": "#d7d9df",
   "orientation": "portrait",
   "categories": [
     "music",

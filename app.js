@@ -2460,8 +2460,8 @@ function registerServiceWorker() {
     navigator.serviceWorker.register('./sw.js')
       .then(() => navigator.serviceWorker.ready)
       .then(() => {
-        if (!navigator.serviceWorker.controller && !sessionStorage.getItem('peach-sw-v35-reloaded')) {
-          sessionStorage.setItem('peach-sw-v35-reloaded', '1');
+        if (!navigator.serviceWorker.controller && !sessionStorage.getItem('peach-sw-v36-reloaded')) {
+          sessionStorage.setItem('peach-sw-v36-reloaded', '1');
           window.setTimeout(() => window.location.reload(), 350);
         }
       })

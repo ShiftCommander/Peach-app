@@ -1,2 +1,2 @@
-Peach - Guitar Tuner V35
-Offline-ready release prep: local chromatic wheel animation, refreshed PWA cache, release headers, and documentation.
+Peach - Guitar Tuner V36
+CSS cleanup release: rebuilt stylesheet, aligned controls, refreshed light PWA theme, and cache bump.
