@@ -98,6 +98,7 @@ The repository includes a plain Node.js backend MVP:
 - `server/tuning-api.js` - HTTP API and optional static file serving.
 - `server/tuning-store.js` - JSON-backed persistent tuning store.
 - `server/ai-lookup.js` - mock AI lookup plus optional OpenAI adapter.
+- `server/start.js` - production entrypoint.
 - `dev/global-tuning-api-mock.js` - local dev launcher.
 - `tests/global-tuning-api.test.js` - regression test for global search, AI fallback and persistence.
 
@@ -147,3 +148,34 @@ https://platform.openai.com/docs/guides/structured-outputs?api-mode=responses
 ```
 
 The returned payload is still validated by Peach before it is inserted, including the requirement that exactly six notes are present.
+
+## Deployable Runtime
+
+The backend can be deployed as a plain Node process or container.
+
+```sh
+npm start
+```
+
+or:
+
+```sh
+docker build -t peach-global-tuning-api .
+docker run -p 8080:8080 -v peach-tunings:/data peach-global-tuning-api
+```
+
+Healthcheck:
+
+```http
+GET /api/health
+```
+
+Runtime config:
+
+```http
+GET /config.js
+```
+
+When the backend serves the static app, `/config.js` is generated from `PEACH_PUBLIC_GLOBAL_TUNING_API_URL` and defaults to `/api/tunings/search`.
+
+When the app stays on GitHub Pages, edit the static `config.js` or set `window.PEACH_GLOBAL_TUNING_API_URL` before `app.js` loads.

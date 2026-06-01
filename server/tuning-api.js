@@ -22,6 +22,11 @@ function createTuningApiServer(options = {}) {
     mode: options.aiMode || options.mode
   });
   const enableStatic = options.enableStatic !== false;
+  const publicApiUrl = options.publicApiUrl || process.env.PEACH_PUBLIC_GLOBAL_TUNING_API_URL || '/api/tunings/search';
+  const rateLimit = createRateLimit({
+    limit: Number(options.rateLimit || process.env.PEACH_RATE_LIMIT || 60),
+    windowMs: Number(options.rateLimitWindowMs || process.env.PEACH_RATE_LIMIT_WINDOW_MS || 60_000)
+  });
 
   async function handleApi(request, response) {
     const url = new URL(request.url, `http://${request.headers.host || 'localhost'}`);
@@ -29,6 +34,15 @@ function createTuningApiServer(options = {}) {
 
     if (request.method !== 'GET') {
       sendJson(response, 405, { error: 'method_not_allowed' });
+      return;
+    }
+
+    const limitState = rateLimit(request);
+    if (!limitState.allowed) {
+      sendJson(response, 429, {
+        error: 'rate_limited',
+        retryAfterSeconds: Math.ceil(limitState.retryAfterMs / 1000)
+      });
       return;
     }
 
@@ -88,6 +102,11 @@ function createTuningApiServer(options = {}) {
       return;
     }
 
+    if (request.url.startsWith('/api/health')) {
+      sendJson(response, 200, { ok: true, service: 'peach-global-tuning-api' });
+      return;
+    }
+
     if (request.url.startsWith('/api/tunings/search')) {
       handleApi(request, response).catch((error) => {
         console.error(error);
@@ -96,10 +115,59 @@ function createTuningApiServer(options = {}) {
       return;
     }
 
+    if (request.url.startsWith('/config.js')) {
+      sendJavaScript(response, buildRuntimeConfig(publicApiUrl));
+      return;
+    }
+
     handleStatic(request, response);
   });
 
   return { server, store };
+}
+
+function createRateLimit({ limit, windowMs }) {
+  const hits = new Map();
+  const safeLimit = Number.isFinite(limit) && limit > 0 ? limit : 60;
+  const safeWindowMs = Number.isFinite(windowMs) && windowMs > 0 ? windowMs : 60_000;
+
+  return function checkRateLimit(request) {
+    const ip = request.headers['x-forwarded-for']?.split(',')[0]?.trim()
+      || request.socket.remoteAddress
+      || 'unknown';
+    const now = Date.now();
+    const state = hits.get(ip) || { count: 0, resetAt: now + safeWindowMs };
+
+    if (now > state.resetAt) {
+      state.count = 0;
+      state.resetAt = now + safeWindowMs;
+    }
+
+    state.count += 1;
+    hits.set(ip, state);
+
+    return {
+      allowed: state.count <= safeLimit,
+      retryAfterMs: Math.max(0, state.resetAt - now)
+    };
+  };
+}
+
+function buildRuntimeConfig(publicApiUrl) {
+  const safeUrl = JSON.stringify(String(publicApiUrl || ''));
+  return [
+    'window.PEACH_CONFIG = window.PEACH_CONFIG || {};',
+    `window.PEACH_CONFIG.globalTuningApiUrl = ${safeUrl};`,
+    'window.PEACH_GLOBAL_TUNING_API_URL = window.PEACH_GLOBAL_TUNING_API_URL || window.PEACH_CONFIG.globalTuningApiUrl || "";'
+  ].join('\n');
+}
+
+function sendJavaScript(response, body) {
+  response.writeHead(200, {
+    'Content-Type': 'application/javascript; charset=utf-8',
+    'Cache-Control': 'no-store'
+  });
+  response.end(`${body}\n`);
 }
 
 function corsHeaders() {
@@ -120,5 +188,6 @@ function sendJson(response, status, body) {
 }
 
 module.exports = {
+  buildRuntimeConfig,
   createTuningApiServer
 };

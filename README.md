@@ -6,13 +6,13 @@ It includes an automatic microphone tuner, a chromatic wheel, reference tones, p
 
 ## Release Status
 
-Current release: **V41**
+Current release: **V42**
 
 - Static app: no package manager, build step or framework runtime is required for the PWA.
 - Optional backend MVP: plain Node.js, no third-party package install required.
 - PWA assets: `manifest.json`, `sw.js`, `_headers`, and app icons are included.
 - Offline runtime: all app code is local; there are no CDN scripts required at runtime.
-- Cache version: `peach-guitar-tuner-v41`.
+- Cache version: `peach-guitar-tuner-v42`.
 - Current production target: GitHub Pages at `https://shiftcommander.github.io/Peach-app/`.
 
 ## Local Preview
@@ -74,8 +74,55 @@ Before a release, verify:
 - `manifest.json` - PWA manifest and install metadata.
 - `_headers` - Netlify headers for manifest type, service worker freshness, and asset caching.
 - `version.txt` - human-readable release marker.
+- `config.js` - static frontend runtime config for GitHub Pages.
+- `server/` - optional deployable Node.js backend for global tuning search.
+- `tests/` - backend regression tests.
+
+## Backend Deployment
+
+GitHub Pages cannot execute the backend. Deploy the Node API on a service that can run a long-lived Node process or container, then point `config.js` to that API URL.
+
+Required runtime:
+
+```text
+Node.js 20+
+```
+
+Useful environment variables:
+
+```text
+PORT=8080
+PEACH_TUNING_DB_PATH=/data/global-tunings.json
+PEACH_PUBLIC_GLOBAL_TUNING_API_URL=https://your-api.example/api/tunings/search
+PEACH_AI_MODE=mock
+OPENAI_API_KEY=...
+OPENAI_MODEL=gpt-4o-mini
+PEACH_RATE_LIMIT=60
+PEACH_RATE_LIMIT_WINDOW_MS=60000
+```
+
+Run as a Node process:
+
+```sh
+npm start
+```
+
+Run as a container:
+
+```sh
+docker build -t peach-global-tuning-api .
+docker run -p 8080:8080 -v peach-tunings:/data peach-global-tuning-api
+```
 
 ## Release Notes
+
+### V42
+
+- Added `config.js` and dynamic backend-served runtime config for production API wiring.
+- Added `package.json`, `server/start.js`, `Dockerfile`, and `.dockerignore` for deployable backend packaging.
+- Added `/api/health` and a basic per-IP rate limit for API hardening.
+- Expanded backend tests to cover health, runtime config, and rate limiting.
+- Bumped the service worker cache from V41 to V42.
 
 ### V41
 

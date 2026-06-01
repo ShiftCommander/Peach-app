@@ -66,10 +66,11 @@ function createJsonTuningStore({ filePath, seedRows = DEFAULT_SEED_ROWS } = {}) 
         ].join(' '));
         const exact = haystack.includes(clean);
         const matchedTerms = terms.filter((term) => haystack.includes(term)).length;
-        const score = (exact ? 20 : 0) + matchedTerms * 4 + (row.generated ? 0 : 2);
+        const fullTermMatch = terms.length < 2 || matchedTerms === terms.length;
+        const score = (exact ? 20 : 0) + (fullTermMatch ? matchedTerms * 4 : 0) + (row.generated ? 0 : 2);
         return { row, score };
       })
-      .filter((item) => item.score > 0 && (terms.length < 2 || item.score >= 8))
+      .filter((item) => item.score > 0 && (terms.length < 2 || item.score >= terms.length * 4))
       .sort((a, b) => b.score - a.score || a.row.displayName.localeCompare(b.row.displayName))
       .slice(0, limit)
       .map((item) => toPublicTuning(item.row));
