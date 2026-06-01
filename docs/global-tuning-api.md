@@ -153,6 +153,25 @@ The returned payload is still validated by Peach before it is inserted, includin
 
 The backend can be deployed as a plain Node process or container.
 
+Netlify Functions + Blobs are also supported:
+
+```text
+netlify/functions/tunings-search.mjs
+netlify/functions/health.mjs
+netlify/functions/config-js.mjs
+netlify.toml
+```
+
+The Netlify implementation uses a site-scoped Blobs store named `peach-global-tunings` with strong consistency.
+
+Netlify CLI builds require the repo to be linked first:
+
+```sh
+netlify link
+netlify build
+netlify deploy --prod
+```
+
 ```sh
 npm start
 ```

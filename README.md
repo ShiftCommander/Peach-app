@@ -6,13 +6,13 @@ It includes an automatic microphone tuner, a chromatic wheel, reference tones, p
 
 ## Release Status
 
-Current release: **V42**
+Current release: **V43**
 
 - Static app: no package manager, build step or framework runtime is required for the PWA.
-- Optional backend MVP: plain Node.js, no third-party package install required.
+- Optional backend MVP: plain Node.js or Netlify Functions with Blobs persistence.
 - PWA assets: `manifest.json`, `sw.js`, `_headers`, and app icons are included.
 - Offline runtime: all app code is local; there are no CDN scripts required at runtime.
-- Cache version: `peach-guitar-tuner-v42`.
+- Cache version: `peach-guitar-tuner-v43`.
 - Current production target: GitHub Pages at `https://shiftcommander.github.io/Peach-app/`.
 
 ## Local Preview
@@ -80,7 +80,7 @@ Before a release, verify:
 
 ## Backend Deployment
 
-GitHub Pages cannot execute the backend. Deploy the Node API on a service that can run a long-lived Node process or container, then point `config.js` to that API URL.
+GitHub Pages cannot execute the backend. Deploy the API on Netlify Functions or another service that can run Node, then point `config.js` to that API URL.
 
 Required runtime:
 
@@ -101,6 +101,17 @@ PEACH_RATE_LIMIT=60
 PEACH_RATE_LIMIT_WINDOW_MS=60000
 ```
 
+Deploy on Netlify:
+
+```sh
+npm install
+netlify link
+netlify build
+netlify deploy --prod
+```
+
+Use `netlify.toml`; the API routes are implemented in `netlify/functions/` and persist shared data in Netlify Blobs.
+
 Run as a Node process:
 
 ```sh
@@ -115,6 +126,13 @@ docker run -p 8080:8080 -v peach-tunings:/data peach-global-tuning-api
 ```
 
 ## Release Notes
+
+### V43
+
+- Added Netlify Functions for `/api/tunings/search`, `/api/health`, and dynamic `/config.js`.
+- Added Netlify Blobs persistence for the shared global tuning database.
+- Added `netlify.toml` and `@netlify/blobs` dependency for serverless deployment.
+- Bumped the service worker cache from V42 to V43.
 
 ### V42
 

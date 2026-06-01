@@ -1,2 +1,2 @@
-Peach - Guitar Tuner V42
-Deployable global tuning backend: runtime config, healthcheck, rate limit, Docker packaging, and refreshed PWA cache.
+Peach - Guitar Tuner V43
+Serverless global tuning backend: Netlify Functions, Blobs persistence, runtime config endpoint, and refreshed PWA cache.

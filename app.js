@@ -2554,8 +2554,8 @@ function registerServiceWorker() {
     navigator.serviceWorker.register('./sw.js')
       .then(() => navigator.serviceWorker.ready)
       .then(() => {
-        if (!navigator.serviceWorker.controller && !sessionStorage.getItem('peach-sw-v42-reloaded')) {
-          sessionStorage.setItem('peach-sw-v42-reloaded', '1');
+        if (!navigator.serviceWorker.controller && !sessionStorage.getItem('peach-sw-v43-reloaded')) {
+          sessionStorage.setItem('peach-sw-v43-reloaded', '1');
           window.setTimeout(() => window.location.reload(), 350);
         }
       })
