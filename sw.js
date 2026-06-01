@@ -1,4 +1,4 @@
-const CACHE_NAME = 'peach-guitar-tuner-v38';
+const CACHE_NAME = 'peach-guitar-tuner-v40';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -37,6 +37,7 @@ self.addEventListener('fetch', (event) => {
 
   const requestUrl = new URL(request.url);
   if (requestUrl.origin !== self.location.origin) return;
+  if (requestUrl.pathname.includes('/api/')) return;
 
   if (request.mode === 'navigate') {
     event.respondWith(

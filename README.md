@@ -6,12 +6,12 @@ It includes an automatic microphone tuner, a chromatic wheel, reference tones, p
 
 ## Release Status
 
-Current release: **V38**
+Current release: **V40**
 
 - Static app: no package manager, build step or framework runtime is required.
 - PWA assets: `manifest.json`, `sw.js`, `_headers`, and app icons are included.
 - Offline runtime: all app code is local; there are no CDN scripts required at runtime.
-- Cache version: `peach-guitar-tuner-v38`.
+- Cache version: `peach-guitar-tuner-v40`.
 - Current production target: GitHub Pages at `https://shiftcommander.github.io/Peach-app/`.
 
 ## Local Preview
@@ -29,6 +29,20 @@ http://localhost:4273
 ```
 
 The page title should be `Peach - Guitar Tuner`.
+
+To test the global tuning search MVP with the local mock API:
+
+```sh
+node dev/global-tuning-api-mock.js
+```
+
+Open `http://localhost:4274`, then set the API endpoint once in DevTools:
+
+```js
+localStorage.setItem('peach-global-tuning-api-url-v1', '/api/tunings/search')
+```
+
+Search for `Black Hole Sun` to get a mock global database result, or any unknown song to trigger the mock AI fallback and persistence behavior.
 
 ## PWA Checks
 
@@ -53,6 +67,16 @@ Before a release, verify:
 - `version.txt` - human-readable release marker.
 
 ## Release Notes
+
+### V40
+
+- Added the frontend flow for global song tuning search when the embedded library has no result.
+- Added support for AI-generated backend results that are returned after being persisted globally.
+- Added `docs/global-tuning-api.md` with the backend API contract and data model requirements.
+- Added `dev/global-tuning-api-mock.js` to test global database hits and AI fallback locally.
+- Prevented the service worker from caching `/api/` responses, so global tuning results and AI fallback responses stay fresh.
+- Completed browser-tested global tuning search MVP with mock global database hits, AI fallback, persistence behavior, and local saving.
+- Bumped the service worker cache from V38 to V40.
 
 ### V38
 

@@ -20,6 +20,8 @@ const EAR_HELP_STORAGE_KEY = 'peach-ear-help-dismissed-v30';
 const CUSTOM_TUNING_STORAGE_KEY = 'timtuner-custom-tuning-v1';
 const SAVED_TUNINGS_STORAGE_KEY = 'timtuner-saved-tunings-v1';
 const CUSTOM_DISCOVERY_STORAGE_KEY = 'timtuner-custom-card-discovered-v1';
+const GLOBAL_TUNING_API_STORAGE_KEY = 'peach-global-tuning-api-url-v1';
+const GLOBAL_TUNING_SEARCH_DEBOUNCE_MS = 420;
 const REFERENCE_TONE_MODE = 'clear';
 const PRESET_SELECT_META = [
   ['standard', 'Standard'],
@@ -213,6 +215,14 @@ let earHelpStartPointer = null;
 let tuningPage = 'diapason';
 let customCardDiscovered = false;
 let autoApplyTimer = null;
+let globalSearchTimer = null;
+let globalSearchController = null;
+let globalSearchState = {
+  query: '',
+  status: 'idle',
+  message: '',
+  results: []
+};
 
 const $ = (selector) => document.querySelector(selector);
 
@@ -271,10 +281,7 @@ function forceSavedManagerClosedOnBoot() {
 
 function bindUI() {
   $('#tuning-select').addEventListener('change', handleTuningChange);
-  $('#saved-tuning-search').addEventListener('input', () => {
-    renderTuningSelect({ preserveSelection: true });
-    renderSongTuningResults();
-  });
+  $('#saved-tuning-search').addEventListener('input', handleSongSearchInput);
   $('#save-custom').addEventListener('click', saveActiveCustomTuning);
   $('#custom-tuning-name').addEventListener('input', () => {
     activeCustomName = $('#custom-tuning-name').value.trim();
@@ -790,6 +797,28 @@ function normalizeSearchTerm(value) {
     .toLowerCase();
 }
 
+function getGlobalTuningApiUrl() {
+  const configured = String(window.PEACH_GLOBAL_TUNING_API_URL || '').trim();
+  if (configured) return configured;
+
+  try {
+    return String(localStorage.getItem(GLOBAL_TUNING_API_STORAGE_KEY) || '').trim();
+  } catch (error) {
+    console.debug('Global tuning API preference unavailable:', error);
+    return '';
+  }
+}
+
+function isGlobalTuningSearchEnabled() {
+  return Boolean(getGlobalTuningApiUrl());
+}
+
+function handleSongSearchInput() {
+  renderTuningSelect({ preserveSelection: true });
+  renderSongTuningResults();
+  scheduleGlobalTuningSearch();
+}
+
 function getSongTuningMatches(query) {
   const cleanQuery = normalizeSearchTerm(query);
   if (cleanQuery.length < 2) return [];
@@ -809,12 +838,17 @@ function getSongTuningMatches(query) {
       ].join(' '));
 
       let score = 0;
+      let matchedTerms = 0;
       if (haystack.includes(cleanQuery)) score += 14;
       terms.forEach((term) => {
-        if (haystack.includes(term)) score += term.length > 2 ? 3 : 1;
+        if (haystack.includes(term)) {
+          matchedTerms += 1;
+          score += term.length > 2 ? 3 : 1;
+        }
       });
       if (normalizeSearchTerm(song.title).startsWith(cleanQuery)) score += 8;
       if (normalizeSearchTerm(song.artist).includes(cleanQuery)) score += 4;
+      if (terms.length > 1 && !haystack.includes(cleanQuery) && matchedTerms < 2) score = 0;
 
       return { song, score };
     })
@@ -824,12 +858,176 @@ function getSongTuningMatches(query) {
     .map((item) => item.song);
 }
 
+function getActiveGlobalResults(query) {
+  return globalSearchState.query === normalizeSearchTerm(query) ? globalSearchState.results : [];
+}
+
+function scheduleGlobalTuningSearch() {
+  clearTimeout(globalSearchTimer);
+  if (globalSearchController) {
+    globalSearchController.abort();
+    globalSearchController = null;
+  }
+
+  const query = $('#saved-tuning-search')?.value || '';
+  const cleanQuery = normalizeSearchTerm(query);
+  const localMatches = getSongTuningMatches(query);
+
+  if (cleanQuery.length < 2) {
+    globalSearchState = { query: '', status: 'idle', message: '', results: [] };
+    renderSongTuningResults();
+    return;
+  }
+
+  if (localMatches.length) {
+    globalSearchState = { query: cleanQuery, status: 'idle', message: '', results: [] };
+    renderSongTuningResults();
+    return;
+  }
+
+  if (!isGlobalTuningSearchEnabled()) {
+    globalSearchState = {
+      query: cleanQuery,
+      status: 'not-configured',
+      message: 'Base globale non connectée sur ce déploiement.',
+      results: []
+    };
+    renderSongTuningResults();
+    return;
+  }
+
+  globalSearchState = {
+    query: cleanQuery,
+    status: 'loading',
+    message: 'Recherche dans la base globale…',
+    results: []
+  };
+  renderSongTuningResults();
+
+  globalSearchTimer = window.setTimeout(() => {
+    fetchGlobalSongTunings(query, cleanQuery);
+  }, GLOBAL_TUNING_SEARCH_DEBOUNCE_MS);
+}
+
+async function fetchGlobalSongTunings(query, cleanQuery) {
+  const endpoint = getGlobalTuningApiUrl();
+  if (!endpoint) return;
+
+  const controller = new AbortController();
+  globalSearchController = controller;
+
+  try {
+    const url = new URL(endpoint, window.location.href);
+    url.searchParams.set('query', query.trim());
+
+    const response = await fetch(url.toString(), {
+      method: 'GET',
+      headers: { Accept: 'application/json' },
+      signal: controller.signal
+    });
+
+    if (!response.ok) throw new Error(`Global tuning API returned ${response.status}`);
+
+    const payload = await response.json();
+    const results = normalizeGlobalTuningPayload(payload)
+      .filter((song) => song)
+      .slice(0, 4);
+
+    if (globalSearchState.query !== cleanQuery) return;
+
+    globalSearchState = {
+      query: cleanQuery,
+      status: results.length ? 'ready' : 'empty',
+      message: results.length
+        ? globalSearchMessage(payload, results)
+        : 'Aucun accordage global trouvé.',
+      results
+    };
+    renderSongTuningResults();
+  } catch (error) {
+    if (error.name === 'AbortError') return;
+    console.debug('Global tuning search failed:', error);
+    if (globalSearchState.query !== cleanQuery) return;
+    globalSearchState = {
+      query: cleanQuery,
+      status: 'error',
+      message: 'Recherche globale indisponible.',
+      results: []
+    };
+    renderSongTuningResults();
+  } finally {
+    if (globalSearchController === controller) globalSearchController = null;
+  }
+}
+
+function normalizeGlobalTuningPayload(payload) {
+  const results = Array.isArray(payload?.results) ? payload.results : [];
+  return results.map(normalizeGlobalSongTuning).filter(Boolean);
+}
+
+function normalizeGlobalSongTuning(item) {
+  try {
+    const notes = Array.isArray(item?.notes) ? item.notes.map(sanitizeNoteName) : [];
+    if (notes.length !== 6) return null;
+
+    const freqs = Array.isArray(item?.freqs) && item.freqs.length === 6
+      ? item.freqs.map(Number)
+      : notes.map(frequencyFromNoteName);
+
+    const title = String(item.title || item.songTitle || item.displayName || 'Morceau').trim().slice(0, 90);
+    const artist = String(item.artist || 'Artiste inconnu').trim().slice(0, 90);
+    const tuningName = String(item.tuningName || item.tuning || notes.map(stripOctave).join(' ')).trim().slice(0, 50);
+    const displayName = String(item.displayName || `${title} — ${artist}`).trim().slice(0, 120);
+    const source = String(item.source || item.origin || 'global-database');
+    const generated = Boolean(item.generated || item.aiGenerated || source.includes('ai'));
+    const persisted = item.persisted !== false;
+
+    return {
+      id: `global:${String(item.id || displayName).slice(0, 120)}`,
+      title,
+      artist,
+      displayName,
+      version: String(item.version || 'Version demandée').trim().slice(0, 80),
+      role: String(item.role || item.instrument || 'Guitare').trim().slice(0, 80),
+      tuningName,
+      notes,
+      freqs,
+      aliases: Array.isArray(item.aliases) ? item.aliases.slice(0, 8) : [],
+      confidence: String(item.confidence || (generated ? 'IA à vérifier' : 'globale')).trim().slice(0, 40),
+      sourceLabel: generated
+        ? (persisted ? 'IA · ajouté à la base globale' : 'IA · non persisté')
+        : 'Base globale',
+      source,
+      generated,
+      persisted
+    };
+  } catch (error) {
+    console.debug('Invalid global tuning result skipped:', error);
+    return null;
+  }
+}
+
+function globalSearchMessage(payload, results) {
+  if (payload?.source === 'ai') {
+    return 'Trouvé par IA et ajouté à la base globale.';
+  }
+  return 'Trouvé dans la base globale.';
+}
+
+function findSongById(id) {
+  return SONG_TUNING_LIBRARY.find((item) => item.id === id)
+    || globalSearchState.results.find((item) => item.id === id);
+}
+
 function renderSongTuningResults() {
   const results = $('#song-tuning-results');
   if (!results) return;
   const query = $('#saved-tuning-search')?.value || '';
   const cleanQuery = normalizeSearchTerm(query);
-  const matches = getSongTuningMatches(query);
+  const localMatches = getSongTuningMatches(query);
+  const globalMatches = getActiveGlobalResults(query);
+  const matches = [...localMatches, ...globalMatches];
+  const globalEnabled = isGlobalTuningSearchEnabled();
 
   results.innerHTML = '';
   results.classList.toggle('is-hidden', cleanQuery.length < 2);
@@ -837,16 +1035,17 @@ function renderSongTuningResults() {
 
   const header = document.createElement('div');
   header.className = 'song-results-head';
+  const statusText = songSearchStatusText(localMatches, globalMatches, globalEnabled);
   header.innerHTML = `
     <strong>Base morceaux</strong>
-    <span>${matches.length ? 'Résultats embarqués pour tester l’UX' : 'Pas encore dans la mini-base'}</span>
+    <span>${escapeHtml(statusText)}</span>
   `;
   results.appendChild(header);
 
   if (!matches.length) {
     const empty = document.createElement('p');
     empty.className = 'song-result-empty';
-    empty.innerText = 'Essaie “Iris”, “Kashmir”, “Everlong”, “Start Me Up”, “Chop Suey”…';
+    empty.innerText = songSearchEmptyText(globalEnabled);
     results.appendChild(empty);
     return;
   }
@@ -858,7 +1057,7 @@ function renderSongTuningResults() {
       <button class="song-result-main" type="button" data-song-action="apply" data-song-id="${escapeHtml(song.id)}" aria-label="Appliquer ${escapeHtml(song.displayName)}">
         <strong>${escapeHtml(song.title)}</strong>
         <span>${escapeHtml(song.artist)} · ${escapeHtml(song.tuningName)}</span>
-        <small>${escapeHtml(song.notes.map(stripOctave).join(' '))} · ${escapeHtml(song.version)}${song.role ? ' · ' + escapeHtml(song.role) : ''}</small>
+        <small>${escapeHtml(song.notes.map(stripOctave).join(' '))} · ${escapeHtml(song.version)}${song.role ? ' · ' + escapeHtml(song.role) : ''} · ${escapeHtml(song.sourceLabel || 'Base morceaux')}</small>
       </button>
       <button class="song-result-save" type="button" data-song-action="save" data-song-id="${escapeHtml(song.id)}" aria-label="Sauvegarder ${escapeHtml(song.displayName)}" title="Sauvegarder">
         <span aria-hidden="true">＋</span>
@@ -869,7 +1068,7 @@ function renderSongTuningResults() {
 
   results.querySelectorAll('button[data-song-action]').forEach((button) => {
     button.addEventListener('click', () => {
-      const song = SONG_TUNING_LIBRARY.find((item) => item.id === button.dataset.songId);
+      const song = findSongById(button.dataset.songId);
       if (!song) return;
       if (button.dataset.songAction === 'save') saveSongTuning(song);
       else applySongTuning(song, { flash: true });
@@ -877,9 +1076,27 @@ function renderSongTuningResults() {
   });
 }
 
+function songSearchStatusText(localMatches, globalMatches, globalEnabled) {
+  if (localMatches.length) return 'Résultats embarqués disponibles.';
+  if (globalMatches.length) return globalSearchState.message || 'Résultats globaux disponibles.';
+  if (globalSearchState.status === 'loading') return globalSearchState.message;
+  if (globalSearchState.status === 'error') return globalSearchState.message;
+  if (globalSearchState.status === 'empty') return globalSearchState.message;
+  if (!globalEnabled) return 'Pas dans la mini-base. Base globale à connecter.';
+  return 'Recherche globale prête.';
+}
+
+function songSearchEmptyText(globalEnabled) {
+  if (globalSearchState.status === 'loading') return 'Recherche globale en cours…';
+  if (globalSearchState.status === 'error') return 'La recherche globale ne répond pas pour le moment.';
+  if (globalSearchState.status === 'empty') return 'Aucun accordage trouvé dans la base globale.';
+  if (!globalEnabled) return 'Connecte une API globale pour chercher les morceaux non documentés.';
+  return 'Essaie “Iris”, “Kashmir”, “Everlong”, “Start Me Up”, “Chop Suey”…';
+}
+
 function applySongTuning(song, { flash = false } = {}) {
   const notes = song.notes.map(sanitizeNoteName);
-  const freqs = notes.map(frequencyFromNoteName);
+  const freqs = getSongFrequencies(song, notes);
 
   activeSavedTuningId = null;
   activeCustomName = song.displayName;
@@ -907,7 +1124,7 @@ function applySongTuning(song, { flash = false } = {}) {
 
 function saveSongTuning(song) {
   const notes = song.notes.map(sanitizeNoteName);
-  const freqs = notes.map(frequencyFromNoteName);
+  const freqs = getSongFrequencies(song, notes);
   const existing = savedTunings.find((item) => item.name === song.displayName && arraysEqual(item.notes, notes));
 
   if (existing) {
@@ -925,10 +1142,12 @@ function saveSongTuning(song) {
     createdAt: now,
     updatedAt: now,
     lastUsedAt: now,
-    source: 'embedded-song-library',
+    source: song.source || 'embedded-song-library',
     songId: song.id,
     sourceLabel: song.sourceLabel,
-    confidence: song.confidence
+    confidence: song.confidence,
+    generated: Boolean(song.generated),
+    persisted: song.persisted !== false
   };
 
   savedTunings.unshift(item);
@@ -942,6 +1161,14 @@ function saveSongTuning(song) {
   renderSavedManager();
   updateCustomActionState();
   flashActionFeedback('Morceau sauvegardé dans Mes accordages.');
+}
+
+function getSongFrequencies(song, notes) {
+  if (Array.isArray(song.freqs) && song.freqs.length === 6) {
+    const freqs = song.freqs.map(Number);
+    if (freqs.every((freq) => Number.isFinite(freq) && freq > 0)) return freqs;
+  }
+  return notes.map(frequencyFromNoteName);
 }
 
 function renderTuningSelect({ preserveSelection = false } = {}) {
@@ -2327,8 +2554,8 @@ function registerServiceWorker() {
     navigator.serviceWorker.register('./sw.js')
       .then(() => navigator.serviceWorker.ready)
       .then(() => {
-        if (!navigator.serviceWorker.controller && !sessionStorage.getItem('peach-sw-v38-reloaded')) {
-          sessionStorage.setItem('peach-sw-v38-reloaded', '1');
+        if (!navigator.serviceWorker.controller && !sessionStorage.getItem('peach-sw-v40-reloaded')) {
+          sessionStorage.setItem('peach-sw-v40-reloaded', '1');
           window.setTimeout(() => window.location.reload(), 350);
         }
       })

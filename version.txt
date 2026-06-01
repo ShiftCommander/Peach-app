@@ -1,2 +1,2 @@
-Peach - Guitar Tuner V38
-Stabilization release: aligned GitHub Pages docs, manifest identity, no-Jekyll publishing, and refreshed PWA cache.
+Peach - Guitar Tuner V40
+Global tuning search MVP: API search flow, AI-fallback persistence handling, API-safe service worker, and local mock tests.
