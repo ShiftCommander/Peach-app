@@ -1,2 +1,2 @@
-Peach - Guitar Tuner V36
-CSS cleanup release: rebuilt stylesheet, aligned controls, refreshed light PWA theme, and cache bump.
+Peach - Guitar Tuner V37
+JS cleanup release: removed proven dead code, fixed custom tuning save state, and refreshed PWA cache.

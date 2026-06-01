@@ -19,8 +19,8 @@ const CLOSE_CENTS = 12;
 const EAR_HELP_STORAGE_KEY = 'peach-ear-help-dismissed-v30';
 const CUSTOM_TUNING_STORAGE_KEY = 'timtuner-custom-tuning-v1';
 const SAVED_TUNINGS_STORAGE_KEY = 'timtuner-saved-tunings-v1';
-const TONE_MODE_STORAGE_KEY = 'timtuner-tone-mode-v1';
 const CUSTOM_DISCOVERY_STORAGE_KEY = 'timtuner-custom-card-discovered-v1';
+const REFERENCE_TONE_MODE = 'clear';
 const PRESET_SELECT_META = [
   ['standard', 'Standard'],
   ['dropD', 'Drop D'],
@@ -166,8 +166,6 @@ let currentPresetKey = 'standard';
 let currentFreqs = [...presetTunings.standard.freqs];
 let currentNotes = [...presetTunings.standard.notes];
 let currentTargetIndex = null;
-let customInputMode = 'notes';
-let selectedToneMode = 'clear';
 let savedTunings = [];
 let activeSavedTuningId = null;
 let activeCustomName = '';
@@ -228,7 +226,6 @@ window.addEventListener('DOMContentLoaded', () => {
   renderStringsGrid();
   renderCustomInputs();
   setTuningPage('diapason', { scroll: true, smooth: false });
-  updateToneModeButtons();
   updateCustomActionState();
   updateCustomSwipeHint();
   renderSavedManager();
@@ -240,8 +237,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
 function restoreUserPreferences() {
   try {
-    const savedToneMode = localStorage.getItem(TONE_MODE_STORAGE_KEY);
-    selectedToneMode = 'clear';
     customCardDiscovered = localStorage.getItem(CUSTOM_DISCOVERY_STORAGE_KEY) === '1';
 
     const savedCustom = JSON.parse(localStorage.getItem(CUSTOM_TUNING_STORAGE_KEY) || 'null');
@@ -299,14 +294,6 @@ function bindUI() {
   $('#mic-permission-button').addEventListener('click', () => requestMicrophoneWhenPossible({ force: true }));
   $('#ear-help-close').addEventListener('click', () => dismissEarHelp({ remember: true }));
   bindHelpPopovers();
-
-  document.querySelectorAll('.tone-mode-button').forEach((button) => {
-    button.addEventListener('click', () => setToneMode(button.dataset.toneMode));
-  });
-
-  document.querySelectorAll('.custom-mode-button').forEach((button) => {
-    button.addEventListener('click', () => setCustomInputMode(button.dataset.customMode));
-  });
 
   bindTuningCardScroll();
   bindUiFeedback();
@@ -640,15 +627,6 @@ function handleTuningChange() {
   stopReferenceTone({ resumeMic: true });
 }
 
-function positionTuningScrollOnDiapason() {
-  const scrollEl = $('#tuning-scroll');
-  const diapasonCard = $('#tuning-card-diapason');
-  if (!scrollEl || !diapasonCard) return;
-  window.setTimeout(() => {
-    scrollEl.scrollLeft = diapasonCard.offsetLeft;
-  }, 0);
-}
-
 function setTuningPage(page, { scroll = true, smooth = true } = {}) {
   const nextPage = page === 'custom' ? 'custom' : 'diapason';
   tuningPage = nextPage;
@@ -711,34 +689,6 @@ function updateCustomSwipeHint() {
   hint.classList.toggle('is-hidden', customCardDiscovered);
 }
 
-function setToneMode(mode) {
-  if (mode === 'pure') mode = 'warm';
-  if (!['warm', 'clear'].includes(mode)) return;
-  selectedToneMode = mode;
-  updateToneModeButtons();
-  try { localStorage.setItem(TONE_MODE_STORAGE_KEY, mode); } catch (error) { console.debug('Tone preference unavailable:', error); }
-
-  if (referenceToneActive && activeStringIndex !== null) {
-    const index = activeStringIndex;
-    stopReferenceTone({ resumeMic: false });
-    window.setTimeout(() => startReferenceTone(index), 40);
-  }
-}
-
-function updateToneModeButtons() {
-  document.querySelectorAll('.tone-mode-button').forEach((button) => {
-    const active = button.dataset.toneMode === selectedToneMode;
-    button.classList.toggle('is-active', active);
-    button.setAttribute('aria-pressed', active ? 'true' : 'false');
-  });
-}
-
-function setCustomInputMode(mode) {
-  customInputMode = 'notes';
-  const grid = $('#custom-note-grid');
-  if (grid) grid.classList.remove('is-hidden');
-}
-
 function scheduleAutoApplyCustomTuning({ fromHz = false } = {}) {
   clearTimeout(autoApplyTimer);
   autoApplyTimer = window.setTimeout(() => {
@@ -774,38 +724,6 @@ function applyCustomTuning({ silent = false, stayOnCustom = true, fromHz = false
   resetTunerVisuals();
   if (!silent) flashActionFeedback('Accordage appliqué.');
   if (!stayOnCustom) setTuningPage('diapason');
-}
-
-function readCustomNotesFromUI() {
-  const notes = [];
-  const freqs = [];
-
-  for (let i = 0; i < 6; i += 1) {
-    const select = $(`#custom-note-${i}`);
-    const note = sanitizeNoteName(select?.value || currentNotes[i] || 'E2');
-    notes.push(note);
-    freqs.push(frequencyFromNoteName(note));
-  }
-
-  return { notes, freqs };
-}
-
-function readCustomHzFromUI() {
-  const notes = [];
-  const freqs = [];
-
-  for (let i = 0; i < 6; i += 1) {
-    const input = $(`#custom-f-${i}`);
-    const value = Number.parseFloat(String(input?.value || '').replace(',', '.'));
-    const fallback = currentFreqs[i] || presetTunings.standard.freqs[i];
-    const freq = Number.isFinite(value) && value >= 30 && value <= 1000 ? value : fallback;
-    const note = getClosestChromaticNote(freq).name;
-    freqs.push(freq);
-    notes.push(note);
-    if (input) input.value = freq.toFixed(2);
-  }
-
-  return { notes, freqs };
 }
 
 function saveCustomTuning() {
@@ -1124,7 +1042,7 @@ function saveActiveCustomTuning() {
   saveCustomTuning();
   renderTuningSelect();
   $('#tuning-select').value = currentPresetKey;
-  $('#custom-tuning-name').value = saved.name;
+  $('#custom-tuning-name').value = name;
   renderTargetNotes();
   renderStringsGrid();
   renderSavedManager();
@@ -1241,20 +1159,26 @@ function updateCustomActionState() {
   const name = rawName || fallbackName;
   const tuning = readCustomUnifiedFromUI();
   const selectedSaved = activeSavedTuningId ? savedTunings.find((item) => item.id === activeSavedTuningId) : null;
-  const baseline = selectedSaved
-    ? { name: selectedSaved.name, notes: selectedSaved.notes, freqs: selectedSaved.freqs }
-    : { name: fallbackName, notes: currentNotes, freqs: currentFreqs };
-
-  const normalizedCurrentFreqs = tuning.freqs.map((value) => Number(value.toFixed(2)));
-  const normalizedBaselineFreqs = baseline.freqs.map((value) => Number(Number(value).toFixed(2)));
-
-  const hasPitchChanges = !arraysEqual(tuning.notes, baseline.notes) || !arraysEqual(normalizedCurrentFreqs, normalizedBaselineFreqs);
-  const hasNameChanges = rawName.length > 0 && rawName !== baseline.name;
-  const hasChanges = hasPitchChanges || hasNameChanges;
-
-  const duplicateNameAndNotes = Boolean(name) && savedTunings.some((item) => item.id !== activeSavedTuningId && item.name === name && arraysEqual(item.notes, tuning.notes));
   const canResolveName = Boolean(name);
-  const disabled = !hasChanges || !canResolveName || duplicateNameAndNotes;
+  const normalizedCurrentFreqs = tuning.freqs.map((value) => Number(value.toFixed(2)));
+  const duplicateNameAndNotes = canResolveName && savedTunings.some((item) => {
+    const sameName = item.id !== activeSavedTuningId && item.name === name;
+    const sameNotes = arraysEqual(item.notes, tuning.notes);
+    const sameFreqs = arraysEqual(
+      item.freqs.map((value) => Number(Number(value).toFixed(2))),
+      normalizedCurrentFreqs
+    );
+    return sameName && sameNotes && sameFreqs;
+  });
+
+  let disabled = !canResolveName || duplicateNameAndNotes;
+
+  if (selectedSaved) {
+    const normalizedBaselineFreqs = selectedSaved.freqs.map((value) => Number(Number(value).toFixed(2)));
+    const hasPitchChanges = !arraysEqual(tuning.notes, selectedSaved.notes) || !arraysEqual(normalizedCurrentFreqs, normalizedBaselineFreqs);
+    const hasNameChanges = rawName.length > 0 && rawName !== selectedSaved.name;
+    disabled = disabled || !(hasPitchChanges || hasNameChanges);
+  }
 
   save.innerText = 'Sauvegarder';
   save.disabled = disabled;
@@ -1264,11 +1188,6 @@ function updateCustomActionState() {
 
 function arraysEqual(a = [], b = []) {
   return a.length === b.length && a.every((value, index) => value === b[index]);
-}
-
-function toggleSavedManager() {
-  const drawer = $('#saved-drawer');
-  setSavedManagerOpen(!drawer?.classList.contains('is-open'));
 }
 
 function setSavedManagerOpen(open) {
@@ -1496,14 +1415,6 @@ function readCustomUnifiedFromUI() {
   return { notes, freqs };
 }
 
-function readCustomNotesFromUI() {
-  return readCustomUnifiedFromUI();
-}
-
-function readCustomHzFromUI() {
-  return readCustomUnifiedFromUI();
-}
-
 function syncNoteInputs(notes) {
   notes.forEach((note, index) => {
     const sanitized = sanitizeNoteName(note);
@@ -1559,7 +1470,7 @@ function startReferenceTone(index) {
   const frequency = currentFreqs[index];
   const note = currentNotes[index];
   const now = audioContext.currentTime;
-  const profile = getToneProfile(frequency, selectedToneMode);
+  const profile = getToneProfile(frequency, REFERENCE_TONE_MODE);
 
   const filter = audioContext.createBiquadFilter();
   filter.type = 'lowpass';
@@ -1643,11 +1554,6 @@ function getToneProfile(frequency, mode) {
       { multiplier: 4, gain: 0.04, type: 'sine' }
     ]
   };
-}
-
-function selectedToneModeLabel() {
-  if (selectedToneMode === 'clear') return 'cloche';
-  return 'orgue';
 }
 
 function stopReferenceTone({ resumeMic = true } = {}) {
@@ -2006,22 +1912,6 @@ function getClosestChromaticNote(frequency) {
   };
 }
 
-function noteFromMidi(midi) {
-  const safeMidi = Number.isFinite(midi) ? Math.round(midi) : 69;
-  const noteIndex = (safeMidi % 12 + 120) % 12;
-  const octave = Math.floor(safeMidi / 12) - 1;
-  return NOTE_NAMES[noteIndex] + octave;
-}
-
-function midiFromNoteName(noteName) {
-  const sanitized = sanitizeNoteName(noteName);
-  const match = sanitized.match(/^([A-G]#?)(-?\d)$/);
-  if (!match) return 69;
-  const noteIndex = NOTE_NAMES.indexOf(match[1]);
-  const octave = Number.parseInt(match[2], 10);
-  return (octave + 1) * 12 + noteIndex;
-}
-
 function renderChromaticWheel(chromatic) {
   const wheel = $('#chromatic-wheel');
   if (!wheel) return;
@@ -2134,18 +2024,6 @@ function setNearestChromaticTick(wheel, noteIndex) {
   lastNearestNoteIndex = noteIndex;
 }
 
-function buildChromaticDiskHtml(nearestNoteIndex, wheelRotation) {
-  return NOTE_NAMES.map((noteName, noteIndex) => {
-    const angle = noteIndex * 30;
-    const isNearest = noteIndex === nearestNoteIndex;
-    return `
-      <span class="chromatic-tick${isNearest ? ' is-nearest' : ''}" data-note-index="${noteIndex}" style="--note-angle:${angle}deg;">
-        <span class="chromatic-tick__label">${noteName}</span>
-      </span>
-    `;
-  }).join('');
-}
-
 function normalizeWheelRotation(currentRotation, desiredRotation) {
   if (!Number.isFinite(currentRotation)) return desiredRotation;
   let adjusted = desiredRotation;
@@ -2181,17 +2059,6 @@ function sanitizeNoteName(noteName) {
 
 function stripOctave(note) {
   return note.replace(/[0-9-]/g, '');
-}
-
-function getRotationDegrees(element) {
-  const style = window.getComputedStyle(element);
-  const matrix = style.getPropertyValue('transform');
-  if (matrix === 'none') return 0;
-
-  const values = matrix.split('(')[1].split(')')[0].split(',');
-  const a = Number.parseFloat(values[0]);
-  const b = Number.parseFloat(values[1]);
-  return Math.round(Math.atan2(b, a) * (180 / Math.PI));
 }
 
 function showEarHelpOnce() {
@@ -2460,8 +2327,8 @@ function registerServiceWorker() {
     navigator.serviceWorker.register('./sw.js')
       .then(() => navigator.serviceWorker.ready)
       .then(() => {
-        if (!navigator.serviceWorker.controller && !sessionStorage.getItem('peach-sw-v36-reloaded')) {
-          sessionStorage.setItem('peach-sw-v36-reloaded', '1');
+        if (!navigator.serviceWorker.controller && !sessionStorage.getItem('peach-sw-v37-reloaded')) {
+          sessionStorage.setItem('peach-sw-v37-reloaded', '1');
           window.setTimeout(() => window.location.reload(), 350);
         }
       })
