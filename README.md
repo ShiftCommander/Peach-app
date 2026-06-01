@@ -6,25 +6,26 @@ It includes an automatic microphone tuner, a chromatic wheel, reference tones, p
 
 ## Release Status
 
-Current release: **V35**
+Current release: **V38**
 
 - Static app: no package manager, build step or framework runtime is required.
 - PWA assets: `manifest.json`, `sw.js`, `_headers`, and app icons are included.
 - Offline runtime: all app code is local; there are no CDN scripts required at runtime.
-- Cache version: `peach-guitar-tuner-v35`.
+- Cache version: `peach-guitar-tuner-v38`.
+- Current production target: GitHub Pages at `https://shiftcommander.github.io/Peach-app/`.
 
 ## Local Preview
 
 Serve the directory from the repository root:
 
 ```sh
-python3 -m http.server 4173
+python3 -m http.server 4273
 ```
 
 Then open:
 
 ```text
-http://localhost:4173
+http://localhost:4273
 ```
 
 The page title should be `Peach - Guitar Tuner`.
@@ -34,9 +35,8 @@ The page title should be `Peach - Guitar Tuner`.
 Before a release, verify:
 
 - The app loads over HTTPS in production.
-- `manifest.json` returns `Content-Type: application/manifest+json; charset=utf-8`.
-- `sw.js`, `/`, `/index.html`, `/version.txt`, `app.js`, and `styles.css` are served with `Cache-Control: no-cache`.
-- `icons/*` are served with long-lived immutable caching.
+- `manifest.json` loads and exposes the expected app name, icons, `start_url`, `scope`, and `id`.
+- On GitHub Pages, static files use GitHub's default cache headers. The `_headers` file is kept for Netlify-compatible deployments, but GitHub Pages does not apply it.
 - The service worker installs and activates without console errors.
 - Reload once after first service worker installation, then test offline reload.
 - Android Chrome shows the install prompt or the manual install option in the browser menu.
@@ -53,6 +53,27 @@ Before a release, verify:
 - `version.txt` - human-readable release marker.
 
 ## Release Notes
+
+### V38
+
+- Aligned release documentation with the current GitHub Pages deployment.
+- Added `.nojekyll` so GitHub Pages publishes the static app as raw files.
+- Set the manifest `id` to a relative app identity so GitHub Pages and local preview resolve it inside their own served path.
+- Bumped the service worker cache from V37 to V38.
+
+### V37
+
+- Removed proven-dead JavaScript from the tuning and reference-tone flows.
+- Fixed the unsaved custom tuning save-state logic so `Sauvegarder` enables only when it can actually save a new or changed tuning.
+- Fixed a stale custom tuning name assignment in the save flow.
+- Bumped the service worker cache from V36 to V37.
+
+### V36
+
+- Rebuilt the stylesheet around a cleaner light soft-UI system.
+- Fixed mobile carousel sizing for the Diapason and Accordage libre cards.
+- Improved note and hertz readability in the tuning controls.
+- Bumped the service worker cache from V35 to V36.
 
 ### V35
 

@@ -1,2 +1,2 @@
-Peach - Guitar Tuner V37
-JS cleanup release: removed proven dead code, fixed custom tuning save state, and refreshed PWA cache.
+Peach - Guitar Tuner V38
+Stabilization release: aligned GitHub Pages docs, manifest identity, no-Jekyll publishing, and refreshed PWA cache.

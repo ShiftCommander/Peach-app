@@ -2,7 +2,7 @@
   "name": "Peach - Guitar Tuner",
   "short_name": "Peach",
   "description": "Peach, guitar tuner premium avec disque chromatique rotatif, mode Oreille, accordages sauvegardés et diapason harmonique intégré.",
-  "id": "/",
+  "id": "./",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
