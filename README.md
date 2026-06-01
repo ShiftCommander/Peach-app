@@ -6,12 +6,13 @@ It includes an automatic microphone tuner, a chromatic wheel, reference tones, p
 
 ## Release Status
 
-Current release: **V40**
+Current release: **V41**
 
-- Static app: no package manager, build step or framework runtime is required.
+- Static app: no package manager, build step or framework runtime is required for the PWA.
+- Optional backend MVP: plain Node.js, no third-party package install required.
 - PWA assets: `manifest.json`, `sw.js`, `_headers`, and app icons are included.
 - Offline runtime: all app code is local; there are no CDN scripts required at runtime.
-- Cache version: `peach-guitar-tuner-v40`.
+- Cache version: `peach-guitar-tuner-v41`.
 - Current production target: GitHub Pages at `https://shiftcommander.github.io/Peach-app/`.
 
 ## Local Preview
@@ -44,6 +45,14 @@ localStorage.setItem('peach-global-tuning-api-url-v1', '/api/tunings/search')
 
 Search for `Black Hole Sun` to get a mock global database result, or any unknown song to trigger the mock AI fallback and persistence behavior.
 
+Run the backend API regression test:
+
+```sh
+node --test tests/global-tuning-api.test.js
+```
+
+The backend stores generated rows in `.tmp/global-tunings-dev.json` during local development.
+
 ## PWA Checks
 
 Before a release, verify:
@@ -67,6 +76,14 @@ Before a release, verify:
 - `version.txt` - human-readable release marker.
 
 ## Release Notes
+
+### V41
+
+- Added a reusable Node.js global tuning API server with JSON persistence.
+- Added a server-side AI lookup adapter with mock mode and optional OpenAI mode.
+- Converted the dev mock server to use the real backend implementation.
+- Added an automated API test for global hit, AI fallback, persistence, and repeated lookup.
+- Bumped the service worker cache from V40 to V41.
 
 ### V40
 

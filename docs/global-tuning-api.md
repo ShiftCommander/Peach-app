@@ -90,3 +90,60 @@ When the backend falls back to AI, it should return the persisted generated row:
 - Store a canonical search key to prevent duplicates for the same song/version/instrument.
 - Keep `generated` and `confidence` fields so UI and moderation can distinguish AI suggestions from confirmed data.
 - Allow later human correction without losing original source metadata.
+
+## Local Backend MVP
+
+The repository includes a plain Node.js backend MVP:
+
+- `server/tuning-api.js` - HTTP API and optional static file serving.
+- `server/tuning-store.js` - JSON-backed persistent tuning store.
+- `server/ai-lookup.js` - mock AI lookup plus optional OpenAI adapter.
+- `dev/global-tuning-api-mock.js` - local dev launcher.
+- `tests/global-tuning-api.test.js` - regression test for global search, AI fallback and persistence.
+
+Start the local backend:
+
+```sh
+node dev/global-tuning-api-mock.js
+```
+
+By default it runs on `http://localhost:4274`, serves the static app, and persists generated rows to `.tmp/global-tunings-dev.json`.
+
+Configure the frontend once in DevTools:
+
+```js
+localStorage.setItem('peach-global-tuning-api-url-v1', '/api/tunings/search')
+```
+
+Then:
+
+- Search `Black Hole Sun` to verify a seeded global database hit.
+- Search any unknown song to trigger the mock AI fallback.
+- Search the same unknown song again to verify the result is now served from the global store.
+
+Run the backend test:
+
+```sh
+node --test tests/global-tuning-api.test.js
+```
+
+## Optional OpenAI Mode
+
+The backend can use the OpenAI adapter instead of mock mode:
+
+```sh
+PEACH_AI_MODE=openai \
+OPENAI_API_KEY=... \
+OPENAI_MODEL=gpt-4o-mini \
+node dev/global-tuning-api-mock.js
+```
+
+The API key stays server-side. The browser only calls Peach's `/api/tunings/search` endpoint.
+
+The OpenAI adapter uses the Responses API with Structured Outputs (`text.format` with `type: "json_schema"`), following OpenAI's Structured Outputs documentation:
+
+```text
+https://platform.openai.com/docs/guides/structured-outputs?api-mode=responses
+```
+
+The returned payload is still validated by Peach before it is inserted, including the requirement that exactly six notes are present.

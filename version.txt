@@ -1,2 +1,2 @@
-Peach - Guitar Tuner V40
-Global tuning search MVP: API search flow, AI-fallback persistence handling, API-safe service worker, and local mock tests.
+Peach - Guitar Tuner V41
+Global tuning backend MVP: persistent API server, AI adapter, automated API test, and refreshed PWA cache.
