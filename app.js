@@ -459,7 +459,7 @@ async function requestMicrophoneWhenPossible({ force = false } = {}) {
   }
 
   if (!navigator.mediaDevices?.getUserMedia) {
-    showMicCard('HTTPS requis', 'Le micro mobile exige une page HTTPS. Publie l’app sur Netlify puis ouvre l’URL sécurisée.', 'Réessayer');
+    showMicCard('HTTPS requis', 'Le micro mobile exige une page HTTPS. Ouvre Peach depuis l’URL GitHub Pages sécurisée.', 'Réessayer');
     return;
   }
 
@@ -2537,7 +2537,7 @@ function showInstallCard(title, text, buttonText) {
 
 async function installPwa() {
   if (!deferredInstallPrompt) {
-    alert('Dans Chrome Android : ouvre le menu ⋮ puis choisis “Installer l’application” ou “Ajouter à l’écran d’accueil”. Si l’option n’apparaît pas, recharge une fois la page HTTPS Netlify.');
+    alert('Dans Chrome Android : ouvre le menu ⋮ puis choisis “Installer l’application” ou “Ajouter à l’écran d’accueil”. Si l’option n’apparaît pas, recharge une fois la page HTTPS GitHub Pages.');
     return;
   }
 
@@ -2554,8 +2554,8 @@ function registerServiceWorker() {
     navigator.serviceWorker.register('./sw.js')
       .then(() => navigator.serviceWorker.ready)
       .then(() => {
-        if (!navigator.serviceWorker.controller && !sessionStorage.getItem('peach-sw-v43-reloaded')) {
-          sessionStorage.setItem('peach-sw-v43-reloaded', '1');
+        if (!navigator.serviceWorker.controller && !sessionStorage.getItem('peach-sw-v44-reloaded')) {
+          sessionStorage.setItem('peach-sw-v44-reloaded', '1');
           window.setTimeout(() => window.location.reload(), 350);
         }
       })

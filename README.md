@@ -6,13 +6,13 @@ It includes an automatic microphone tuner, a chromatic wheel, reference tones, p
 
 ## Release Status
 
-Current release: **V43**
+Current release: **V44**
 
 - Static app: no package manager, build step or framework runtime is required for the PWA.
-- Optional backend MVP: plain Node.js or Netlify Functions with Blobs persistence.
-- PWA assets: `manifest.json`, `sw.js`, `_headers`, and app icons are included.
+- Optional backend MVP: plain Node.js process (separate from GitHub Pages static hosting).
+- PWA assets: `manifest.json`, `sw.js`, and app icons are included.
 - Offline runtime: all app code is local; there are no CDN scripts required at runtime.
-- Cache version: `peach-guitar-tuner-v43`.
+- Cache version: `peach-guitar-tuner-v44`.
 - Current production target: GitHub Pages at `https://shiftcommander.github.io/Peach-app/`.
 
 ## Local Preview
@@ -59,7 +59,7 @@ Before a release, verify:
 
 - The app loads over HTTPS in production.
 - `manifest.json` loads and exposes the expected app name, icons, `start_url`, `scope`, and `id`.
-- On GitHub Pages, static files use GitHub's default cache headers. The `_headers` file is kept for Netlify-compatible deployments, but GitHub Pages does not apply it.
+- On GitHub Pages, static files use GitHub's default cache headers.
 - The service worker installs and activates without console errors.
 - Reload once after first service worker installation, then test offline reload.
 - Android Chrome shows the install prompt or the manual install option in the browser menu.
@@ -72,7 +72,6 @@ Before a release, verify:
 - `app.js` - tuner logic, UI behavior, install prompt, and service worker registration.
 - `sw.js` - offline cache and navigation fallback.
 - `manifest.json` - PWA manifest and install metadata.
-- `_headers` - Netlify headers for manifest type, service worker freshness, and asset caching.
 - `version.txt` - human-readable release marker.
 - `config.js` - static frontend runtime config for GitHub Pages.
 - `server/` - optional deployable Node.js backend for global tuning search.
@@ -80,7 +79,7 @@ Before a release, verify:
 
 ## Backend Deployment
 
-GitHub Pages cannot execute the backend. Deploy the API on Netlify Functions or another service that can run Node, then point `config.js` to that API URL.
+GitHub Pages cannot execute the backend. Deploy the API on any Node-capable runtime, then point `config.js` to that API URL.
 
 Required runtime:
 
@@ -101,17 +100,6 @@ PEACH_RATE_LIMIT=60
 PEACH_RATE_LIMIT_WINDOW_MS=60000
 ```
 
-Deploy on Netlify:
-
-```sh
-npm install
-netlify link
-netlify build
-netlify deploy --prod
-```
-
-Use `netlify.toml`; the API routes are implemented in `netlify/functions/` and persist shared data in Netlify Blobs.
-
 Run as a Node process:
 
 ```sh
@@ -127,11 +115,17 @@ docker run -p 8080:8080 -v peach-tunings:/data peach-global-tuning-api
 
 ## Release Notes
 
+### V44
+
+- Removed deprecated serverless-specific files, dependencies, tests, and deployment notes.
+- Kept GitHub Pages as the primary static deployment path.
+- Updated tablet breakpoint behavior to prevent clipped cards in portrait.
+- Bumped the service worker cache from V43 to V44.
+
 ### V43
 
-- Added Netlify Functions for `/api/tunings/search`, `/api/health`, and dynamic `/config.js`.
-- Added Netlify Blobs persistence for the shared global tuning database.
-- Added `netlify.toml` and `@netlify/blobs` dependency for serverless deployment.
+- Confirmed GitHub Pages as the primary production target for the static app.
+- Kept the optional Node.js backend workflow for global tuning search.
 - Bumped the service worker cache from V42 to V43.
 
 ### V42
@@ -187,5 +181,5 @@ docker run -p 8080:8080 -v peach-tunings:/data peach-global-tuning-api
 - Replaced GSAP-only chromatic wheel smoothing with a local `requestAnimationFrame` animation.
 - Bumped the service worker cache from V34 to V35.
 - Updated service worker first-install reload guard to the V35 key.
-- Expanded Netlify headers for release-friendly cache behavior without requiring hashed asset filenames.
+- Expanded cache behavior guidance for release-friendly static asset updates without requiring hashed asset filenames.
 - Replaced the placeholder README with release, preview, and PWA verification notes.
