@@ -213,9 +213,7 @@ svg {
   align-items: start;
 }
 
-.install-card,
 .mic-permission-card,
-.ear-help-card,
 .tuner-card,
 .tuning-card,
 .saved-drawer__panel {
@@ -228,9 +226,7 @@ svg {
     inset -1px -1px 1px rgba(120, 126, 140, 0.18);
 }
 
-.install-card,
-.mic-permission-card,
-.ear-help-card {
+.mic-permission-card {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -239,26 +235,18 @@ svg {
   border-radius: 1.55rem;
 }
 
-.install-card strong,
-.install-card span,
 .mic-permission-card strong,
-.mic-permission-card span,
-.ear-help-card strong,
-.ear-help-card span {
+.mic-permission-card span {
   display: block;
 }
 
-.install-card strong,
-.mic-permission-card strong,
-.ear-help-card strong {
+.mic-permission-card strong {
   color: var(--ink-strong);
   font-size: 0.9rem;
   line-height: 1.15;
 }
 
-.install-card span,
-.mic-permission-card span,
-.ear-help-card span {
+.mic-permission-card span {
   margin-top: 0.2rem;
   color: var(--muted);
   font-size: 0.76rem;
@@ -266,7 +254,6 @@ svg {
   line-height: 1.25;
 }
 
-.install-card button,
 .mic-permission-card button,
 .secondary-action {
   min-height: 2.8rem;
@@ -287,33 +274,7 @@ svg {
   background: linear-gradient(145deg, #f98544, var(--orange));
 }
 
-.ear-help-card {
-  position: relative;
-  align-items: flex-start;
-  padding-right: 3.25rem;
-}
 
-.ear-help-close,
-.glass-help-close,
-#saved-drawer-close {
-  width: 2.15rem;
-  height: 2.15rem;
-  display: grid;
-  place-items: center;
-  border: 1px solid rgba(118, 125, 140, 0.2);
-  border-radius: 999rem;
-  color: var(--muted);
-  background: linear-gradient(145deg, #eef0f5, #dce0e8);
-  box-shadow:
-    0.25rem 0.3rem 0.55rem rgba(111, 116, 130, 0.22),
-    -0.2rem -0.2rem 0.5rem rgba(255, 255, 255, 0.74);
-}
-
-.ear-help-close {
-  position: absolute;
-  top: 0.85rem;
-  right: 0.85rem;
-}
 
 .tuner-card {
   position: relative;
@@ -586,40 +547,6 @@ svg {
   line-height: 1.14;
 }
 
-.cents-deviation {
-  position: relative;
-  z-index: 2;
-  min-height: 2.6rem;
-  display: grid;
-  place-items: center;
-  margin-top: 0.8rem;
-  padding: 0.56rem 0.85rem;
-  border: 1px solid rgba(118, 126, 142, 0.16);
-  border-radius: 1rem;
-  color: var(--muted);
-  background: linear-gradient(150deg, #e9ecf2, #dfe3eb);
-  font-size: 0.82rem;
-  font-weight: 720;
-  line-height: 1.2;
-  text-align: center;
-  box-shadow:
-    inset 1px 1px 2px rgba(123, 130, 145, 0.15),
-    inset -1px -1px 2px rgba(255, 255, 255, 0.75);
-}
-
-.cents-deviation.is-perfect,
-.cents-deviation.is-ear {
-  color: #2d7778;
-}
-
-.cents-deviation.is-low {
-  color: #9b5c17;
-}
-
-.cents-deviation.is-high,
-.cents-deviation.is-perfect-outside {
-  color: #9a3f56;
-}
 
 .target-notes {
   display: flex;
@@ -1207,9 +1134,7 @@ select:focus-visible {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .install-card,
-  .mic-permission-card,
-  .ear-help-card {
+  .mic-permission-card {
     grid-column: 1 / -1;
   }
 
@@ -1294,14 +1219,11 @@ select:focus-visible {
     padding-bottom: 0.9rem;
   }
 
-  .install-card,
-  .mic-permission-card,
-  .ear-help-card {
+  .mic-permission-card {
     border-radius: 1.35rem;
     padding: 0.82rem 0.85rem;
   }
 
-  .install-card button,
   .mic-permission-card button {
     min-height: 2.55rem;
     padding-inline: 0.9rem;

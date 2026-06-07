@@ -16,7 +16,6 @@ const ANALYSIS_INTERVAL_MS = 42;
 const SIGNAL_STALE_MS = 920;
 const PERFECT_CENTS = 3;
 const CLOSE_CENTS = 12;
-const EAR_HELP_STORAGE_KEY = 'peach-ear-help-dismissed-v30';
 const CUSTOM_TUNING_STORAGE_KEY = 'timtuner-custom-tuning-v1';
 const SAVED_TUNINGS_STORAGE_KEY = 'timtuner-saved-tunings-v1';
 const CUSTOM_DISCOVERY_STORAGE_KEY = 'timtuner-custom-card-discovered-v1';
@@ -200,18 +199,12 @@ let chromaticWheelTweenElement = null;
 let chromaticWheelInitialized = false;
 let lastNearestNoteIndex = null;
 let smoothedDisplayFrequency = null;
-let lastFeedbackText = "";
-let lastFeedbackTextAt = 0;
 let lastUiFeedbackAt = 0;
 let suppressAnalysisUntil = 0;
 
 let noteHistory = [];
 let lastStableTarget = '';
 let stableFrames = 0;
-let deferredInstallPrompt = null;
-let installFallbackShown = false;
-let earHelpTimer = null;
-let earHelpStartPointer = null;
 let tuningPage = 'diapason';
 let customCardDiscovered = false;
 let autoApplyTimer = null;
@@ -240,7 +233,6 @@ window.addEventListener('DOMContentLoaded', () => {
   updateCustomSwipeHint();
   renderSavedManager();
   renderSongTuningResults();
-  setupInstallPrompt();
   registerServiceWorker();
   requestMicrophoneWhenPossible();
 });
@@ -297,15 +289,13 @@ function bindUI() {
     openSavedMenuId = null;
     renderSavedManager();
   });
-  $('#install-button').addEventListener('click', installPwa);
   $('#mic-permission-button').addEventListener('click', () => requestMicrophoneWhenPossible({ force: true }));
-  $('#ear-help-close').addEventListener('click', () => dismissEarHelp({ remember: true }));
   bindHelpPopovers();
 
   bindTuningCardScroll();
   bindUiFeedback();
 
-  bindEarHelpSwipe();
+
 
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
@@ -427,7 +417,6 @@ function pauseForBackground() {
   setListeningState('waiting', 'En pause hors app');
   setSignalState(false, 'Micro libéré');
   hideMicCard();
-  dismissEarHelp({ remember: false });
 
   const detail = $('#heard-note-detail');
   if (detail && lastUiFrequency) {
@@ -729,7 +718,6 @@ function applyCustomTuning({ silent = false, stayOnCustom = true, fromHz = false
   updateCustomActionState();
   stopReferenceTone({ resumeMic: true });
   resetTunerVisuals();
-  if (!silent) flashActionFeedback('Accordage appliqué.');
   if (!stayOnCustom) setTuningPage('diapason');
 }
 
@@ -1119,6 +1107,7 @@ function applySongTuning(song, { flash = false } = {}) {
   updateCustomActionState();
   stopReferenceTone({ resumeMic: true });
   resetTunerVisuals();
+  setTuningPage('diapason');
   if (flash) flashActionFeedback(`${song.tuningName} appliqué.`);
 }
 
@@ -1159,8 +1148,7 @@ function saveSongTuning(song) {
   const select = $('#tuning-select');
   if (select) select.value = currentPresetKey;
   renderSavedManager();
-  updateCustomActionState();
-  flashActionFeedback('Morceau sauvegardé dans Mes accordages.');
+  setTuningPage('diapason');
 }
 
 function getSongFrequencies(song, notes) {
@@ -1529,18 +1517,7 @@ function escapeHtml(value) {
     .replace(/'/g, '&#039;');
 }
 
-function flashActionFeedback(message) {
-  const feedback = $('#cents-deviation');
-  if (!feedback || referenceToneActive || isMicTuning) return;
-  feedback.className = 'cents-deviation is-ear';
-  setFeedbackText(message, { force: true });
-  window.setTimeout(() => {
-    if (!referenceToneActive && !lastUiFrequency) {
-      feedback.className = 'cents-deviation';
-      setFeedbackText('Joue une corde pour commencer.', { force: true });
-    }
-  }, 1400);
-}
+
 
 function renderTargetNotes() {
   const targetDiv = $('#target-notes-ui');
@@ -1738,14 +1715,11 @@ function startReferenceTone(index) {
   currentTargetIndex = index;
   renderTargetNotes();
   updatePlayingButtonState();
-  showEarHelpOnce();
 
   $('.tuner-card').classList.remove('is-perfect', 'is-perfect-outside', 'is-low', 'is-high');
   $('.tuner-card').classList.add('is-ear');
   $('#detected-note').innerText = note;
   $('#heard-note-detail').innerText = `${frequency.toFixed(1)} Hz`;
-  $('#cents-deviation').className = 'cents-deviation is-ear';
-  setFeedbackText('', { force: true });
   renderChromaticWheel({ ...getClosestChromaticNote(frequency), cents: 0, name: note });
 }
 
@@ -1844,8 +1818,7 @@ function resetTunerVisuals() {
   const tunerCard = $('.tuner-card');
   tunerCard.classList.remove('is-perfect', 'is-perfect-outside', 'is-low', 'is-high', 'is-ear');
   $('#detected-note').innerText = '--';
-  $('#heard-note-detail').innerText = referenceToneActive ? 'Référence active · micro en pause' : 'En attente d’une corde…';
-  $('#cents-deviation').className = 'cents-deviation';
+  $('#heard-note-detail').innerText = 'En attente d’une corde…';
   setSignalState(false, referenceToneActive ? 'Micro en pause' : 'Aucun signal');
   smoothedDisplayFrequency = null;
   setFeedbackText('Joue une corde pour commencer.', { force: true });
@@ -1903,7 +1876,6 @@ function updateTunerFromFrequency(frequency, rms) {
 
   $('#detected-note').innerText = chromatic.name;
   $('#heard-note-detail').innerText = getHeardDetailLabel(displayFrequency, chromatic, outsideTuningPerfect, targetPerfect);
-  setFeedbackText(getFeedbackLabel(targetCents, target.note, chromatic, outsideTuningPerfect, targetPerfect));
 
   setSignalState(true, getSignalLabel(rms));
   updateTuningState(chromatic.cents, { outsideTuningPerfect, targetPerfect, chromaticPerfect });
@@ -1922,18 +1894,7 @@ function isNoteInCurrentTuning(noteName) {
   return currentNotes.some((note) => sanitizeNoteName(note) === sanitized);
 }
 
-function getFeedbackLabel(cents, targetNote, chromatic = null, outsideTuningPerfect = false, targetPerfect = false) {
-  if (outsideTuningPerfect && chromatic) return `Juste hors accordage · vise ${targetNote}`;
-  if (targetPerfect || Math.abs(cents) <= PERFECT_CENTS) return `Juste · ${targetNote}`;
 
-  if (cents < 0) {
-    if (Math.abs(cents) <= CLOSE_CENTS) return `Presque ${targetNote} · serre légèrement`;
-    return `Vise ${targetNote} · trop bas, serre`;
-  }
-
-  if (Math.abs(cents) <= CLOSE_CENTS) return `Presque ${targetNote} · détends légèrement`;
-  return `Vise ${targetNote} · trop haut, détends`;
-}
 
 function smoothDisplayFrequency(frequency) {
   if (!Number.isFinite(frequency)) return frequency;
@@ -1953,20 +1914,7 @@ function smoothDisplayFrequency(frequency) {
   return smoothedDisplayFrequency;
 }
 
-function setFeedbackText(message, { force = false } = {}) {
-  const feedback = $('#cents-deviation');
-  if (!feedback) return;
-  const normalized = String(message || '').trim();
-  if (!normalized) return;
-  const now = performance.now();
 
-  if (!force && normalized !== lastFeedbackText && now - lastFeedbackTextAt < 150) return;
-  if (normalized === lastFeedbackText && !force) return;
-
-  lastFeedbackText = normalized;
-  lastFeedbackTextAt = now;
-  feedback.textContent = normalized;
-}
 
 function getSignalLabel(rms) {
   if (rms > 0.055) return 'Signal fort';
@@ -1976,22 +1924,16 @@ function getSignalLabel(rms) {
 
 function updateTuningState(cents, state = {}) {
   const tunerCard = $('.tuner-card');
-  const centsLabel = $('#cents-deviation');
   tunerCard.classList.remove('is-perfect', 'is-perfect-outside', 'is-low', 'is-high', 'is-ear');
-  centsLabel.className = 'cents-deviation';
 
   if (state.outsideTuningPerfect) {
     tunerCard.classList.add('is-perfect-outside');
-    centsLabel.classList.add('is-perfect-outside');
   } else if (state.targetPerfect) {
     tunerCard.classList.add('is-perfect');
-    centsLabel.classList.add('is-perfect');
   } else if (cents < 0) {
     tunerCard.classList.add('is-low');
-    centsLabel.classList.add('is-low');
   } else {
     tunerCard.classList.add('is-high');
-    centsLabel.classList.add('is-high');
   }
 }
 
@@ -2288,41 +2230,7 @@ function stripOctave(note) {
   return note.replace(/[0-9-]/g, '');
 }
 
-function showEarHelpOnce() {
-  const isProbablyMobile = window.matchMedia('(hover: none), (pointer: coarse)').matches || window.innerWidth < 680;
-  if (!isProbablyMobile) return;
 
-  try {
-    if (localStorage.getItem(EAR_HELP_STORAGE_KEY) === '1') return;
-  } catch (error) {
-    console.debug('Ear help storage unavailable:', error);
-  }
-
-  const card = $('#ear-help-card');
-  card.classList.remove('is-hidden');
-  card.classList.remove('is-dismissing');
-
-  clearTimeout(earHelpTimer);
-  earHelpTimer = window.setTimeout(() => dismissEarHelp({ remember: true }), 6500);
-}
-
-function dismissEarHelp({ remember = true } = {}) {
-  const card = $('#ear-help-card');
-  if (!card || card.classList.contains('is-hidden')) return;
-
-  clearTimeout(earHelpTimer);
-  card.classList.add('is-dismissing');
-  window.setTimeout(() => {
-    card.classList.add('is-hidden');
-    card.classList.remove('is-dismissing');
-    card.style.transform = '';
-    card.style.opacity = '';
-  }, 170);
-
-  if (remember) {
-    try { localStorage.setItem(EAR_HELP_STORAGE_KEY, '1'); } catch (error) { console.debug('Ear help storage unavailable:', error); }
-  }
-}
 
 function bindUiFeedback() {
   document.addEventListener('click', (event) => {
@@ -2467,85 +2375,7 @@ function playUiFeedback(kind = 'tap') {
   }).catch(() => {});
 }
 
-function bindEarHelpSwipe() {
-  const card = $('#ear-help-card');
 
-  card.addEventListener('pointerdown', (event) => {
-    earHelpStartPointer = { x: event.clientX, y: event.clientY };
-  });
-
-  card.addEventListener('pointermove', (event) => {
-    if (!earHelpStartPointer) return;
-    const dx = event.clientX - earHelpStartPointer.x;
-    const dy = event.clientY - earHelpStartPointer.y;
-    if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
-    card.style.transform = `translate(${dx * 0.35}px, ${Math.max(0, dy) * 0.35}px)`;
-    card.style.opacity = String(Math.max(0.55, 1 - (Math.abs(dx) + Math.abs(dy)) / 260));
-  });
-
-  card.addEventListener('pointerup', (event) => {
-    if (!earHelpStartPointer) return;
-    const dx = event.clientX - earHelpStartPointer.x;
-    const dy = event.clientY - earHelpStartPointer.y;
-    earHelpStartPointer = null;
-
-    if (Math.abs(dx) > 65 || Math.abs(dy) > 55) {
-      dismissEarHelp({ remember: true });
-      return;
-    }
-
-    card.style.transform = '';
-    card.style.opacity = '';
-  });
-
-  card.addEventListener('pointercancel', () => {
-    earHelpStartPointer = null;
-    card.style.transform = '';
-    card.style.opacity = '';
-  });
-}
-
-function setupInstallPrompt() {
-  const standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-  if (standalone) return;
-
-  window.addEventListener('beforeinstallprompt', (event) => {
-    event.preventDefault();
-    deferredInstallPrompt = event;
-    showInstallCard('Installer Peach', 'Ajoute Peach à ton écran d’accueil Android.', 'Installer');
-  });
-
-  window.addEventListener('appinstalled', () => {
-    deferredInstallPrompt = null;
-    $('#install-card').classList.add('is-hidden');
-  });
-
-  window.setTimeout(() => {
-    if (!deferredInstallPrompt && !installFallbackShown) {
-      showInstallCard('Installation Android', 'Si Chrome ne propose pas encore l’installation : menu ⋮ puis “Installer l’application” ou “Ajouter à l’écran d’accueil”.', 'Aide');
-    }
-  }, 2800);
-}
-
-function showInstallCard(title, text, buttonText) {
-  installFallbackShown = true;
-  $('#install-title').innerText = title;
-  $('#install-text').innerText = text;
-  $('#install-button').innerText = buttonText;
-  $('#install-card').classList.remove('is-hidden');
-}
-
-async function installPwa() {
-  if (!deferredInstallPrompt) {
-    alert('Dans Chrome Android : ouvre le menu ⋮ puis choisis “Installer l’application” ou “Ajouter à l’écran d’accueil”. Si l’option n’apparaît pas, recharge une fois la page HTTPS GitHub Pages.');
-    return;
-  }
-
-  deferredInstallPrompt.prompt();
-  await deferredInstallPrompt.userChoice;
-  deferredInstallPrompt = null;
-  $('#install-card').classList.add('is-hidden');
-}
 
 function registerServiceWorker() {
   if (!('serviceWorker' in navigator)) return;

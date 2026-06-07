@@ -1,4 +1,4 @@
-const CACHE_NAME = 'peach-guitar-tuner-v48';
+const CACHE_NAME = 'peach-guitar-tuner-v49';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -8,7 +8,6 @@ const CORE_ASSETS = [
   './app.js',
   './dial-lens.js',
   './dial-smooth.js',
-  './ui-cleanup.js',
   './manifest.json',
   './version.txt',
   './icons/favicon-32.png',
