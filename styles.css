@@ -1000,7 +1000,7 @@ select:focus-visible {
   width: min(26rem, 92vw);
   height: 100%;
   display: grid;
-  grid-template-rows: auto auto minmax(0, 1fr);
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
   gap: 1rem;
   padding: max(1rem, env(safe-area-inset-top)) 1rem max(1rem, env(safe-area-inset-bottom));
   border-radius: 1.6rem 0 0 1.6rem;
@@ -1288,4 +1288,131 @@ select:focus-visible {
     animation-duration: 0.01ms;
     animation-iteration-count: 1;
   }
+}
+
+/* --- THEME LUTHIER --- */
+
+[data-theme="luthier"] {
+  --page-bg: #c1b39c;
+  --page-bg-2: #b0a38b;
+  --surface: #d8cdba;
+  --surface-soft: #e2d9ca;
+  --surface-sunken: #c9bda8;
+  --ink: #3a2b20;
+  --ink-strong: #1a1008;
+  --muted: #7b6a5a;
+  --muted-soft: #9c8b7b;
+  --blue: #ab6a42;
+  --blue-dark: #8c502b;
+  --cyan: #c2a878;
+  --orange: #b84c26;
+  --danger: #9c3333;
+  --line: rgba(70, 50, 30, 0.15);
+  --line-soft: rgba(255, 255, 255, 0.45);
+  --shadow-dark: rgba(70, 50, 30, 0.4);
+  --shadow-mid: rgba(70, 50, 30, 0.25);
+  --shadow-light: rgba(255, 250, 240, 0.6);
+}
+
+[data-theme="luthier"] body {
+  background:
+    radial-gradient(circle at 10% 7%, rgba(255, 250, 240, 0.35), transparent 25rem),
+    radial-gradient(circle at 86% 5%, rgba(255, 250, 240, 0.25), transparent 24rem),
+    linear-gradient(180deg, var(--page-bg), var(--page-bg-2));
+}
+
+[data-theme="luthier"] body::before {
+  background:
+    radial-gradient(circle at 50% 100%, rgba(100, 70, 40, 0.15), transparent 36rem),
+    url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)" opacity="0.04"/></svg>');
+}
+
+[data-theme="luthier"] .dial-ring--outer {
+  background: linear-gradient(145deg, #d2c5b3, #bba993);
+  box-shadow: 
+    inset 1px 1px 2px rgba(255, 250, 240, 0.6),
+    inset -1px -1px 3px rgba(70, 50, 30, 0.2),
+    0 12px 24px var(--shadow-mid);
+}
+
+[data-theme="luthier"] .dial-ring--inner {
+  background: #2a221b;
+  box-shadow:
+    inset 0 4px 12px rgba(0, 0, 0, 0.5),
+    inset 0 1px 2px rgba(0, 0, 0, 0.8),
+    0 1px 1px rgba(255, 250, 240, 0.15);
+}
+
+[data-theme="luthier"] .chromatic-tick__label {
+  color: #dfd5c5;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+}
+
+[data-theme="luthier"] .chromatic-tick.is-nearest .chromatic-tick__label {
+  color: #f4ecd8;
+  text-shadow: 0 0 8px rgba(194, 168, 120, 0.6), 0 1px 2px rgba(0,0,0,0.8);
+}
+
+[data-theme="luthier"] .dial-bezel-light {
+  background: linear-gradient(135deg, rgba(255, 250, 240, 0.18) 0%, transparent 40%, rgba(255, 250, 240, 0.05) 100%);
+}
+
+[data-theme="luthier"] .center-marker {
+  background: linear-gradient(180deg, #c2a878, #a88d5c);
+  box-shadow:
+    inset 1px 0 1px rgba(255, 255, 255, 0.4),
+    inset -1px 0 1px rgba(0, 0, 0, 0.3),
+    0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="luthier"] .center-pivot {
+  background: radial-gradient(circle at 40% 40%, #c2a878, #8c6e42);
+  box-shadow: 
+    0 4px 8px rgba(0,0,0,0.5),
+    inset 1px 1px 2px rgba(255,255,255,0.4);
+}
+
+[data-theme="luthier"] .tuner-card.is-perfect .center-marker {
+  background: linear-gradient(180deg, #6db388, #4a825e);
+}
+
+/* Appearance section */
+.saved-drawer__appearance {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 0.4rem;
+}
+
+.saved-drawer__appearance strong {
+  color: var(--ink-strong);
+  font-size: 0.95rem;
+}
+
+.current-theme-label {
+  color: var(--muted);
+  font-size: 0.78rem;
+  margin-bottom: 0.4rem;
+}
+
+.theme-toggle-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1rem;
+  background: var(--surface-sunken);
+  color: var(--ink-strong);
+  border: 1px solid var(--line);
+  border-radius: var(--control-radius);
+  font-size: 0.85rem;
+  font-weight: 600;
+  box-shadow: inset 1px 1px 2px var(--shadow-light), inset -1px -1px 2px rgba(0,0,0,0.03);
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.theme-toggle-button:active {
+  transform: scale(0.97);
+  box-shadow: inset 2px 2px 4px rgba(0,0,0,0.06);
 }
