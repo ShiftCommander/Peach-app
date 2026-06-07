@@ -1293,126 +1293,265 @@ select:focus-visible {
 /* --- THEME LUTHIER --- */
 
 [data-theme="luthier"] {
-  --page-bg: #c1b39c;
-  --page-bg-2: #b0a38b;
-  --surface: #d8cdba;
-  --surface-soft: #e2d9ca;
-  --surface-sunken: #c9bda8;
-  --ink: #3a2b20;
-  --ink-strong: #1a1008;
-  --muted: #7b6a5a;
-  --muted-soft: #9c8b7b;
-  --blue: #ab6a42;
-  --blue-dark: #8c502b;
-  --cyan: #c2a878;
+  /* Warm, rich amber/wood tones */
+  --page-bg: #d4c2a8;
+  --page-bg-2: #bcab92;
+  --surface: #ebdcca;
+  --surface-soft: #f2ebd9;
+  --surface-sunken: #cebfac;
+  --ink: #3b2818;
+  --ink-strong: #1f1207;
+  --muted: #826a54;
+  --muted-soft: #9c8979;
+  
+  --blue: #ab5d29; /* Warm copper/brass */
+  --blue-dark: #82431a;
+  --cyan: #c7ab7c; /* Pale brass/gold highlight */
   --orange: #b84c26;
   --danger: #9c3333;
-  --line: rgba(70, 50, 30, 0.15);
-  --line-soft: rgba(255, 255, 255, 0.45);
-  --shadow-dark: rgba(70, 50, 30, 0.4);
-  --shadow-mid: rgba(70, 50, 30, 0.25);
+  
+  --line: rgba(70, 45, 20, 0.12);
+  --line-soft: rgba(255, 250, 235, 0.5);
+  --shadow-dark: rgba(70, 45, 20, 0.35);
+  --shadow-mid: rgba(70, 45, 20, 0.22);
   --shadow-light: rgba(255, 250, 240, 0.6);
 }
 
+/* 1. Surfaces (Body, Cards, Drawer) */
 [data-theme="luthier"] body {
   background:
-    radial-gradient(circle at 10% 7%, rgba(255, 250, 240, 0.35), transparent 25rem),
-    radial-gradient(circle at 86% 5%, rgba(255, 250, 240, 0.25), transparent 24rem),
-    linear-gradient(180deg, var(--page-bg), var(--page-bg-2));
+    radial-gradient(circle at 10% 5%, rgba(255, 250, 230, 0.45), transparent 25rem),
+    radial-gradient(circle at 85% 10%, rgba(255, 250, 230, 0.25), transparent 30rem),
+    linear-gradient(170deg, var(--page-bg), var(--page-bg-2));
 }
 
 [data-theme="luthier"] body::before {
+  /* Subtle wood grain/noise and vignette */
   background:
-    radial-gradient(circle at 50% 100%, rgba(100, 70, 40, 0.15), transparent 36rem),
-    url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)" opacity="0.04"/></svg>');
+    radial-gradient(circle at 50% 100%, rgba(60, 35, 10, 0.18), transparent 45rem),
+    url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)" opacity="0.04"/></svg>');
+}
+
+[data-theme="luthier"] .tuning-card,
+[data-theme="luthier"] .mic-permission-card {
+  background: linear-gradient(135deg, #f0e6d6, #e3d2be);
+  box-shadow: 
+    0 16px 32px var(--shadow-dark),
+    inset 1px 1px 2px rgba(255, 255, 255, 0.8),
+    inset -1px -1px 2px rgba(100, 70, 40, 0.1);
+  border: 1px solid rgba(130, 100, 70, 0.15);
+}
+
+[data-theme="luthier"] .saved-drawer__panel {
+  background: linear-gradient(150deg, #ebdcca, #d4c4b0);
+  box-shadow: -12px 0 32px var(--shadow-dark);
+  border-right: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+[data-theme="luthier"] .saved-item.is-active {
+  background: rgba(171, 93, 41, 0.08); /* copper tint */
+  border-color: rgba(171, 93, 41, 0.25);
+}
+
+/* 2. Cadran (Dial) */
+[data-theme="luthier"] .dial {
+  background: linear-gradient(135deg, #dcd0bc, #c5b49d);
+  box-shadow: 
+    0 16px 32px var(--shadow-mid),
+    inset 1px 1px 2px rgba(255, 255, 255, 0.7),
+    inset -1px -1px 3px rgba(80, 50, 30, 0.15);
+  border: 1px solid rgba(120, 90, 60, 0.2);
 }
 
 [data-theme="luthier"] .dial-ring--outer {
-  background: linear-gradient(145deg, #d2c5b3, #bba993);
+  background: 
+    repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(255,255,255,0.08) 2px, rgba(255,255,255,0.08) 4px),
+    linear-gradient(135deg, #c5b49d, #9c8969); /* Soft brass/brushed metal base */
   box-shadow: 
-    inset 1px 1px 2px rgba(255, 250, 240, 0.6),
-    inset -1px -1px 3px rgba(70, 50, 30, 0.2),
-    0 12px 24px var(--shadow-mid);
+    inset 1px 1px 3px rgba(255, 250, 235, 0.6),
+    inset -2px -2px 5px rgba(60, 40, 20, 0.3),
+    0 12px 24px var(--shadow-dark);
+  border: 1px solid rgba(100, 70, 40, 0.2);
 }
 
 [data-theme="luthier"] .dial-ring--inner {
-  background: #2a221b;
+  background: radial-gradient(circle at center, #261b12, #1a100a); /* deep ebony */
   box-shadow:
-    inset 0 4px 12px rgba(0, 0, 0, 0.5),
-    inset 0 1px 2px rgba(0, 0, 0, 0.8),
-    0 1px 1px rgba(255, 250, 240, 0.15);
+    inset 0 6px 18px rgba(0, 0, 0, 0.7),
+    inset 0 1px 2px rgba(0, 0, 0, 0.9),
+    0 1px 1px rgba(255, 250, 235, 0.25);
+  border: 1px solid #000;
 }
 
-[data-theme="luthier"] .chromatic-tick__label {
-  color: #dfd5c5;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+[data-theme="luthier"] .dial-label {
+  color: #8a7b6a;
+  text-shadow: 0 1px 1px rgba(255,255,255,0.6);
 }
 
-[data-theme="luthier"] .chromatic-tick.is-nearest .chromatic-tick__label {
-  color: #f4ecd8;
-  text-shadow: 0 0 8px rgba(194, 168, 120, 0.6), 0 1px 2px rgba(0,0,0,0.8);
+/* Vitre fumée / Loupe */
+[data-theme="luthier"] .dial-glass--smoked {
+  background:
+    radial-gradient(ellipse at 50% 10%, transparent 0 14%, rgba(255, 245, 225, 0.12) 24%, rgba(255, 245, 225, 0.04) 44%, transparent 100%),
+    linear-gradient(120deg, rgba(255, 250, 235, 0.18), rgba(220, 210, 190, 0.22) 34%, rgba(190, 175, 150, 0.12) 100%);
+  border-color: rgba(255, 250, 235, 0.35);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 250, 235, 0.6),
+    inset 0 -1px 0 rgba(90, 70, 50, 0.15),
+    0 1.05rem 2.1rem rgba(60, 45, 30, 0.22);
+}
+
+[data-theme="luthier"] .dial-glass--smoked::after {
+  background:
+    radial-gradient(120% 160% at 50% 28%, rgba(255, 250, 235, 0.55), rgba(255, 250, 235, 0.12) 42%, transparent 74%),
+    linear-gradient(180deg, rgba(255, 250, 235, 0.18), rgba(180, 160, 130, 0.04));
+  border-color: rgba(255, 250, 235, 0.6);
 }
 
 [data-theme="luthier"] .dial-bezel-light {
-  background: linear-gradient(135deg, rgba(255, 250, 240, 0.18) 0%, transparent 40%, rgba(255, 250, 240, 0.05) 100%);
+  background: linear-gradient(135deg, rgba(255, 250, 235, 0.2) 0%, transparent 40%, rgba(255, 250, 235, 0.06) 100%);
 }
 
+/* Aiguille / Pivot (Laiton / Or pale) */
 [data-theme="luthier"] .center-marker {
-  background: linear-gradient(180deg, #c2a878, #a88d5c);
+  background: linear-gradient(90deg, #c4a976 0%, #ecd6aa 30%, #ceb484 70%, #9c8152 100%);
   box-shadow:
-    inset 1px 0 1px rgba(255, 255, 255, 0.4),
-    inset -1px 0 1px rgba(0, 0, 0, 0.3),
-    0 4px 8px rgba(0, 0, 0, 0.5);
+    inset 1px 0 1px rgba(255, 255, 255, 0.6),
+    0 6px 12px rgba(0, 0, 0, 0.45);
 }
 
 [data-theme="luthier"] .center-pivot {
-  background: radial-gradient(circle at 40% 40%, #c2a878, #8c6e42);
+  background: radial-gradient(circle at 35% 35%, #f2ecd8, #c4a976 40%, #7a6035 90%);
   box-shadow: 
-    0 4px 8px rgba(0,0,0,0.5),
-    inset 1px 1px 2px rgba(255,255,255,0.4);
+    0 8px 12px rgba(0, 0, 0, 0.5),
+    inset 1px 1px 2px rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(60, 40, 20, 0.5);
 }
 
 [data-theme="luthier"] .tuner-card.is-perfect .center-marker {
-  background: linear-gradient(180deg, #6db388, #4a825e);
+  background: linear-gradient(90deg, #74a883 0%, #a4cdb1 30%, #82b692 70%, #527c60 100%);
 }
 
-/* Appearance section */
-.saved-drawer__appearance {
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--line);
-  display: grid;
-  gap: 0.4rem;
+/* 3. Disque rotatif */
+[data-theme="luthier"] .chromatic-wheel {
+  background: radial-gradient(circle at 30% 30%, #fffbfa, #f0ebd8 60%, #c4b69d 100%);
+  box-shadow: 
+    inset 0 2px 5px rgba(255, 255, 255, 0.9),
+    inset 0 -3px 8px rgba(100, 80, 50, 0.3),
+    0 10px 20px rgba(0, 0, 0, 0.25);
+  border: 1px solid #dcd0bc;
 }
 
-.saved-drawer__appearance strong {
+[data-theme="luthier"] .chromatic-tick__label {
+  color: #4f3d2e;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7); /* Engraved */
+}
+
+[data-theme="luthier"] .chromatic-tick.is-nearest .chromatic-tick__label {
+  color: #1a1209;
+  background: linear-gradient(145deg, #f7ebd5, #d9c8a9);
+  border-color: rgba(160, 120, 80, 0.3);
+  box-shadow:
+    0 4px 10px rgba(90, 60, 30, 0.25),
+    inset 1px 1px 2px rgba(255, 255, 255, 0.8);
+  text-shadow: none;
+}
+
+[data-theme="luthier"] .tuner-card.is-low .chromatic-tick.is-nearest .chromatic-tick__label {
+  background: linear-gradient(145deg, #e3a968, #b85223);
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+[data-theme="luthier"] .tuner-card.is-high .chromatic-tick.is-nearest .chromatic-tick__label {
+  background: linear-gradient(145deg, #d67a7a, #8c2424);
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+/* 4. Boutons de cordes (String Card) */
+[data-theme="luthier"] .string-card {
+  background: linear-gradient(145deg, #ebdcca, #d4c4b0);
+  border: 1px solid rgba(130, 100, 70, 0.15);
+  box-shadow: 
+    0 6px 12px var(--shadow-mid),
+    inset 1px 1px 2px rgba(255, 250, 235, 0.8),
+    inset -1px -1px 3px rgba(100, 70, 40, 0.08);
   color: var(--ink-strong);
-  font-size: 0.95rem;
 }
 
-.current-theme-label {
-  color: var(--muted);
-  font-size: 0.78rem;
-  margin-bottom: 0.4rem;
+[data-theme="luthier"] .string-card:active,
+[data-theme="luthier"] .string-card.is-playing {
+  background: linear-gradient(145deg, #d4c4b0, #c4b29c);
+  box-shadow: 
+    0 2px 4px var(--shadow-dark),
+    inset 2px 2px 6px rgba(80, 50, 30, 0.18);
+  transform: scale(0.96);
+  border-color: rgba(130, 100, 70, 0.25);
 }
 
-.theme-toggle-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  padding: 0.75rem 1rem;
-  background: var(--surface-sunken);
+[data-theme="luthier"] .string-card.is-current-target {
+  background: linear-gradient(145deg, #e6d3ba, #d4ae83); /* Subtle copper glow */
+  border-color: rgba(180, 110, 60, 0.35);
+  box-shadow: 
+    0 8px 16px rgba(140, 80, 40, 0.25),
+    inset 1px 1px 3px rgba(255, 250, 235, 0.85);
+  transform: scale(1.02);
+}
+
+/* 5. Inputs / Selects / Menu Buttons */
+[data-theme="luthier"] input[type="search"],
+[data-theme="luthier"] input[type="text"],
+[data-theme="luthier"] select {
+  background: linear-gradient(145deg, #e3d3be, #d6c5af);
+  border: 1px solid rgba(110, 80, 50, 0.2);
+  box-shadow: inset 1px 2px 4px rgba(90, 60, 30, 0.1), inset -1px -1px 2px rgba(255, 250, 235, 0.5);
   color: var(--ink-strong);
-  border: 1px solid var(--line);
-  border-radius: var(--control-radius);
-  font-size: 0.85rem;
-  font-weight: 600;
-  box-shadow: inset 1px 1px 2px var(--shadow-light), inset -1px -1px 2px rgba(0,0,0,0.03);
-  transition: transform 120ms ease, box-shadow 120ms ease;
 }
 
-.theme-toggle-button:active {
+[data-theme="luthier"] input:focus,
+[data-theme="luthier"] select:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(171, 93, 41, 0.2), inset 1px 2px 4px rgba(90, 60, 30, 0.12);
+}
+
+[data-theme="luthier"] .secondary-action,
+[data-theme="luthier"] .mic-permission-card button {
+  background: linear-gradient(145deg, #f2ead3, #e3ceaf);
+  border: 1px solid rgba(120, 80, 40, 0.2);
+  box-shadow: 
+    0 4px 8px var(--shadow-mid),
+    inset 1px 1px 2px rgba(255, 250, 235, 0.8);
+  color: var(--ink-strong);
+}
+
+[data-theme="luthier"] .secondary-action:active,
+[data-theme="luthier"] .mic-permission-card button:active {
+  background: linear-gradient(145deg, #e3ceaf, #cba97c);
+  box-shadow: inset 2px 2px 6px rgba(90, 50, 20, 0.18);
   transform: scale(0.97);
-  box-shadow: inset 2px 2px 4px rgba(0,0,0,0.06);
+}
+
+/* Appearance section overrides */
+[data-theme="luthier"] .theme-toggle-button {
+  background: linear-gradient(145deg, #e6d8c4, #d4c2aa);
+  border: 1px solid rgba(130, 90, 50, 0.2);
+  box-shadow: 
+    inset 1px 1px 3px rgba(255, 250, 235, 0.8),
+    inset -1px -1px 3px rgba(90, 60, 30, 0.1),
+    0 4px 8px var(--shadow-mid);
+  color: var(--ink-strong);
+}
+
+[data-theme="luthier"] .theme-toggle-button:active {
+  background: linear-gradient(145deg, #d4c2aa, #c2ae92);
+  box-shadow: inset 2px 2px 8px rgba(90, 60, 30, 0.25);
+  transform: scale(0.97);
+}
+
+[data-theme="luthier"] .saved-drawer__appearance strong {
+  color: var(--ink-strong);
+}
+
+[data-theme="luthier"] .current-theme-label {
+  color: var(--muted);
 }
