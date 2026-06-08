@@ -1290,324 +1290,69 @@ select:focus-visible {
   }
 }
 
-/* --- THEME LUTHIER (V2 - ULTRA MATERIAL) --- */
+.saved-drawer__appearance {
+  margin-top: auto;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.saved-drawer__appearance-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.saved-drawer__appearance-header strong {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--ink-strong);
+}
+
+.current-theme-label {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.theme-toggle-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.drawer-close-btn {
+  margin-top: -0.25rem;
+  margin-right: -0.25rem;
+}
+
+/* --- THEME LUTHIER (NEUTRAL PLACEHOLDER) --- */
 
 [data-theme="luthier"] {
-  /* Core variables */
-  --page-bg: #825b3a; /* Darker mahogany base */
-  --page-bg-2: #4a301a;
-  --surface: #e8d3b8;
-  --surface-soft: #f4e6d3;
-  --surface-sunken: #c4ae93;
-  --ink: #3b2818;
-  --ink-strong: #1f1207;
-  --muted: #8c735a;
-  --muted-soft: #a8947e;
+  /* Warm neutral variant of Console */
+  --page-bg: #e6e3df;
+  --page-bg-2: #d9d5ce;
+  --surface: #f5f2ed;
+  --surface-soft: #fcfbfa;
+  --surface-sunken: #e8e4db;
+  --ink: #3b352e;
+  --ink-strong: #24201b;
+  --muted: #8c8378;
+  --muted-soft: #b0a79a;
   
-  --blue: #ab5d29;
-  --blue-dark: #82431a;
-  --cyan: #c7ab7c;
-  --orange: #b84c26;
-  --danger: #9c3333;
+  --blue: #a37c52; /* Warm brown accent */
+  --blue-dark: #825f38;
+  --cyan: #d1b48c;
+  --orange: #c46a3d;
+  --danger: #ba4a4a;
   
-  --line: rgba(70, 45, 20, 0.2);
-  --line-soft: rgba(255, 250, 235, 0.5);
-  --shadow-dark: rgba(30, 15, 5, 0.5);
-  --shadow-mid: rgba(40, 20, 5, 0.3);
-  --shadow-light: rgba(255, 250, 240, 0.7);
-}
-
-/* 1. Surfaces (Body Wood) */
-[data-theme="luthier"] body {
-  background:
-    radial-gradient(circle at 15% 15%, rgba(255, 200, 150, 0.15), transparent 40rem),
-    radial-gradient(circle at 85% 85%, rgba(0, 0, 0, 0.3), transparent 40rem),
-    linear-gradient(170deg, var(--page-bg), var(--page-bg-2));
-}
-
-[data-theme="luthier"] body::before {
-  /* Wood grain & noise */
-  background:
-    repeating-linear-gradient(86deg, transparent 0, transparent 4px, rgba(20, 10, 0, 0.05) 4px, rgba(20, 10, 0, 0.05) 7px),
-    radial-gradient(circle at 50% 100%, rgba(20, 10, 0, 0.4), transparent 50rem),
-    url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)" opacity="0.08"/></svg>');
-  background-blend-mode: multiply, normal, overlay;
-}
-
-/* Polished Ash/Maple Wood Cards */
-[data-theme="luthier"] .tuning-card,
-[data-theme="luthier"] .mic-permission-card {
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(0, 0, 0, 0.05)),
-    repeating-linear-gradient(2deg, rgba(160, 110, 60, 0.04) 0px, rgba(160, 110, 60, 0.04) 3px, transparent 3px, transparent 8px),
-    #ebdcc2;
-  box-shadow: 
-    0 24px 48px rgba(30, 15, 5, 0.45),
-    inset 0 2px 6px rgba(255, 255, 255, 0.9),
-    inset 0 -2px 8px rgba(100, 60, 20, 0.15);
-  border: 1px solid rgba(120, 80, 40, 0.3);
-}
-
-/* 2. Cadran (Dial Base) */
-[data-theme="luthier"] .dial {
-  background: 
-    linear-gradient(135deg, rgba(255,255,255,0.2), transparent),
-    radial-gradient(circle at center, #dfccb3, #b8a082);
-  box-shadow: 
-    0 20px 40px rgba(30, 15, 5, 0.5),
-    inset 2px 2px 4px rgba(255, 255, 255, 0.8),
-    inset -2px -2px 6px rgba(80, 50, 30, 0.3);
-  border: 1px solid rgba(100, 60, 30, 0.4);
-}
-
-/* Brushed Brass Outer Ring */
-[data-theme="luthier"] .dial-ring--outer {
-  background: 
-    repeating-conic-gradient(from 0deg, rgba(255,255,255,0.1) 0deg 2deg, transparent 2deg 5deg, rgba(0,0,0,0.05) 5deg 8deg, transparent 8deg 15deg),
-    conic-gradient(from 45deg, #c4a976, #e6ce9c, #9c8152, #e6ce9c, #c4a976),
-    #c4a976;
-  background-blend-mode: overlay, normal;
-  box-shadow: 
-    inset 2px 2px 6px rgba(255, 255, 255, 0.9),
-    inset -2px -2px 8px rgba(60, 30, 0, 0.6),
-    0 16px 32px rgba(20, 10, 0, 0.6);
-  border: 1px solid rgba(60, 30, 0, 0.8);
-}
-
-/* Deep Ebony Inner Ring */
-[data-theme="luthier"] .dial-ring--inner {
-  background: 
-    repeating-linear-gradient(90deg, rgba(0,0,0,0.2) 0, rgba(0,0,0,0.2) 1px, transparent 1px, transparent 4px),
-    radial-gradient(circle at center, #2e1a12, #0d0603);
-  box-shadow:
-    inset 0 12px 24px rgba(0, 0, 0, 0.95),
-    inset 0 2px 4px rgba(0, 0, 0, 1),
-    0 1px 1px rgba(255, 250, 235, 0.4);
-  border: 1px solid #000;
-}
-
-[data-theme="luthier"] .dial-label {
-  color: #705844;
-  text-shadow: 0 1px 1px rgba(255,255,255,0.8);
-}
-
-/* Vitre fumée / Loupe */
-[data-theme="luthier"] .dial-glass--smoked {
-  background:
-    radial-gradient(ellipse at 50% 10%, transparent 0 14%, rgba(255, 245, 225, 0.15) 24%, rgba(255, 245, 225, 0.05) 44%, transparent 100%),
-    linear-gradient(120deg, rgba(255, 250, 235, 0.15), rgba(220, 200, 170, 0.25) 34%, rgba(180, 160, 130, 0.15) 100%);
-  border-color: rgba(255, 250, 235, 0.4);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 250, 235, 0.7),
-    inset 0 -1px 0 rgba(80, 50, 30, 0.2),
-    0 1.05rem 2.1rem rgba(40, 20, 10, 0.3);
-}
-
-[data-theme="luthier"] .dial-glass--smoked::after {
-  background:
-    radial-gradient(120% 160% at 50% 28%, rgba(255, 250, 235, 0.6), rgba(255, 250, 235, 0.15) 42%, transparent 74%),
-    linear-gradient(180deg, rgba(255, 250, 235, 0.25), rgba(180, 150, 110, 0.05));
-  border-color: rgba(255, 250, 235, 0.7);
-}
-
-[data-theme="luthier"] .dial-bezel-light {
-  background: linear-gradient(135deg, rgba(255, 250, 235, 0.25) 0%, transparent 40%, rgba(255, 250, 235, 0.05) 100%);
-}
-
-/* Aiguille / Pivot (Polished Brass) */
-[data-theme="luthier"] .center-marker {
-  background: linear-gradient(90deg, #d4ba8a 0%, #fae8c8 30%, #ceb484 70%, #8a6c38 100%);
-  box-shadow:
-    inset 1px 0 1px rgba(255, 255, 255, 0.8),
-    0 8px 16px rgba(0, 0, 0, 0.6);
-}
-
-[data-theme="luthier"] .center-pivot {
-  background: 
-    conic-gradient(from 120deg, #c4a976, #fae8c8, #8a6c38, #c4a976),
-    #c4a976;
-  box-shadow: 
-    0 10px 16px rgba(0, 0, 0, 0.7),
-    inset 1px 1px 3px rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(60, 30, 10, 0.6);
-}
-
-[data-theme="luthier"] .tuner-card.is-perfect .center-marker {
-  background: linear-gradient(90deg, #7db38e 0%, #b8e0c6 30%, #82b692 70%, #476e54 100%);
-}
-
-/* 3. Disque rotatif (Ivory/Bone) */
-[data-theme="luthier"] .chromatic-wheel {
-  background: 
-    radial-gradient(circle at 40% 40%, rgba(255,255,255,0.7), transparent),
-    repeating-radial-gradient(circle at 50% 50%, rgba(200, 180, 150, 0.06) 0, rgba(200, 180, 150, 0.06) 2px, transparent 2px, transparent 6px),
-    #f2ead3;
-  box-shadow: 
-    inset 0 3px 6px rgba(255, 255, 255, 1),
-    inset 0 -3px 10px rgba(120, 90, 60, 0.4),
-    0 12px 24px rgba(0, 0, 0, 0.35);
-  border: 1px solid #c4b69d;
-}
-
-[data-theme="luthier"] .chromatic-tick__label {
-  color: #3b2818;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); /* Deep engraving effect */
-}
-
-/* Active Target Label (Polished Copper Plaque) */
-[data-theme="luthier"] .chromatic-tick.is-nearest .chromatic-tick__label {
-  color: #241107;
-  background: 
-    linear-gradient(135deg, rgba(255,255,255,0.4) 0%, transparent 40%, rgba(0,0,0,0.1) 100%),
-    linear-gradient(90deg, #d4a373, #e6ccaa, #c28854);
-  border-color: rgba(100, 50, 20, 0.5);
-  box-shadow:
-    0 6px 12px rgba(60, 30, 10, 0.4),
-    inset 1px 1px 2px rgba(255, 255, 255, 0.9),
-    inset -1px -1px 3px rgba(80, 40, 10, 0.4);
-  text-shadow: 0 1px 0 rgba(255,255,255,0.4);
-}
-
-[data-theme="luthier"] .tuner-card.is-low .chromatic-tick.is-nearest .chromatic-tick__label {
-  background: 
-    linear-gradient(135deg, rgba(255,255,255,0.3) 0%, transparent 40%, rgba(0,0,0,0.2) 100%),
-    linear-gradient(90deg, #e3a968, #d4773b, #a8421c);
-  color: #fff;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.4);
-}
-
-[data-theme="luthier"] .tuner-card.is-high .chromatic-tick.is-nearest .chromatic-tick__label {
-  background: 
-    linear-gradient(135deg, rgba(255,255,255,0.3) 0%, transparent 40%, rgba(0,0,0,0.2) 100%),
-    linear-gradient(90deg, #d67a7a, #a83a3a, #7a1c1c);
-  color: #fff;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.4);
-}
-
-/* 4. Boutons de cordes (Carved Wood Buttons) */
-[data-theme="luthier"] .string-card {
-  background: 
-    linear-gradient(145deg, rgba(255,255,255,0.15), rgba(0,0,0,0.05)),
-    #d8c3a5;
-  border: 1px solid rgba(100, 60, 30, 0.3);
-  box-shadow: 
-    0 8px 16px rgba(40, 20, 5, 0.3),
-    inset 1px 2px 3px rgba(255, 255, 255, 0.9),
-    inset -1px -2px 4px rgba(100, 60, 30, 0.2);
-  color: #3b2818;
-}
-
-[data-theme="luthier"] .string-card:active,
-[data-theme="luthier"] .string-card.is-playing {
-  background: 
-    linear-gradient(145deg, rgba(0,0,0,0.05), rgba(255,255,255,0.05)),
-    #ccb594;
-  box-shadow: 
-    0 2px 4px rgba(40, 20, 5, 0.4),
-    inset 2px 4px 8px rgba(80, 40, 20, 0.3);
-  transform: translateY(2px) scale(0.97);
-  border-color: rgba(120, 70, 30, 0.4);
-}
-
-[data-theme="luthier"] .string-card.is-current-target {
-  background: 
-    linear-gradient(145deg, rgba(255,255,255,0.2), rgba(0,0,0,0.1)),
-    #c49260; /* Copperish wood glow */
-  border-color: rgba(140, 70, 30, 0.5);
-  box-shadow: 
-    0 10px 20px rgba(100, 40, 10, 0.3),
-    inset 1px 2px 4px rgba(255, 255, 255, 0.8),
-    inset -1px -2px 4px rgba(80, 30, 10, 0.3);
-  transform: scale(1.02);
-}
-
-/* 5. Drawer (Dark Leather / Premium Case) */
-[data-theme="luthier"] .saved-drawer__panel {
-  background: 
-    radial-gradient(circle at top left, rgba(255,255,255,0.05), transparent),
-    linear-gradient(160deg, #3b2a1a, #1a1008);
-  box-shadow: -16px 0 48px rgba(10, 5, 0, 0.9);
-  border-right: 1px solid rgba(255, 255, 255, 0.05);
-  color: #e8d3b8;
-}
-
-[data-theme="luthier"] .saved-drawer__head strong,
-[data-theme="luthier"] .saved-drawer__appearance strong {
-  color: #faeed9;
-}
-
-[data-theme="luthier"] .saved-drawer__head span,
-[data-theme="luthier"] .current-theme-label {
-  color: #bfa88f;
-}
-
-[data-theme="luthier"] .saved-item__title-button strong {
-  color: #faeed9;
-}
-
-[data-theme="luthier"] .saved-item__title-button span {
-  color: #bfa88f;
-}
-
-[data-theme="luthier"] .saved-item__more {
-  color: #bfa88f;
-}
-
-[data-theme="luthier"] .saved-drawer__appearance {
-  border-top-color: rgba(255, 255, 255, 0.1);
-}
-
-/* 6. Inputs / Selects / General Buttons */
-[data-theme="luthier"] input[type="search"],
-[data-theme="luthier"] input[type="text"],
-[data-theme="luthier"] select {
-  background: linear-gradient(145deg, #ccbaa0, #bba689);
-  border: 1px solid rgba(80, 50, 30, 0.4);
-  box-shadow: inset 1px 2px 6px rgba(60, 30, 10, 0.2), inset -1px -1px 2px rgba(255, 250, 235, 0.4);
-  color: var(--ink-strong);
-}
-
-[data-theme="luthier"] .saved-drawer__panel input[type="search"] {
-  background: linear-gradient(145deg, #4a3523, #2e1e12);
-  border-color: rgba(0,0,0,0.5);
-  color: #faeed9;
-  box-shadow: inset 1px 2px 6px rgba(0,0,0,0.4), inset -1px -1px 2px rgba(255,255,255,0.05);
-}
-
-[data-theme="luthier"] input:focus,
-[data-theme="luthier"] select:focus {
-  border-color: var(--blue);
-  box-shadow: 0 0 0 3px rgba(171, 93, 41, 0.3), inset 1px 2px 4px rgba(90, 60, 30, 0.2);
-}
-
-[data-theme="luthier"] .secondary-action,
-[data-theme="luthier"] .mic-permission-card button {
-  background: linear-gradient(145deg, #e8d3b8, #d1b898);
-  border: 1px solid rgba(100, 60, 30, 0.3);
-  box-shadow: 
-    0 6px 12px rgba(40, 20, 5, 0.25),
-    inset 1px 2px 3px rgba(255, 255, 255, 0.9);
-  color: var(--ink-strong);
-}
-
-[data-theme="luthier"] .secondary-action:active,
-[data-theme="luthier"] .mic-permission-card button:active {
-  background: linear-gradient(145deg, #d1b898, #bba07f);
-  box-shadow: inset 2px 4px 8px rgba(80, 40, 20, 0.2);
-  transform: translateY(1px) scale(0.97);
-}
-
-[data-theme="luthier"] .theme-toggle-button {
-  background: linear-gradient(145deg, #4a3523, #2e1e12);
-  border: 1px solid #1a1008;
-  box-shadow: 
-    inset 1px 1px 2px rgba(255, 255, 255, 0.1),
-    0 8px 16px rgba(0, 0, 0, 0.5);
-  color: #faeed9;
-}
-
-[data-theme="luthier"] .theme-toggle-button:active {
-  background: linear-gradient(145deg, #2e1e12, #1f1208);
-  box-shadow: inset 2px 4px 8px rgba(0, 0, 0, 0.6);
-  transform: translateY(1px) scale(0.97);
+  --line: rgba(140, 131, 120, 0.22);
+  --line-soft: rgba(255, 255, 255, 0.62);
+  --shadow-dark: rgba(120, 110, 100, 0.36);
+  --shadow-mid: rgba(120, 110, 100, 0.22);
+  --shadow-light: rgba(255, 255, 255, 0.86);
 }
