@@ -1,0 +1,26 @@
+.card{
+  border:1px solid var(--border-1);
+  background:var(--bg-card);
+  box-shadow:var(--shadow-card);
+  border-radius:var(--card-radius-md);
+  padding:var(--card-pad);
+}
+
+.btn-primary{
+  min-height:2.8rem;
+  border:1px solid rgba(54,93,161,0.36);
+  border-radius:var(--pill-radius);
+  padding:var(--pad-sm) 1.15rem;
+  color:#f7fbff;
+  background:var(--btn-blue-gradient);
+  font-weight:850;
+  box-shadow:0.4rem 0.48rem 0.82rem rgba(64,88,139,0.32), inset 1px 1px 1px rgba(255,255,255,0.34);
+}
+
+.pill{
+  border-radius:var(--pill-radius);
+}
+
+.shadow-card{
+  box-shadow:var(--shadow-card);
+}
