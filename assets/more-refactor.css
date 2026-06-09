@@ -1,0 +1,43 @@
+/* More refactor overrides — additional low-risk replacements to prefer tokens
+   Loaded after utilities.css so changes are incremental and reversible.
+*/
+
+/* Brand mark — prefer tokens for background and border */
+.brand-mark {
+  background: linear-gradient(150deg, var(--surface-soft), var(--surface));
+  border: 1px solid var(--border-1);
+  box-shadow: 0.42rem 0.48rem 0.95rem var(--shadow-dark), -0.32rem -0.32rem 0.78rem var(--shadow-light), inset 1px 1px 1px rgba(255,255,255,0.7), inset -1px -1px 2px rgba(115,121,136,0.22);
+}
+
+/* Header control — use tokenized border and control background */
+.library-menu-button {
+  border: 1px solid var(--border-1);
+  background: var(--bg-control);
+}
+
+/* Dial — use border token */
+.dial {
+  border: 1px solid var(--border-2);
+}
+
+/* Small controls and help toggles */
+.help-toggle,
+.ear-help-close,
+.glass-help-close,
+#saved-drawer-close {
+  border: 1px solid var(--border-1);
+}
+
+/* Target pills */
+.target-note {
+  border: 1px solid var(--border-2);
+  border-radius: var(--pill-radius);
+}
+
+/* Buttons inside cards default to primary utility when possible (keeps original visual but centralizes) */
+.install-card button,
+.mic-permission-card button,
+.secondary-action {
+  border-radius: var(--pill-radius);
+  padding: var(--pad-sm) 1.15rem;
+}
