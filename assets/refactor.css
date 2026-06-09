@@ -1,0 +1,54 @@
+/* Refactor overrides: non-destructive, high-confidence replacements using design tokens and utilities */
+
+/* Ensure card-like elements use tokens when not yet migrated to .card */
+.install-card,
+.mic-permission-card,
+.ear-help-card,
+.tuner-card,
+.tuning-card,
+.saved-drawer__panel,
+.tuning-card.library-card,
+.tuning-card.custom-tuning-card {
+  border: 1px solid var(--border-1) !important;
+  background: var(--bg-card) !important;
+  box-shadow: var(--shadow-card) !important;
+}
+
+/* Buttons */
+.install-card button,
+.mic-permission-card button,
+.secondary-action,
+.btn-primary {
+  border-radius: var(--pill-radius) !important;
+  padding: var(--pad-sm) 1.15rem !important;
+  background: var(--btn-blue-gradient) !important;
+}
+
+/* Form controls */
+.field-stack input,
+.field-stack select {
+  border: 1px solid var(--border-2) !important;
+  background: var(--bg-control) !important;
+}
+
+/* Tuner dial safer replacements */
+.dial {
+  border: 1px solid rgba(118, 126, 142, 0.24); /* keep original tint for dial */
+}
+
+/* Small utilities to prefer tokens */
+.help-toggle,
+.ear-help-close,
+.glass-help-close,
+#saved-drawer-close,
+.library-menu-button {
+  border: 1px solid var(--border-1) !important;
+}
+
+/* Target notes / pills */
+.target-note {
+  border: 1px solid var(--border-2) !important;
+  border-radius: var(--pill-radius) !important;
+}
+
+/* Keep this file minimal and deliberately non-destructive. */
