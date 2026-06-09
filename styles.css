@@ -107,10 +107,7 @@ svg {
   min-height: 100dvh;
   margin-inline: auto;
   padding:
-    max(1rem, env(safe-area-inset-top))
-    max(1rem, env(safe-area-inset-right))
-    max(1.25rem, env(safe-area-inset-bottom))
-    max(1rem, env(safe-area-inset-left));
+    max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(1.25rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
 }
 
 .app-header {
@@ -123,6 +120,7 @@ svg {
   gap: 1rem;
   padding: 0.25rem 0 1rem;
 }
+
 
 .brand {
   display: flex;
@@ -698,8 +696,8 @@ select:focus-visible {
   gap: 0.42rem;
 }
 
-.field-stack > span,
-.custom-field > span {
+.field-stack>span,
+.custom-field>span {
   color: var(--muted);
   font-size: 0.68rem;
   font-weight: 850;
@@ -991,7 +989,7 @@ select:focus-visible {
   width: min(26rem, 92vw);
   height: 100%;
   display: grid;
-  grid-template-rows: auto auto minmax(0, 1fr);
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
   gap: 1rem;
   padding: max(1rem, env(safe-area-inset-top)) 1rem max(1rem, env(safe-area-inset-bottom));
   border-radius: 1.6rem 0 0 1.6rem;
@@ -1271,6 +1269,7 @@ select:focus-visible {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
@@ -1279,4 +1278,72 @@ select:focus-visible {
     animation-duration: 0.01ms;
     animation-iteration-count: 1;
   }
+}
+
+.saved-drawer__appearance {
+  margin-top: auto;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.saved-drawer__appearance-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.saved-drawer__appearance-header strong {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--ink-strong);
+}
+
+.current-theme-label {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.theme-toggle-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.drawer-close-btn {
+  margin-top: -0.25rem;
+  margin-right: -0.25rem;
+}
+
+/* --- THEME LUTHIER (NEUTRAL PLACEHOLDER) --- */
+
+[data-theme="luthier"] {
+  /* Warm neutral variant of Console */
+  --page-bg: #e6e3df;
+  --page-bg-2: #d9d5ce;
+  --surface: #f5f2ed;
+  --surface-soft: #fcfbfa;
+  --surface-sunken: #e8e4db;
+  --ink: #3b352e;
+  --ink-strong: #24201b;
+  --muted: #8c8378;
+  --muted-soft: #b0a79a;
+
+  --blue: #a37c52;
+  /* Warm brown accent */
+  --blue-dark: #825f38;
+  --cyan: #d1b48c;
+  --orange: #c46a3d;
+  --danger: #ba4a4a;
+
+  --line: rgba(140, 131, 120, 0.22);
+  --line-soft: rgba(255, 255, 255, 0.62);
+  --shadow-dark: rgba(120, 110, 100, 0.36);
+  --shadow-mid: rgba(120, 110, 100, 0.22);
+  --shadow-light: rgba(255, 255, 255, 0.86);
 }

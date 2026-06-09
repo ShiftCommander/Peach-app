@@ -1,4 +1,4 @@
-const CACHE_NAME = 'peach-guitar-tuner-v49';
+const CACHE_NAME = 'peach-guitar-tuner-v50';
 const CORE_ASSETS = [
   './',
   './index.html',

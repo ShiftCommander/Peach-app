@@ -153,7 +153,7 @@
             <strong id="saved-drawer-title">Mes accordages</strong>
             <span>Utilise, renomme, duplique ou supprime tes réglages sauvegardés.</span>
           </div>
-          <button id="saved-drawer-close" type="button" aria-label="Fermer">×</button>
+          <button id="saved-drawer-close" class="help-toggle drawer-close-btn" type="button" aria-label="Fermer">×</button>
         </div>
 
         <label class="field-stack saved-drawer-search">
@@ -162,6 +162,17 @@
         </label>
 
         <div id="saved-manager-list" class="saved-manager-list saved-manager-list--drawer"></div>
+
+        <div class="saved-drawer__appearance">
+          <div class="saved-drawer__appearance-header">
+            <strong>Apparence</strong>
+            <span id="current-theme-label" class="current-theme-label">Thème actuel : Console</span>
+          </div>
+          <button id="theme-toggle-button" type="button" class="secondary-action theme-toggle-button" aria-label="Passer au thème Luthier">
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            <span id="theme-toggle-text">Passer au thème Luthier</span>
+          </button>
+        </div>
       </div>
     </aside>
 

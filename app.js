@@ -20,6 +20,7 @@ const CUSTOM_TUNING_STORAGE_KEY = 'timtuner-custom-tuning-v1';
 const SAVED_TUNINGS_STORAGE_KEY = 'timtuner-saved-tunings-v1';
 const CUSTOM_DISCOVERY_STORAGE_KEY = 'timtuner-custom-card-discovered-v1';
 const GLOBAL_TUNING_API_STORAGE_KEY = 'peach-global-tuning-api-url-v1';
+const THEME_STORAGE_KEY = 'peach-theme';
 const GLOBAL_TUNING_SEARCH_DEBOUNCE_MS = 420;
 const REFERENCE_TONE_MODE = 'clear';
 const PRESET_SELECT_META = [
@@ -219,6 +220,12 @@ let globalSearchState = {
 
 const $ = (selector) => document.querySelector(selector);
 
+let currentTheme = 'console';
+try {
+  currentTheme = localStorage.getItem(THEME_STORAGE_KEY) === 'luthier' ? 'luthier' : 'console';
+  document.documentElement.setAttribute('data-theme', currentTheme);
+} catch (error) {}
+
 window.addEventListener('DOMContentLoaded', () => {
   restoreUserPreferences();
   renderTuningSelect();
@@ -235,7 +242,28 @@ window.addEventListener('DOMContentLoaded', () => {
   renderSongTuningResults();
   registerServiceWorker();
   requestMicrophoneWhenPossible();
+  applyTheme(currentTheme);
 });
+
+function applyTheme(theme) {
+  currentTheme = theme === 'luthier' ? 'luthier' : 'console';
+  document.documentElement.setAttribute('data-theme', currentTheme);
+  
+  const label = $('#current-theme-label');
+  if (label) label.innerText = currentTheme === 'luthier' ? 'Thème actuel : Luthier' : 'Thème actuel : Console';
+  
+  const btnText = $('#theme-toggle-text');
+  if (btnText) btnText.innerText = currentTheme === 'luthier' ? 'Passer au thème Console' : 'Passer au thème Luthier';
+  
+  const btn = $('#theme-toggle-button');
+  if (btn) btn.setAttribute('aria-label', currentTheme === 'luthier' ? 'Passer au thème Console' : 'Passer au thème Luthier');
+}
+
+function toggleTheme() {
+  const newTheme = currentTheme === 'luthier' ? 'console' : 'luthier';
+  try { localStorage.setItem(THEME_STORAGE_KEY, newTheme); } catch (e) {}
+  applyTheme(newTheme);
+}
 
 function restoreUserPreferences() {
   try {
@@ -289,7 +317,9 @@ function bindUI() {
     openSavedMenuId = null;
     renderSavedManager();
   });
+
   $('#mic-permission-button').addEventListener('click', () => requestMicrophoneWhenPossible({ force: true }));
+  $('#theme-toggle-button')?.addEventListener('click', toggleTheme);
   bindHelpPopovers();
 
   bindTuningCardScroll();
