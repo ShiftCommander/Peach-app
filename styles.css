@@ -107,10 +107,7 @@ svg {
   min-height: 100dvh;
   margin-inline: auto;
   padding:
-    max(1rem, env(safe-area-inset-top))
-    max(1rem, env(safe-area-inset-right))
-    max(1.25rem, env(safe-area-inset-bottom))
-    max(1rem, env(safe-area-inset-left));
+    max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(1.25rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
 }
 
 .app-header {
@@ -130,7 +127,6 @@ svg {
   inset: -1rem -1rem 0;
   z-index: -1;
   pointer-events: none;
-  background: linear-gradient(180deg, rgba(215, 217, 223, 0.95), rgba(215, 217, 223, 0));
 }
 
 .brand {
@@ -707,8 +703,8 @@ select:focus-visible {
   gap: 0.42rem;
 }
 
-.field-stack > span,
-.custom-field > span {
+.field-stack>span,
+.custom-field>span {
   color: var(--muted);
   font-size: 0.68rem;
   font-weight: 850;
@@ -1280,6 +1276,7 @@ select:focus-visible {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
@@ -1343,13 +1340,14 @@ select:focus-visible {
   --ink-strong: #24201b;
   --muted: #8c8378;
   --muted-soft: #b0a79a;
-  
-  --blue: #a37c52; /* Warm brown accent */
+
+  --blue: #a37c52;
+  /* Warm brown accent */
   --blue-dark: #825f38;
   --cyan: #d1b48c;
   --orange: #c46a3d;
   --danger: #ba4a4a;
-  
+
   --line: rgba(140, 131, 120, 0.22);
   --line-soft: rgba(255, 255, 255, 0.62);
   --shadow-dark: rgba(120, 110, 100, 0.36);
