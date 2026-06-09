@@ -124,15 +124,6 @@ svg {
   padding: 0.25rem 0 1rem;
 }
 
-.app-header::before {
-  content: "";
-  position: absolute;
-  inset: -1rem -1rem 0;
-  z-index: -1;
-  pointer-events: none;
-  background: linear-gradient(180deg, rgba(215, 217, 223, 0.95), rgba(215, 217, 223, 0));
-}
-
 .brand {
   display: flex;
   align-items: center;
