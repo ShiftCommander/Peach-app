@@ -1,2 +1,2 @@
-Peach - Guitar Tuner V52
+Peach - Guitar Tuner V52.1
 Capability-driven installation, installed-app detection, explicit PWA updates, and GitHub Pages release metadata.
