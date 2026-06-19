@@ -34,6 +34,14 @@
 
     <main class="app-main">
 
+      <section id="pwa-card" class="pwa-card is-hidden" aria-live="polite" aria-label="Application Peach">
+        <div>
+          <strong id="pwa-title">Installer Peach</strong>
+          <span id="pwa-text">Ajoute l’accordeur à ton écran d’accueil.</span>
+        </div>
+        <a id="pwa-action" href="./" target="_blank" rel="noopener">Installer Peach</a>
+      </section>
+
       <section id="mic-permission-card" class="mic-permission-card is-hidden" aria-live="polite">
         <div>
           <strong id="mic-permission-title">Micro en attente</strong>
@@ -179,6 +187,7 @@
   </div>
 
   <script src="config.js" defer></script>
+  <script src="pwa-lifecycle.js" defer></script>
   <script src="app.js" defer></script>
   <script src="dial-lens.js" defer></script>
   <script src="dial-smooth.js" defer></script>

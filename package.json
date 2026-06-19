@@ -1,13 +1,13 @@
 {
   "name": "peach-guitar-tuner",
-  "version": "44.0.0",
+  "version": "52.0.0",
   "private": true,
   "description": "Static Peach guitar tuner PWA with optional Node.js global tuning API backend.",
   "scripts": {
     "start": "node server/start.js",
     "dev:api": "node dev/global-tuning-api-mock.js",
     "test": "node --test tests/*.test.js",
-    "check": "node --check app.js && node --check config.js && node --check server/tuning-utils.js && node --check server/tuning-store.js && node --check server/ai-lookup.js && node --check server/tuning-api.js && node --check server/start.js && node --check dev/global-tuning-api-mock.js && node --check tests/global-tuning-api.test.js"
+    "check": "node --check app.js && node --check pwa-lifecycle.js && node --check sw.js && node --check config.js && node --check server/tuning-utils.js && node --check server/tuning-store.js && node --check server/ai-lookup.js && node --check server/tuning-api.js && node --check server/start.js && node --check dev/global-tuning-api-mock.js && node --check tests/global-tuning-api.test.js && node --check tests/pwa-lifecycle.test.js && node --check tests/pwa-service-worker.test.js"
   },
   "engines": {
     "node": ">=20"

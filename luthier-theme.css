@@ -76,6 +76,7 @@
     inset -1px -1px 1px rgba(89, 61, 35, 0.18);
 }
 
+:root[data-theme="luthier"] .pwa-card,
 :root[data-theme="luthier"] .mic-permission-card,
 :root[data-theme="luthier"] .tuner-card,
 :root[data-theme="luthier"] .tuning-card,
@@ -245,6 +246,7 @@
 }
 
 :root[data-theme="luthier"] .secondary-action,
+:root[data-theme="luthier"] .pwa-card a,
 :root[data-theme="luthier"] .mic-permission-card button {
   color: #fff8eb;
   border-color: rgba(255, 229, 184, 0.3);
@@ -289,6 +291,7 @@
   background-color: var(--page-bg);
 }
 :root[data-theme="luthier"] .tuning-card,
+:root[data-theme="luthier"] .pwa-card,
 :root[data-theme="luthier"] .mic-permission-card {
   background: var(--surface);
   box-shadow:

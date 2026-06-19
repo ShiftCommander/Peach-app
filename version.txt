@@ -1,2 +1,2 @@
-Peach - Guitar Tuner V44
-GitHub Pages primary release, deprecated serverless artifacts removed, tablet layout stabilized, and PWA cache refreshed.
+Peach - Guitar Tuner V52
+Capability-driven installation, installed-app detection, explicit PWA updates, and GitHub Pages release metadata.

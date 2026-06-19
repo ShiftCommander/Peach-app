@@ -6,13 +6,13 @@ It includes an automatic microphone tuner, a chromatic wheel, reference tones, p
 
 ## Release Status
 
-Current release: **V44**
+Current release: **V52**
 
 - Static app: no package manager, build step or framework runtime is required for the PWA.
 - Optional backend MVP: plain Node.js process (separate from GitHub Pages static hosting).
 - PWA assets: `manifest.json`, `sw.js`, and app icons are included.
 - Offline runtime: all app code is local; there are no CDN scripts required at runtime.
-- Cache version: `peach-guitar-tuner-v44`.
+- Cache version: `peach-guitar-tuner-v52`.
 - Current production target: GitHub Pages at `https://shiftcommander.github.io/Peach-app/`.
 
 ## Local Preview
@@ -62,15 +62,18 @@ Before a release, verify:
 - On GitHub Pages, static files use GitHub's default cache headers.
 - The service worker installs and activates without console errors.
 - Reload once after first service worker installation, then test offline reload.
-- Android Chrome shows the install prompt or the manual install option in the browser menu.
+- Android Chrome shows the in-app install action only when the native install prompt is available.
+- An already-installed PWA is detected when Chrome supports related-app detection; Peach then checks for a waiting service-worker update before offering to open the app.
 - Microphone permission works on a secure origin and the tuner reacts to input.
 
 ## Files
 
 - `index.html` - app shell and metadata.
 - `styles.css` - full UI styling.
-- `app.js` - tuner logic, UI behavior, install prompt, and service worker registration.
-- `sw.js` - offline cache and navigation fallback.
+- `app.js` - tuner logic and UI behavior.
+- `pwa-lifecycle.js` - installability, installed-app detection, update checks, and app launching.
+- `release.json` - machine-readable production release version.
+- `sw.js` - offline cache, version messaging, explicit updates, and navigation fallback.
 - `manifest.json` - PWA manifest and install metadata.
 - `version.txt` - human-readable release marker.
 - `config.js` - static frontend runtime config for GitHub Pages.
@@ -114,6 +117,14 @@ docker run -p 8080:8080 -v peach-tunings:/data peach-global-tuning-api
 ```
 
 ## Release Notes
+
+### V52
+
+- Restored the install action only for contexts where Chrome exposes a genuine PWA install prompt.
+- Added installed-PWA detection, release checks, explicit service-worker update activation, and an Android launch action.
+- Added a one-time legacy-cache migration so pre-V52 installations load the new lifecycle controller; later releases wait for the explicit update action.
+- Added relative manifest launch metadata for the GitHub Pages `/Peach-app/` project path.
+- Synchronized package, release, human-readable, and service-worker versions.
 
 ### V44
 

@@ -11,6 +11,15 @@
     "minimal-ui",
     "browser"
   ],
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "./manifest.json"
+    }
+  ],
   "background_color": "#d7d9df",
   "theme_color": "#d7d9df",
   "orientation": "portrait",
