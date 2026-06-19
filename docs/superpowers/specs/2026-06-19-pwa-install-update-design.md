@@ -72,7 +72,11 @@ The Android/TWA and Play Store approach is explicitly deferred.
 
 ## Release Assumptions
 
-- Production remains `https://shiftcommander.github.io/Peach-app/` over HTTPS.
+- Production is the classic GitHub Pages branch deployment at `https://shiftcommander.github.io/Peach-app/`.
+- GitHub Pages publishes the repository root (`/`) from `main`; feature-branch pushes do not change production, while merging to `main` starts the Pages build-and-deployment workflow.
+- The default `shiftcommander.github.io` domain is used without a custom domain, and GitHub enforces HTTPS.
+- Manifest, service-worker scope, launch URLs, related-app metadata, and release-metadata requests must remain relative to the `/Peach-app/` project path. No URL may assume origin-root hosting.
+- Release metadata must live in the repository root so the branch-based Pages deployment publishes it without a build step.
 - Release metadata and the service-worker version are incremented together for every deployed frontend release.
 - Installed-PWA detection is enhanced behavior for supporting Chromium browsers; it is not presented as universally available.
 - Android package distribution, Play Store versioning, deep-link intents, and TWA signing are out of scope.
