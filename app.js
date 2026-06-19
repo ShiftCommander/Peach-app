@@ -240,7 +240,6 @@ window.addEventListener('DOMContentLoaded', () => {
   updateCustomSwipeHint();
   renderSavedManager();
   renderSongTuningResults();
-  registerServiceWorker();
   requestMicrophoneWhenPossible();
   applyTheme(currentTheme);
 });
@@ -258,7 +257,6 @@ function applyTheme(theme) {
   const btn = $('#theme-toggle-button');
   if (btn) btn.setAttribute('aria-label', currentTheme === 'luthier' ? 'Passer au thème Console' : 'Passer au thème Luthier');
 }
-
 function toggleTheme() {
   const newTheme = currentTheme === 'luthier' ? 'console' : 'luthier';
   try { localStorage.setItem(THEME_STORAGE_KEY, newTheme); } catch (e) {}
@@ -286,8 +284,6 @@ function restoreUserPreferences() {
     savedTunings = [];
   }
 }
-
-
 function forceSavedManagerClosedOnBoot() {
   const drawer = $('#saved-drawer');
   const button = $('#library-menu-button');
@@ -2403,24 +2399,4 @@ function playUiFeedback(kind = 'tap') {
       });
     }, Math.ceil((profile.duration + 0.05) * 1000));
   }).catch(() => {});
-}
-
-
-
-function registerServiceWorker() {
-  if (!('serviceWorker' in navigator)) return;
-
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js')
-      .then(() => navigator.serviceWorker.ready)
-      .then(() => {
-        if (!navigator.serviceWorker.controller && !sessionStorage.getItem('peach-sw-v44-reloaded')) {
-          sessionStorage.setItem('peach-sw-v44-reloaded', '1');
-          window.setTimeout(() => window.location.reload(), 350);
-        }
-      })
-      .catch((error) => {
-        console.debug('Service worker registration failed:', error);
-      });
-  });
 }
