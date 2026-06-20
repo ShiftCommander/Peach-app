@@ -1443,6 +1443,9 @@ function setSavedManagerOpen(open) {
   drawer.setAttribute('aria-hidden', shouldOpen ? 'false' : 'true');
   document.body.classList.toggle('drawer-open', shouldOpen);
 
+  // Show branding when menu opens; hide again when closed
+  document.querySelector('.app-header')?.classList.toggle('is-menu-open', shouldOpen);
+
   if (button) button.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
   if (shouldOpen) {
     renderSavedManager();
@@ -2400,3 +2403,18 @@ function playUiFeedback(kind = 'tap') {
     }, Math.ceil((profile.duration + 0.05) * 1000));
   }).catch(() => {});
 }
+
+// Header auto-hide: fade brand out when user scrolls away from top, restore at top.
+(function initHeaderScroll() {
+  const SCROLL_THRESHOLD = 52;
+  const header = document.querySelector('.app-header');
+  if (!header) return;
+
+  function updateHeader() {
+    const atTop = (window.scrollY || document.documentElement.scrollTop) < SCROLL_THRESHOLD;
+    header.classList.toggle('is-scrolled', !atTop);
+  }
+
+  updateHeader();
+  window.addEventListener('scroll', updateHeader, { passive: true });
+}());
