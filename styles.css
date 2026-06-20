@@ -577,6 +577,8 @@ svg {
   flex-direction: column;
   flex: 0 0 min(100%, calc(100vw - 2rem));
   overflow: hidden;
+  overflow: clip;
+  isolation: isolate;
   padding: var(--card-pad);
   border-radius: var(--card-radius);
   scroll-snap-align: start;
