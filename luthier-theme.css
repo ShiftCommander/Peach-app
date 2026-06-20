@@ -50,15 +50,10 @@
 }
 
 :root[data-theme="luthier"] .brand-mark {
-  border-color: rgba(73, 50, 28, 0.2);
-  background:
-    radial-gradient(circle at 35% 24%, rgba(255, 241, 211, 0.68), transparent 44%),
-    linear-gradient(150deg, #f2dfbf, #c89552 55%, #6f4524);
-  box-shadow:
-    0.42rem 0.48rem 0.95rem rgba(67, 45, 26, 0.26),
-    -0.32rem -0.32rem 0.78rem rgba(255, 245, 227, 0.64),
-    inset 1px 1px 1px rgba(255, 248, 232, 0.68),
-    inset -1px -1px 2px rgba(80, 49, 26, 0.22);
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
 
 :root[data-theme="luthier"] .library-menu-button,
@@ -145,50 +140,32 @@
 }
 
 :root[data-theme="luthier"] .chromatic-tick__label {
-  border-color: rgba(102, 73, 42, 0.16);
-  color: rgba(52, 40, 28, 0.66);
-  background: rgba(250, 241, 222, 0.3);
+  border: none;
+  color: rgba(52, 40, 28, 0.55);
+  background: transparent;
+  text-shadow: 0 1px 0 rgba(255, 248, 225, 0.6);
 }
 
 :root[data-theme="luthier"] .chromatic-tick.is-nearest .chromatic-tick__label {
-  color: #fff9ec;
-  background: linear-gradient(145deg, #b8894a, #65401f);
-  border-color: rgba(255, 232, 187, 0.36);
-  box-shadow:
-    0 0.72rem 1.4rem rgba(70, 42, 20, 0.28),
-    inset 1px 1px 1px rgba(255, 242, 215, 0.28),
-    inset -1px -1px 1px rgba(36, 22, 12, 0.28);
-}
-
-:root[data-theme="luthier"] .center-marker {
-  background: linear-gradient(180deg, rgba(255, 250, 238, 0.96), rgba(176, 124, 58, 0.76) 42%, rgba(255, 248, 229, 0.9));
-  box-shadow:
-    0 0 0 1px rgba(42, 26, 14, 0.18),
-    0 0 1.45rem rgba(210, 151, 77, 0.26);
-}
-
-:root[data-theme="luthier"] .center-pivot {
-  border-color: rgba(255, 236, 198, 0.28);
-  background:
-    radial-gradient(circle at 35% 28%, rgba(255, 247, 228, 0.9), rgba(165, 121, 63, 0.74) 48%, rgba(72, 46, 23, 0.84));
-  box-shadow:
-    0 0.36rem 0.8rem rgba(0, 0, 0, 0.28),
-    inset 1px 1px 1px rgba(255, 242, 213, 0.5),
-    inset -1px -1px 1px rgba(34, 21, 11, 0.32);
+  color: rgba(72, 44, 16, 0.96);
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  text-shadow: 0 1px 1px rgba(255, 242, 212, 0.8), 0 -1px 0 rgba(0, 0, 0, 0.08);
 }
 
 :root[data-theme="luthier"] .dial-note-readout {
-  color: rgba(255, 249, 236, 0.92);
-  text-shadow: 0 0.12rem 0.4rem rgba(0, 0, 0, 0.32);
+  color: rgba(255, 249, 236, 0.96);
+  text-shadow: 0 0.12rem 0.5rem rgba(0, 0, 0, 0.42);
 }
 
 :root[data-theme="luthier"] .detected-note {
-  color: #fff8e9;
+  color: #fffcf2;
 }
 
 :root[data-theme="luthier"] #heard-note-detail,
 :root[data-theme="luthier"] .dial-note-readout span {
-  color: rgba(238, 221, 190, 0.82);
+  color: rgba(255, 235, 198, 0.92);
 }
 
 :root[data-theme="luthier"] .dial-glass--smoked {
@@ -326,7 +303,7 @@
 }
 
 :root[data-theme="luthier"] .chromatic-wheel--lens .is-nearest .chromatic-tick__label {
-  color: #3b2c1d;
+  color: rgba(72, 44, 16, 0.96);
   font-weight: 900;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 1px rgba(255, 242, 212, 0.9);
 }
