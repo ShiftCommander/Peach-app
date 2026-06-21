@@ -280,6 +280,8 @@ svg {
 .tuner-card {
   position: relative;
   overflow: hidden;
+  overflow: clip;
+  isolation: isolate;
   padding: clamp(1rem, 2.8vw, 1.25rem);
   border-radius: var(--card-radius);
 }
@@ -983,6 +985,9 @@ select:focus-visible {
   height: 100%;
   display: grid;
   grid-template-rows: auto auto minmax(0, 1fr) auto;
+  overflow: hidden;
+  overflow: clip;
+  isolation: isolate;
   gap: 1rem;
   padding: max(1rem, env(safe-area-inset-top)) 1rem max(1rem, env(safe-area-inset-bottom));
   border-radius: 1.6rem 0 0 1.6rem;
