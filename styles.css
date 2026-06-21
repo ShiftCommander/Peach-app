@@ -562,7 +562,7 @@ svg {
   display: flex;
   gap: clamp(0.9rem, 2.8vw, 1.25rem);
   overflow-x: auto;
-  padding: 0 0 0.35rem;
+  padding: 0 0 1.5rem;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
 }
