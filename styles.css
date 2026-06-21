@@ -555,6 +555,7 @@ svg {
 
 .tuning-carousel {
   min-width: 0;
+  margin-inline: calc(-1 * max(1rem, env(safe-area-inset-left))) calc(-1 * max(1rem, env(safe-area-inset-right)));
 }
 
 .tuning-scroll {
@@ -577,13 +578,17 @@ svg {
   min-height: 22rem;
   display: flex;
   flex-direction: column;
-  flex: 0 0 min(100%, calc(100vw - 2rem));
+  flex: 0 0 min(100%, 100vw);
   overflow: hidden;
   overflow: clip;
   isolation: isolate;
   padding: var(--card-pad);
   border-radius: var(--card-radius);
   scroll-snap-align: start;
+  box-shadow:
+    0 0.5rem 1.4rem var(--shadow-dark),
+    inset 1px 1px 1px rgba(255, 255, 255, 0.78),
+    inset -1px -1px 1px rgba(120, 126, 140, 0.18);
 }
 
 .section-title {
@@ -1128,6 +1133,10 @@ select:focus-visible {
 
   .tuner-card {
     align-self: start;
+  }
+
+  .tuning-carousel {
+    margin-inline: 0;
   }
 
   .tuning-scroll {
