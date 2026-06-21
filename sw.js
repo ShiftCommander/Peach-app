@@ -1,6 +1,6 @@
 const APP_VERSION = '52.1.1';
 const CACHE_NAME = 'peach-guitar-tuner-v52-1-1';
-const EXPLICIT_UPDATE_BASE_CACHE = 'peach-guitar-tuner-v52-1-1';
+const EXPLICIT_UPDATE_BASE_CACHE = 'peach-guitar-tuner-v52';
 const CACHE_PREFIX = 'peach-guitar-tuner-v';
 const CORE_ASSETS = [
   './',
@@ -29,7 +29,7 @@ self.addEventListener('install', (event) => {
       caches.open(CACHE_NAME).then((cache) => cache.addAll(CORE_ASSETS)),
     ]).then(([keys]) => {
       const hasLegacyCache = keys.some((key) => key.startsWith(CACHE_PREFIX));
-      const supportsExplicitUpdates = keys.includes(EXPLICIT_UPDATE_BASE_CACHE);
+      const supportsExplicitUpdates = keys.some((key) => key.startsWith(EXPLICIT_UPDATE_BASE_CACHE));
       return hasLegacyCache && !supportsExplicitUpdates ? self.skipWaiting() : null;
     })
   );
