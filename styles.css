@@ -562,8 +562,9 @@ svg {
   display: flex;
   gap: clamp(0.9rem, 2.8vw, 1.25rem);
   overflow-x: auto;
-  padding: 0 0 0.35rem;
+  padding: 0 max(1rem, env(safe-area-inset-right)) 0.35rem max(1rem, env(safe-area-inset-left));
   scroll-snap-type: x mandatory;
+  scroll-padding-inline-start: max(1rem, env(safe-area-inset-left));
   scrollbar-width: none;
 }
 
@@ -578,7 +579,7 @@ svg {
   min-height: 22rem;
   display: flex;
   flex-direction: column;
-  flex: 0 0 min(100%, 100vw);
+  flex: 0 0 100%;
   overflow: hidden;
   overflow: clip;
   isolation: isolate;
