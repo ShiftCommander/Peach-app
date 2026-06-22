@@ -562,7 +562,7 @@ svg {
   display: flex;
   gap: clamp(0.9rem, 2.8vw, 1.25rem);
   overflow-x: auto;
-  padding: 0 max(1rem, env(safe-area-inset-right)) 0.35rem max(1rem, env(safe-area-inset-left));
+  padding: 0 max(1rem, env(safe-area-inset-right)) 1.5rem max(1rem, env(safe-area-inset-left));
   scroll-snap-type: x mandatory;
   scroll-padding-inline-start: max(1rem, env(safe-area-inset-left));
   scrollbar-width: none;
