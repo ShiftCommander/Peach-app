@@ -1,21 +1,41 @@
-# Peach - Guitar Tuner
+# 🎸 Peach - Guitar Tuner
 
-Peach is a static, installable PWA guitar tuner built with plain HTML, CSS and JavaScript.
+![Version](https://img.shields.io/badge/version-v52.1.0-blue.svg)
+![Node](https://img.shields.io/badge/node-%3E%3D20-brightgreen.svg)
+![PWA](https://img.shields.io/badge/PWA-ready-success.svg)
+![GitHub Pages](https://img.shields.io/badge/deployment-GitHub%20Pages-lightgrey.svg)
+
+Peach is a static, installable Progressive Web App (PWA) guitar tuner built with plain HTML, CSS, and JavaScript.
 
 It includes an automatic microphone tuner, a chromatic wheel, reference tones, preset tunings, saved custom tunings, and a small embedded song tuning library.
 
-## Release Status
+## ✨ Features
 
-Current release: **V52**
+- **Microphone Tuner:** Automatic pitch detection and chromatic wheel.
+- **Reference Tones:** Play exact frequencies for manual tuning.
+- **Tuning Library:** Preset tunings, saved custom tunings, and an embedded song tuning library.
+- **Offline Capable PWA:** Installable locally without needing an app store. All app code is local; no CDN scripts are required at runtime.
+- **Optional Backend MVP:** A plain Node.js process (separate from GitHub Pages static hosting) for global tuning search and AI fallbacks.
 
-- Static app: no package manager, build step or framework runtime is required for the PWA.
-- Optional backend MVP: plain Node.js process (separate from GitHub Pages static hosting).
-- PWA assets: `manifest.json`, `sw.js`, and app icons are included.
-- Offline runtime: all app code is local; there are no CDN scripts required at runtime.
-- Cache version: `peach-guitar-tuner-v52`.
-- Current production target: GitHub Pages at `https://shiftcommander.github.io/Peach-app/`.
+## 🚀 Live Demo
 
-## Local Preview
+The current production target is hosted on GitHub Pages:
+👉 **[Play Peach Guitar Tuner](https://shiftcommander.github.io/Peach-app/)**
+
+## 🛠 Tech Stack
+
+- **Frontend:** HTML5, CSS3, Vanilla JavaScript (No framework required).
+- **Backend (Optional):** Node.js 20+ (for the global tuning API).
+- **Deployment:** GitHub Pages (Static app), Docker (Backend).
+
+## 📦 Getting Started (Local Development)
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) >= 20 (for backend and tests)
+- Python 3 (for serving static files locally)
+
+### Frontend Local Preview
 
 Serve the directory from the repository root:
 
@@ -23,37 +43,63 @@ Serve the directory from the repository root:
 python3 -m http.server 4273
 ```
 
-Then open:
+Then open `http://localhost:4273` in your browser. The page title should be `Peach - Guitar Tuner`.
 
-```text
-http://localhost:4273
-```
-
-The page title should be `Peach - Guitar Tuner`.
+### Backend Local Preview (Global Tuning Search MVP)
 
 To test the global tuning search MVP with the local mock API:
 
+1. Start the mock backend:
+
+   ```sh
+   npm run dev:api
+   # or: node dev/global-tuning-api-mock.js
+   ```
+
+2. Open `http://localhost:4274`.
+3. Set the API endpoint once in your browser's DevTools console:
+
+   ```javascript
+   localStorage.setItem('peach-global-tuning-api-url-v1', '/api/tunings/search');
+   ```
+
+4. Search for `Black Hole Sun` to get a mock global database result, or any unknown song to trigger the mock AI fallback and persistence behavior.
+
+*(Note: The backend stores generated rows in `.tmp/global-tunings-dev.json` during local development.)*
+
+## 📁 Project Structure
+
+- `index.html` - App shell and metadata.
+- `styles.css` - Full UI styling.
+- `app.js` - Tuner logic and UI behavior.
+- `pwa-lifecycle.js` - Installability, installed-app detection, update checks, and app launching.
+- `release.json` - Machine-readable production release version.
+- `sw.js` - Offline cache, version messaging, explicit updates, and navigation fallback.
+- `manifest.json` - PWA manifest and install metadata.
+- `version.txt` - Human-readable release marker.
+- `config.js` - Static frontend runtime config for GitHub Pages.
+- `server/` - Optional deployable Node.js backend for global tuning search.
+- `tests/` - Backend regression tests.
+- `dev/` - Local development scripts.
+
+## 🧪 Testing and PWA Checks
+
+### Backend Tests
+
+Run the backend API regression tests:
+
 ```sh
-node dev/global-tuning-api-mock.js
+npm test
+# or: node --test tests/*.test.js
 ```
 
-Open `http://localhost:4274`, then set the API endpoint once in DevTools:
-
-```js
-localStorage.setItem('peach-global-tuning-api-url-v1', '/api/tunings/search')
-```
-
-Search for `Black Hole Sun` to get a mock global database result, or any unknown song to trigger the mock AI fallback and persistence behavior.
-
-Run the backend API regression test:
+You can also check syntax:
 
 ```sh
-node --test tests/global-tuning-api.test.js
+npm run check
 ```
 
-The backend stores generated rows in `.tmp/global-tunings-dev.json` during local development.
-
-## PWA Checks
+### PWA Checks Before Release
 
 Before a release, verify:
 
@@ -61,38 +107,18 @@ Before a release, verify:
 - `manifest.json` loads and exposes the expected app name, icons, `start_url`, `scope`, and `id`.
 - On GitHub Pages, static files use GitHub's default cache headers.
 - The service worker installs and activates without console errors.
-- Reload once after first service worker installation, then test offline reload.
+- Reload once after the first service worker installation, then test offline reload.
 - Android Chrome shows the in-app install action only when the native install prompt is available.
 - An already-installed PWA is detected when Chrome supports related-app detection; Peach then checks for a waiting service-worker update before offering to open the app.
 - Microphone permission works on a secure origin and the tuner reacts to input.
 
-## Files
-
-- `index.html` - app shell and metadata.
-- `styles.css` - full UI styling.
-- `app.js` - tuner logic and UI behavior.
-- `pwa-lifecycle.js` - installability, installed-app detection, update checks, and app launching.
-- `release.json` - machine-readable production release version.
-- `sw.js` - offline cache, version messaging, explicit updates, and navigation fallback.
-- `manifest.json` - PWA manifest and install metadata.
-- `version.txt` - human-readable release marker.
-- `config.js` - static frontend runtime config for GitHub Pages.
-- `server/` - optional deployable Node.js backend for global tuning search.
-- `tests/` - backend regression tests.
-
-## Backend Deployment
+## 🚢 Backend Deployment
 
 GitHub Pages cannot execute the backend. Deploy the API on any Node-capable runtime, then point `config.js` to that API URL.
 
-Required runtime:
+### Environment Variables
 
-```text
-Node.js 20+
-```
-
-Useful environment variables:
-
-```text
+```env
 PORT=8080
 PEACH_TUNING_DB_PATH=/data/global-tunings.json
 PEACH_PUBLIC_GLOBAL_TUNING_API_URL=https://your-api.example/api/tunings/search
@@ -103,20 +129,26 @@ PEACH_RATE_LIMIT=60
 PEACH_RATE_LIMIT_WINDOW_MS=60000
 ```
 
-Run as a Node process:
+### Run as a Node process
 
 ```sh
 npm start
+# or: node server/start.js
 ```
 
-Run as a container:
+### Run as a container (Docker)
 
 ```sh
 docker build -t peach-global-tuning-api .
 docker run -p 8080:8080 -v peach-tunings:/data peach-global-tuning-api
 ```
 
-## Release Notes
+## 📝 Release Notes
+
+### V52.1.0 (Current)
+
+- Restore PWA install and update flow (merged from `codex/pwa-install-update`).
+- Added installability, installed-app detection, explicit service-worker update activation, and Android launch action.
 
 ### V52
 
