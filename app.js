@@ -349,6 +349,7 @@ function bindUI() {
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') {
       document.querySelectorAll('.glass-help-popover:not(.is-hidden)').forEach((popover) => popover.classList.add('is-hidden'));
+      document.querySelectorAll('.help-toggle[aria-expanded="true"]').forEach((btn) => btn.setAttribute('aria-expanded', 'false'));
       setSavedManagerOpen(false);
     }
     if (event.key === 'Tab') trapSavedDrawerFocus(event);
@@ -363,9 +364,11 @@ function bindHelpPopovers() {
       if (!target) return;
       const willOpen = target.classList.contains('is-hidden');
       document.querySelectorAll('.glass-help-popover').forEach((popover) => popover.classList.add('is-hidden'));
+      document.querySelectorAll('.help-toggle[aria-expanded="true"]').forEach((btn) => btn.setAttribute('aria-expanded', 'false'));
       if (willOpen) {
         helpPopoverReturnFocus = button;
         target.classList.remove('is-hidden');
+        button.setAttribute('aria-expanded', 'true');
         window.setTimeout(() => target.querySelector('.glass-help-close')?.focus?.(), 0);
       }
       playUiFeedback('tap');
@@ -376,6 +379,7 @@ function bindHelpPopovers() {
     button.addEventListener('click', (event) => {
       event.stopPropagation();
       button.closest('.glass-help-popover')?.classList.add('is-hidden');
+      document.querySelectorAll('.help-toggle[aria-expanded="true"]').forEach((btn) => btn.setAttribute('aria-expanded', 'false'));
       window.setTimeout(() => helpPopoverReturnFocus?.focus?.(), 0);
       playUiFeedback('tap');
     });
@@ -384,6 +388,7 @@ function bindHelpPopovers() {
   document.addEventListener('pointerdown', (event) => {
     if (event.target.closest('.glass-help-popover') || event.target.closest('.help-toggle')) return;
     document.querySelectorAll('.glass-help-popover:not(.is-hidden)').forEach((popover) => popover.classList.add('is-hidden'));
+    document.querySelectorAll('.help-toggle[aria-expanded="true"]').forEach((btn) => btn.setAttribute('aria-expanded', 'false'));
   }, { passive: true });
 }
 
