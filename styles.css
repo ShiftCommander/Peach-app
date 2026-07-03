@@ -1366,51 +1366,87 @@ select:focus-visible {
 
 .toast-container {
   position: fixed;
-  bottom: 2rem;
-  left: 0;
-  right: 0;
+  inset: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
   pointer-events: none;
   z-index: 1000;
 }
 
-.toast-message {
+.toast-stamp {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  will-change: transform, opacity;
+  animation: fade-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.toast-stamp.is-hiding {
+  animation: fade-out 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.toast-stamp__circle {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  background: var(--surface);
+  box-shadow: 0 8px 24px var(--shadow-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: stamp-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  will-change: transform;
+}
+
+.toast-stamp__icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  stroke: var(--ink);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  animation: draw-icon 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+}
+
+.toast-stamp__text {
   background: var(--ink-strong);
   color: var(--surface);
-  padding: 0.75rem 1.25rem;
+  padding: 0.5rem 1rem;
   border-radius: var(--control-radius);
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: 0.85rem;
+  font-weight: 600;
   box-shadow: 0 4px 12px var(--shadow-dark);
-  animation: toast-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  will-change: transform, opacity;
+  opacity: 0;
+  transform: translateY(0.5rem);
+  animation: text-pop 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.25s forwards;
 }
 
-.toast-message.is-hiding {
-  animation: toast-out 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+@keyframes stamp-pop {
+  0% { transform: scale(0.5); opacity: 0; }
+  60% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
-@keyframes toast-in {
-  from {
-    opacity: 0;
-    transform: translateY(1rem) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+@keyframes draw-icon {
+  to { stroke-dashoffset: 0; }
 }
 
-@keyframes toast-out {
-  from {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: translateY(1rem) scale(0.95);
-  }
+@keyframes text-pop {
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fade-up {
+  from { transform: translateY(1rem); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fade-out {
+  from { transform: translateY(0) scale(1); opacity: 1; }
+  to { transform: translateY(-1rem) scale(0.9); opacity: 0; }
 }

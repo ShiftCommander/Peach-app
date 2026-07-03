@@ -2408,16 +2408,44 @@ function flashActionFeedback(message) {
   const container = $('#toast-container');
   if (!container) return;
 
-  const toast = document.createElement('div');
-  toast.className = 'toast-message';
-  toast.innerText = message;
+  const isDelete = message.toLowerCase().includes('supprimé');
+  const stamp = document.createElement('div');
+  stamp.className = 'toast-stamp';
+  stamp.setAttribute('role', 'status');
+  stamp.setAttribute('aria-live', 'polite');
 
-  container.appendChild(toast);
+  const circle = document.createElement('div');
+  circle.className = 'toast-stamp__circle';
+  circle.setAttribute('aria-hidden', 'true');
+
+  const iconSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  iconSvg.setAttribute('class', 'toast-stamp__icon');
+  iconSvg.setAttribute('viewBox', '0 0 24 24');
+
+  if (isDelete) {
+    iconSvg.style.stroke = 'var(--danger)';
+    iconSvg.innerHTML = '<path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>';
+  } else {
+    iconSvg.style.stroke = 'var(--ink-strong)';
+    iconSvg.innerHTML = '<polyline points="20 6 9 17 4 12"></polyline>';
+  }
+
+  circle.appendChild(iconSvg);
+  stamp.appendChild(circle);
+
+  if (message) {
+    const text = document.createElement('span');
+    text.className = 'toast-stamp__text';
+    text.textContent = message;
+    stamp.appendChild(text);
+  }
+
+  container.appendChild(stamp);
 
   window.setTimeout(() => {
-    toast.classList.add('is-hiding');
-    toast.addEventListener('animationend', () => toast.remove());
-  }, 2500);
+    stamp.classList.add('is-hiding');
+    stamp.addEventListener('animationend', () => stamp.remove());
+  }, 1600);
 }
 
 (function initHeaderScroll() {
