@@ -2442,7 +2442,9 @@ function flashActionFeedback(message) {
 
   window.setTimeout(() => {
     stamp.classList.add('is-hiding');
-    stamp.addEventListener('animationend', () => stamp.remove());
+    stamp.addEventListener('animationend', (event) => {
+      if (event.target === stamp) stamp.remove();
+    });
     // Fallback for when animations are disabled (prefers-reduced-motion)
     window.setTimeout(() => {
       if (stamp.parentNode) stamp.remove();
