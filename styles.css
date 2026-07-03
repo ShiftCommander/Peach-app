@@ -1363,3 +1363,35 @@ select:focus-visible {
   --shadow-mid: rgba(120, 110, 100, 0.22);
   --shadow-light: rgba(255, 255, 255, 0.86);
 }
+
+
+.toast-container {
+  position: fixed;
+  bottom: max(1.25rem, env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  pointer-events: none;
+}
+
+.toast {
+  background: var(--ink-strong);
+  color: #fff;
+  padding: 0.75rem 1.25rem;
+  border-radius: 999rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  box-shadow: 0 0.5rem 1.4rem var(--shadow-dark);
+  opacity: 0;
+  transform: translateY(1rem);
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  text-align: center;
+}
+
+.toast.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}

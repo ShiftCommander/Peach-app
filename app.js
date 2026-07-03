@@ -2418,3 +2418,40 @@ function playUiFeedback(kind = 'tap') {
   updateHeader();
   window.addEventListener('scroll', updateHeader, { passive: true });
 }());
+
+
+function flashActionFeedback(message) {
+  let container = document.getElementById('toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'toast-container';
+    container.className = 'toast-container';
+    container.setAttribute('aria-live', 'polite');
+    container.setAttribute('aria-atomic', 'true');
+    document.body.appendChild(container);
+  }
+
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.innerText = message;
+  container.appendChild(toast);
+
+  // Trigger animation
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      toast.classList.add('is-visible');
+    });
+  });
+
+  setTimeout(() => {
+    toast.classList.remove('is-visible');
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
+
+function setFeedbackText(text, options) {
+  const detail = document.getElementById('heard-note-detail');
+  if (detail) {
+    detail.innerText = text;
+  }
+}
