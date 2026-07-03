@@ -1450,3 +1450,26 @@ select:focus-visible {
   from { transform: translateY(0) scale(1); opacity: 1; }
   to { transform: translateY(-1rem) scale(0.9); opacity: 0; }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .toast-stamp,
+  .toast-stamp__circle,
+  .toast-stamp__icon,
+  .toast-stamp__text,
+  .toast-stamp.is-hiding {
+    animation: none !important;
+  }
+
+  .toast-stamp__icon {
+    stroke-dashoffset: 0;
+  }
+
+  .toast-stamp__text {
+    opacity: 1;
+    transform: none;
+  }
+
+  .toast-stamp.is-hiding {
+    display: none;
+  }
+}

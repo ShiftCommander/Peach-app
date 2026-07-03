@@ -2412,7 +2412,6 @@ function flashActionFeedback(message) {
   const stamp = document.createElement('div');
   stamp.className = 'toast-stamp';
   stamp.setAttribute('role', 'status');
-  stamp.setAttribute('aria-live', 'polite');
 
   const circle = document.createElement('div');
   circle.className = 'toast-stamp__circle';
@@ -2433,18 +2432,21 @@ function flashActionFeedback(message) {
   circle.appendChild(iconSvg);
   stamp.appendChild(circle);
 
-  if (message) {
-    const text = document.createElement('span');
-    text.className = 'toast-stamp__text';
-    text.textContent = message;
-    stamp.appendChild(text);
-  }
+  // Added screen reader text only for accessibility
+  const srText = document.createElement('span');
+  srText.className = 'sr-only';
+  srText.textContent = message;
+  stamp.appendChild(srText);
 
   container.appendChild(stamp);
 
   window.setTimeout(() => {
     stamp.classList.add('is-hiding');
     stamp.addEventListener('animationend', () => stamp.remove());
+    // Fallback for when animations are disabled (prefers-reduced-motion)
+    window.setTimeout(() => {
+      if (stamp.parentNode) stamp.remove();
+    }, 400);
   }, 1600);
 }
 
