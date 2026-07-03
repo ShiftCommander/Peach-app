@@ -1850,7 +1850,6 @@ function resetTunerVisuals() {
   $('#heard-note-detail').innerText = 'En attente d’une corde…';
   setSignalState(false, referenceToneActive ? 'Micro en pause' : 'Aucun signal');
   smoothedDisplayFrequency = null;
-  setFeedbackText('Joue une corde pour commencer.', { force: true });
   renderChromaticWheel(null);
   currentTargetIndex = null;
   renderTargetNotes();
@@ -2405,6 +2404,22 @@ function playUiFeedback(kind = 'tap') {
 }
 
 // Header auto-hide: fade brand out when user scrolls away from top, restore at top.
+function flashActionFeedback(message) {
+  const container = $('#toast-container');
+  if (!container) return;
+
+  const toast = document.createElement('div');
+  toast.className = 'toast-message';
+  toast.innerText = message;
+
+  container.appendChild(toast);
+
+  window.setTimeout(() => {
+    toast.classList.add('is-hiding');
+    toast.addEventListener('animationend', () => toast.remove());
+  }, 2500);
+}
+
 (function initHeaderScroll() {
   const SCROLL_THRESHOLD = 52;
   const header = document.querySelector('.app-header');
