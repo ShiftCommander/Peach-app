@@ -633,6 +633,12 @@ svg {
 .pwa-card a:focus-visible,
 .secondary-action:focus-visible,
 .string-card:focus-visible,
+.song-result-main:focus-visible,
+.song-result-save:focus-visible,
+.saved-item__title-button:focus-visible,
+.saved-item__more:focus-visible,
+.saved-item__menu button:focus-visible,
+.drawer-close-btn:focus-visible,
 input:focus-visible,
 select:focus-visible {
   outline: 2px solid rgba(79, 135, 216, 0.72);
