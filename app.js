@@ -2418,3 +2418,55 @@ function playUiFeedback(kind = 'tap') {
   updateHeader();
   window.addEventListener('scroll', updateHeader, { passive: true });
 }());
+
+
+function flashActionFeedback(message) {
+  let toast = document.getElementById('action-feedback-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'action-feedback-toast';
+    toast.setAttribute('aria-live', 'polite');
+    toast.className = 'history-pill'; // Reusing history-pill for visual consistency
+
+    // Inline styling for toast behavior without touching css
+    toast.style.position = 'fixed';
+    toast.style.bottom = 'max(1.5rem, env(safe-area-inset-bottom))';
+    toast.style.left = '50%';
+    toast.style.transform = 'translate(-50%, 150%)';
+    toast.style.opacity = '0';
+    toast.style.transition = 'transform 240ms cubic-bezier(0.22, 1, 0.36, 1), opacity 240ms ease';
+    toast.style.zIndex = '9999';
+    toast.style.pointerEvents = 'none';
+    toast.style.whiteSpace = 'nowrap';
+    toast.style.background = 'linear-gradient(145deg, var(--ink), var(--ink-strong))';
+    toast.style.color = '#fff';
+    toast.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.15)';
+    toast.style.fontSize = '0.85rem';
+    toast.style.padding = '0.65rem 1.1rem';
+
+    document.body.appendChild(toast);
+  }
+
+  toast.innerText = message;
+
+  // Reset animation state
+  toast.style.transition = 'none';
+  toast.style.transform = 'translate(-50%, 150%)';
+  toast.style.opacity = '0';
+
+  // Trigger reflow
+  void toast.offsetWidth;
+
+  toast.style.transition = 'transform 240ms cubic-bezier(0.22, 1, 0.36, 1), opacity 240ms ease';
+  toast.style.transform = 'translate(-50%, 0)';
+  toast.style.opacity = '1';
+
+  if (toast.timeoutId) {
+    clearTimeout(toast.timeoutId);
+  }
+
+  toast.timeoutId = setTimeout(() => {
+    toast.style.transform = 'translate(-50%, 150%)';
+    toast.style.opacity = '0';
+  }, 2400);
+}
