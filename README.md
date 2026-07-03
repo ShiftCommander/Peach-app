@@ -24,14 +24,13 @@ The current production target is hosted on GitHub Pages:
 ## 🛠 Tech Stack
 
 - **Frontend:** HTML5, CSS3, Vanilla JavaScript (No framework required).
-- **Backend (Optional):** Node.js 20+ (for the global tuning API).
-- **Deployment:** GitHub Pages (Static app), Docker (Backend).
+- **Deployment:** GitHub Pages (Static app).
 
 ## 📦 Getting Started (Local Development)
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) >= 20 (for backend and tests)
+- [Node.js](https://nodejs.org/) >= 20
 - Python 3 (for serving static files locally)
 
 ### Frontend Local Preview
@@ -44,28 +43,6 @@ python3 -m http.server 4273
 
 Then open `http://localhost:4273` in your browser. The page title should be `Peach - Guitar Tuner`.
 
-### Backend Local Preview (Global Tuning Search MVP)
-
-To test the global tuning search MVP with the local mock API:
-
-1. Start the mock backend:
-
-   ```sh
-   npm run dev:api
-   # or: node dev/global-tuning-api-mock.js
-   ```
-
-2. Open `http://localhost:4274`.
-3. Set the API endpoint once in your browser's DevTools console:
-
-   ```javascript
-   localStorage.setItem('peach-global-tuning-api-url-v1', '/api/tunings/search');
-   ```
-
-4. Search for `Black Hole Sun` to get a mock global database result, or any unknown song to trigger the mock AI fallback and persistence behavior.
-
-*(Note: The backend stores generated rows in `.tmp/global-tunings-dev.json` during local development.)*
-
 ## 📁 Project Structure
 
 - `index.html` - App shell and metadata.
@@ -77,26 +54,9 @@ To test the global tuning search MVP with the local mock API:
 - `manifest.json` - PWA manifest and install metadata.
 - `version.txt` - Human-readable release marker.
 - `config.js` - Static frontend runtime config for GitHub Pages.
-- `server/` - Optional deployable Node.js backend for global tuning search.
-- `tests/` - Backend regression tests.
 - `dev/` - Local development scripts.
 
 ## 🧪 Testing and PWA Checks
-
-### Backend Tests
-
-Run the backend API regression tests:
-
-```sh
-npm test
-# or: node --test tests/*.test.js
-```
-
-You can also check syntax:
-
-```sh
-npm run check
-```
 
 ### PWA Checks Before Release
 
@@ -110,37 +70,6 @@ Before a release, verify:
 - Android Chrome shows the in-app install action only when the native install prompt is available.
 - An already-installed PWA is detected when Chrome supports related-app detection; Peach then checks for a waiting service-worker update before offering to open the app.
 - Microphone permission works on a secure origin and the tuner reacts to input.
-
-## 🚢 Backend Deployment
-
-GitHub Pages cannot execute the backend. Deploy the API on any Node-capable runtime, then point `config.js` to that API URL.
-
-### Environment Variables
-
-```env
-PORT=8080
-PEACH_TUNING_DB_PATH=/data/global-tunings.json
-PEACH_PUBLIC_GLOBAL_TUNING_API_URL=https://your-api.example/api/tunings/search
-PEACH_AI_MODE=mock
-OPENAI_API_KEY=...
-OPENAI_MODEL=gpt-4o-mini
-PEACH_RATE_LIMIT=60
-PEACH_RATE_LIMIT_WINDOW_MS=60000
-```
-
-### Run as a Node process
-
-```sh
-npm start
-# or: node server/start.js
-```
-
-### Run as a container (Docker)
-
-```sh
-docker build -t peach-global-tuning-api .
-docker run -p 8080:8080 -v peach-tunings:/data peach-global-tuning-api
-```
 
 ## 📝 Release Notes
 
