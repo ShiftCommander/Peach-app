@@ -15,7 +15,6 @@ It includes an automatic microphone tuner, a chromatic wheel, reference tones, p
 - **Reference Tones:** Play exact frequencies for manual tuning.
 - **Tuning Library:** Preset tunings, saved custom tunings, and an embedded song tuning library.
 - **Offline Capable PWA:** Installable locally without needing an app store. All app code is local; no CDN scripts are required at runtime.
-- **Optional Backend MVP:** A plain Node.js process (separate from GitHub Pages static hosting) for global tuning search and AI fallbacks.
 
 ## 🚀 Live Demo
 
