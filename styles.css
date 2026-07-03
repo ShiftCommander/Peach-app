@@ -629,8 +629,12 @@ svg {
 }
 
 .help-toggle:focus-visible,
+.glass-help-close:focus-visible,
 .library-menu-button:focus-visible,
+.mic-permission-card button:focus-visible,
 .pwa-card a:focus-visible,
+.saved-item__title-button:focus-visible,
+.saved-item__menu button:focus-visible,
 .secondary-action:focus-visible,
 .string-card:focus-visible,
 input:focus-visible,
