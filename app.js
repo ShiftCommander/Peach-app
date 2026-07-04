@@ -1057,9 +1057,15 @@ function renderSongTuningResults() {
   results.appendChild(header);
 
   if (!matches.length) {
-    const empty = document.createElement('p');
-    empty.className = 'song-result-empty';
-    empty.innerText = songSearchEmptyText(globalEnabled);
+    const empty = document.createElement('div');
+    empty.className = 'empty-state-block song-result-empty-block';
+    empty.innerHTML = `
+      <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="empty-state-icon">
+        <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <strong>Aucun morceau trouvé</strong>
+      <p>${songSearchEmptyText(globalEnabled)}</p>
+    `;
     results.appendChild(empty);
     return;
   }
@@ -1471,17 +1477,30 @@ function renderSavedManager() {
     });
 
   if (!savedTunings.length) {
-    const empty = document.createElement('p');
-    empty.className = 'saved-empty';
-    empty.innerText = 'Aucun accordage enregistré pour l’instant. Crée un accordage, donne-lui un nom, puis sauvegarde-le.';
+    const empty = document.createElement('div');
+    empty.className = 'empty-state-block';
+    empty.innerHTML = `
+      <svg aria-hidden="true" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="empty-state-icon">
+        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+      </svg>
+      <strong>Aucun accordage</strong>
+      <p>Crée un accordage libre, donne-lui un nom, puis sauvegarde-le pour le retrouver ici.</p>
+      <button class="secondary-action empty-state-cta" type="button" onclick="document.getElementById('saved-drawer-close').click(); setTimeout(() => document.getElementById('custom-tuning-name').focus(), 300);">Créer un accordage</button>
+    `;
     list.appendChild(empty);
     return;
   }
 
   if (!items.length) {
-    const empty = document.createElement('p');
-    empty.className = 'saved-empty';
-    empty.innerText = 'Aucun accordage ne correspond à cette recherche.';
+    const empty = document.createElement('div');
+    empty.className = 'empty-state-block';
+    empty.innerHTML = `
+      <svg aria-hidden="true" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="empty-state-icon">
+        <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <strong>Aucun résultat</strong>
+      <p>Aucun accordage ne correspond à cette recherche.</p>
+    `;
     list.appendChild(empty);
     return;
   }

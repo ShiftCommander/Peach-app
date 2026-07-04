@@ -1,0 +1,5 @@
+## 2024-05-19 - The importance of toast notifications for accessibility\n**Learning:** The flashActionFeedback function is called all over the app, but there's no visual implementation of a toast to show this feedback to the user. This leaves a gap in the UX for users and a potential a11y issue if the user receives no feedback from their actions.\n**Action:** Add an accessible toast container to index.html with an aria-live region to ensure that the messages passed into flashActionFeedback are surfaced correctly to both visual and screen reader users.
+
+## 2024-05-20 - Reusable Empty State Patterns for Vanilla JS Lists
+**Learning:** When injecting empty states into dynamic lists (like search results or saved tunings), using a structured `.empty-state-block` with an SVG icon, explanatory text, and a primary CTA (using the standard `.btn.btn-primary`) creates a much better UX than simply showing no results. The pattern is now established in `app.js` and `styles.css`.
+**Action:** Reuse the `.empty-state-block` CSS class and HTML structure whenever adding empty states to other dynamic lists in the application to ensure consistency.
