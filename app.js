@@ -1869,7 +1869,6 @@ function resetTunerVisuals() {
   $('#heard-note-detail').innerText = 'En attente d’une corde…';
   setSignalState(false, referenceToneActive ? 'Micro en pause' : 'Aucun signal');
   smoothedDisplayFrequency = null;
-  setFeedbackText('Joue une corde pour commencer.', { force: true });
   renderChromaticWheel(null);
   currentTargetIndex = null;
   renderTargetNotes();
@@ -2424,6 +2423,54 @@ function playUiFeedback(kind = 'tap') {
 }
 
 // Header auto-hide: fade brand out when user scrolls away from top, restore at top.
+function flashActionFeedback(message) {
+  const container = $('#toast-container');
+  if (!container) return;
+
+  const isDelete = message.toLowerCase().includes('supprimé');
+  const stamp = document.createElement('div');
+  stamp.className = 'toast-stamp';
+  stamp.setAttribute('role', 'status');
+
+  const circle = document.createElement('div');
+  circle.className = 'toast-stamp__circle';
+  circle.setAttribute('aria-hidden', 'true');
+
+  const iconSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  iconSvg.setAttribute('class', 'toast-stamp__icon');
+  iconSvg.setAttribute('viewBox', '0 0 24 24');
+
+  if (isDelete) {
+    iconSvg.style.stroke = 'var(--danger)';
+    iconSvg.innerHTML = '<path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>';
+  } else {
+    iconSvg.style.stroke = 'var(--ink-strong)';
+    iconSvg.innerHTML = '<polyline points="20 6 9 17 4 12"></polyline>';
+  }
+
+  circle.appendChild(iconSvg);
+  stamp.appendChild(circle);
+
+  // Added screen reader text only for accessibility
+  const srText = document.createElement('span');
+  srText.className = 'sr-only';
+  srText.textContent = message;
+  stamp.appendChild(srText);
+
+  container.appendChild(stamp);
+
+  window.setTimeout(() => {
+    stamp.classList.add('is-hiding');
+    stamp.addEventListener('animationend', (event) => {
+      if (event.target === stamp) stamp.remove();
+    });
+    // Fallback for when animations are disabled (prefers-reduced-motion)
+    window.setTimeout(() => {
+      if (stamp.parentNode) stamp.remove();
+    }, 400);
+  }, 1600);
+}
+
 (function initHeaderScroll() {
   const SCROLL_THRESHOLD = 52;
   const header = document.querySelector('.app-header');
