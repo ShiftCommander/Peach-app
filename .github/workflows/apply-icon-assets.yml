@@ -1,0 +1,55 @@
+name: Apply Peach icon assets
+
+on:
+  push:
+    branches:
+      - feat/new-peach-app-icon
+    paths:
+      - .icon-staging/ready
+
+permissions:
+  contents: write
+
+jobs:
+  apply-assets:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out icon branch
+        uses: actions/checkout@v4
+        with:
+          ref: feat/new-peach-app-icon
+          fetch-depth: 0
+
+      - name: Decode PNG assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          base64 --decode .icon-staging/favicon-32.png.b64 > icons/favicon-32.png
+          base64 --decode .icon-staging/apple-touch-icon.png.b64 > icons/apple-touch-icon.png
+          base64 --decode .icon-staging/icon-192.png.b64 > icons/icon-192.png
+          base64 --decode .icon-staging/icon-512.png.b64 > icons/icon-512.png
+          base64 --decode .icon-staging/maskable-icon-192.png.b64 > icons/maskable-icon-192.png
+          base64 --decode .icon-staging/maskable-icon-512.png.b64 > icons/maskable-icon-512.png
+
+      - name: Verify exact Git blob hashes
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object icons/favicon-32.png)" = "45655db379655fdca4f46596873e1271add8836f"
+          test "$(git hash-object icons/apple-touch-icon.png)" = "b245f22c43e0b62c1f50877773164cd5d5f9fd1c"
+          test "$(git hash-object icons/icon-192.png)" = "a5360e373172765968f073bfb2a2f1b985dfd030"
+          test "$(git hash-object icons/icon-512.png)" = "f810b77ffc543323f16e2055472395b72c777d6b"
+          test "$(git hash-object icons/maskable-icon-192.png)" = "e10fa07e379103ae94a23f6000cbda18918f1108"
+          test "$(git hash-object icons/maskable-icon-512.png)" = "5f02c38bf327c3133db1ef09e8c9d48d59f9de09"
+
+      - name: Commit restored binary assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .icon-staging
+          rm -f .github/workflows/apply-icon-assets.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add icons .icon-staging .github/workflows/apply-icon-assets.yml
+          git commit -m "fix: restore Peach icon PNG assets"
+          git push origin HEAD:feat/new-peach-app-icon
