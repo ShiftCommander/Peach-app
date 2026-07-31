@@ -1,5 +1,5 @@
-const APP_VERSION = '52.1.1';
-const CACHE_NAME = 'peach-guitar-tuner-v52-1-1';
+const APP_VERSION = '52.1.2';
+const CACHE_NAME = 'peach-guitar-tuner-v52-1-2';
 const EXPLICIT_UPDATE_BASE_CACHE = 'peach-guitar-tuner-v52';
 const CACHE_PREFIX = 'peach-guitar-tuner-v';
 const CORE_ASSETS = [
@@ -19,7 +19,8 @@ const CORE_ASSETS = [
   './icons/apple-touch-icon.png',
   './icons/icon-192.png',
   './icons/icon-512.png',
-  './icons/maskable-icon-192.png'
+  './icons/maskable-icon-192.png',
+  './icons/maskable-icon-512.png'
 ];
 
 self.addEventListener('install', (event) => {
