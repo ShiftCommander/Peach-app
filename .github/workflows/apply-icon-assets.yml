@@ -20,16 +20,16 @@ jobs:
           ref: feat/new-peach-app-icon
           fetch-depth: 0
 
-      - name: Decode PNG assets
+      - name: Download Drive-sourced PNG assets
         shell: bash
         run: |
           set -euo pipefail
-          cat .icon-staging/favicon-32.png.b64.part-* | base64 --decode > icons/favicon-32.png
-          cat .icon-staging/apple-touch-icon.png.b64.part-* | base64 --decode > icons/apple-touch-icon.png
-          cat .icon-staging/icon-192.png.b64.part-* | base64 --decode > icons/icon-192.png
-          cat .icon-staging/icon-512.png.b64.part-* | base64 --decode > icons/icon-512.png
-          cat .icon-staging/maskable-icon-192.png.b64.part-* | base64 --decode > icons/maskable-icon-192.png
-          cat .icon-staging/maskable-icon-512.png.b64.part-* | base64 --decode > icons/maskable-icon-512.png
+          curl -fsSL --retry 3 'https://sdmntpritalynorth.oaiusercontent.com/files/00000000-b950-8246-8284-001034f03b22/raw?se=2026-07-31T07:28:41Z&sp=r&sv=2026-02-06&sr=b&scid=d7235127-cae6-5e00-9ff2-a4daf6fc6488&skoid=ba81670d-b682-4d2d-9682-ac0ffdfb3fa1&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-07-31T05:49:51Z&ske=2026-08-02T05:49:51Z&sks=b&skv=2026-02-06&sig=bVhIrwTn%2B1UgnhIaeWh2Ey4cAeJV6OF25uezfbGb9iw%3D' -o icons/favicon-32.png
+          curl -fsSL --retry 3 'https://sdmntprnortheu.oaiusercontent.com/files/00000000-9660-81f4-b897-3a9427ae4901/raw?se=2026-07-31T07:28:24Z&sp=r&sv=2026-02-06&sr=b&scid=ba595599-83f2-5dcb-88ef-282bde30cadb&skoid=ba81670d-b682-4d2d-9682-ac0ffdfb3fa1&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-07-31T05:49:48Z&ske=2026-08-02T05:49:48Z&sks=b&skv=2026-02-06&sig=wqgKxRz/YzWkIvss%2BouvdmNiQzdtwpZJ01BdA9bmDyQ%3D' -o icons/apple-touch-icon.png
+          curl -fsSL --retry 3 'https://sdmntprukwest.oaiusercontent.com/files/00000000-7af4-8243-a11d-b22f07ca5a4f/raw?se=2026-07-31T07:28:49Z&sp=r&sv=2026-02-06&sr=b&scid=4b76a33a-abf4-5765-96d5-da41c3176a0f&skoid=ba81670d-b682-4d2d-9682-ac0ffdfb3fa1&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-07-31T06:57:50Z&ske=2026-08-02T06:57:50Z&sks=b&skv=2026-02-06&sig=0LthFbPI0dc%2B3wSCSmHrm4eShpnMYSJBc8gzHSGgqr8%3D' -o icons/icon-192.png
+          curl -fsSL --retry 3 'https://sdmntprnortheu.oaiusercontent.com/files/00000000-d40c-81f4-9b6b-1e4d3ba17b6c/raw?se=2026-07-31T07:28:59Z&sp=r&sv=2026-02-06&sr=b&scid=176637b3-9870-58cb-9baf-9b6902eb07f3&skoid=ba81670d-b682-4d2d-9682-ac0ffdfb3fa1&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-07-31T05:49:48Z&ske=2026-08-02T05:49:48Z&sks=b&skv=2026-02-06&sig=7Lokjm%2BDwkFcx3lSszUeTw9pHdz%2BYZ18mTVrf1prhxk%3D' -o icons/icon-512.png
+          curl -fsSL --retry 3 'https://sdmntprukwest.oaiusercontent.com/files/00000000-3ef8-8243-bf79-058399636950/raw?se=2026-07-31T07:29:13Z&sp=r&sv=2026-02-06&sr=b&scid=0f830f5c-d94b-5363-93fc-f0e52009283b&skoid=ba81670d-b682-4d2d-9682-ac0ffdfb3fa1&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-07-31T02:12:22Z&ske=2026-08-02T02:12:22Z&sks=b&skv=2026-02-06&sig=x8XFKg0VERlnb6BBNNamWoxBikmjAtjCTCSohJrfmRU%3D' -o icons/maskable-icon-192.png
+          curl -fsSL --retry 3 'https://sdmntprnortheu.oaiusercontent.com/files/00000000-9788-81f4-92d8-b8374d33cd84/raw?se=2026-07-31T07:29:25Z&sp=r&sv=2026-02-06&sr=b&scid=767f2497-38e0-540b-902a-cb711d10497c&skoid=ba81670d-b682-4d2d-9682-ac0ffdfb3fa1&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-07-31T02:14:16Z&ske=2026-08-02T02:14:16Z&sks=b&skv=2026-02-06&sig=iG0GmWXkzHkS8ze6Dhzti1vnwxHLehTd1ZXofCbh6Pw%3D' -o icons/maskable-icon-512.png
 
       - name: Verify exact Git blob hashes
         shell: bash
@@ -50,6 +50,6 @@ jobs:
           rm -f .github/workflows/apply-icon-assets.yml
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add icons .icon-staging .github/workflows/apply-icon-assets.yml
+          git add -A icons .icon-staging .github/workflows/apply-icon-assets.yml
           git commit -m "fix: restore Peach icon PNG assets"
           git push origin HEAD:feat/new-peach-app-icon
