@@ -24,12 +24,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          base64 --decode .icon-staging/favicon-32.png.b64 > icons/favicon-32.png
-          base64 --decode .icon-staging/apple-touch-icon.png.b64 > icons/apple-touch-icon.png
-          base64 --decode .icon-staging/icon-192.png.b64 > icons/icon-192.png
-          base64 --decode .icon-staging/icon-512.png.b64 > icons/icon-512.png
-          base64 --decode .icon-staging/maskable-icon-192.png.b64 > icons/maskable-icon-192.png
-          base64 --decode .icon-staging/maskable-icon-512.png.b64 > icons/maskable-icon-512.png
+          cat .icon-staging/favicon-32.png.b64.part-* | base64 --decode > icons/favicon-32.png
+          cat .icon-staging/apple-touch-icon.png.b64.part-* | base64 --decode > icons/apple-touch-icon.png
+          cat .icon-staging/icon-192.png.b64.part-* | base64 --decode > icons/icon-192.png
+          cat .icon-staging/icon-512.png.b64.part-* | base64 --decode > icons/icon-512.png
+          cat .icon-staging/maskable-icon-192.png.b64.part-* | base64 --decode > icons/maskable-icon-192.png
+          cat .icon-staging/maskable-icon-512.png.b64.part-* | base64 --decode > icons/maskable-icon-512.png
 
       - name: Verify exact Git blob hashes
         shell: bash
