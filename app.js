@@ -194,9 +194,9 @@ let lastAnalysisAt = 0;
 let lastSignalAt = 0;
 let lastUiFrequency = null;
 let chromaticWheelRotationDeg = 0;
-let chromaticWheelQuickTo = null;
+let chromaticWheelTargetRotationDeg = 0;
 let chromaticWheelTween = null;
-let chromaticWheelTweenElement = null;
+let chromaticWheelLastAnimationAt = 0;
 let chromaticWheelInitialized = false;
 let lastNearestNoteIndex = null;
 let smoothedDisplayFrequency = null;
@@ -232,6 +232,7 @@ window.addEventListener('DOMContentLoaded', () => {
   bindUI();
   forceSavedManagerClosedOnBoot();
   requestAnimationFrame(forceSavedManagerClosedOnBoot);
+  renderChromaticWheel(null);
   renderTargetNotes();
   renderStringsGrid();
   renderCustomInputs();
@@ -348,11 +349,25 @@ function bindUI() {
 
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') {
-      document.querySelectorAll('.glass-help-popover:not(.is-hidden)').forEach((popover) => popover.classList.add('is-hidden'));
-      setSavedManagerOpen(false);
+      const closedHelp = closeHelpPopovers({ returnFocus: true });
+      if (!closedHelp) setSavedManagerOpen(false);
     }
     if (event.key === 'Tab') trapSavedDrawerFocus(event);
   });
+}
+
+function closeHelpPopovers({ returnFocus = false } = {}) {
+  const openPopovers = [...document.querySelectorAll('.glass-help-popover:not(.is-hidden)')];
+  if (!openPopovers.length) return false;
+
+  openPopovers.forEach((popover) => popover.classList.add('is-hidden'));
+  document.querySelectorAll('.help-toggle[aria-expanded="true"]')
+    .forEach((button) => button.setAttribute('aria-expanded', 'false'));
+
+  const returnTarget = helpPopoverReturnFocus;
+  helpPopoverReturnFocus = null;
+  if (returnFocus) window.setTimeout(() => returnTarget?.focus?.(), 0);
+  return true;
 }
 
 function bindHelpPopovers() {
@@ -362,10 +377,11 @@ function bindHelpPopovers() {
       const target = document.getElementById(button.dataset.helpTarget || '');
       if (!target) return;
       const willOpen = target.classList.contains('is-hidden');
-      document.querySelectorAll('.glass-help-popover').forEach((popover) => popover.classList.add('is-hidden'));
+      closeHelpPopovers();
       if (willOpen) {
         helpPopoverReturnFocus = button;
         target.classList.remove('is-hidden');
+        button.setAttribute('aria-expanded', 'true');
         window.setTimeout(() => target.querySelector('.glass-help-close')?.focus?.(), 0);
       }
       playUiFeedback('tap');
@@ -375,15 +391,14 @@ function bindHelpPopovers() {
   document.querySelectorAll('.glass-help-close').forEach((button) => {
     button.addEventListener('click', (event) => {
       event.stopPropagation();
-      button.closest('.glass-help-popover')?.classList.add('is-hidden');
-      window.setTimeout(() => helpPopoverReturnFocus?.focus?.(), 0);
+      closeHelpPopovers({ returnFocus: true });
       playUiFeedback('tap');
     });
   });
 
   document.addEventListener('pointerdown', (event) => {
     if (event.target.closest('.glass-help-popover') || event.target.closest('.help-toggle')) return;
-    document.querySelectorAll('.glass-help-popover:not(.is-hidden)').forEach((popover) => popover.classList.add('is-hidden'));
+    closeHelpPopovers();
   }, { passive: true });
 }
 
@@ -1057,10 +1072,22 @@ function renderSongTuningResults() {
   results.appendChild(header);
 
   if (!matches.length) {
-    const empty = document.createElement('p');
-    empty.className = 'song-result-empty';
-    empty.innerText = songSearchEmptyText(globalEnabled);
-    results.appendChild(empty);
+    const isLoading = globalSearchState.status === 'loading';
+    const isError = globalSearchState.status === 'error';
+    results.appendChild(createEmptyState({
+      kind: 'search',
+      className: 'song-result-empty-block',
+      title: isLoading ? 'Recherche en cours' : (isError ? 'Recherche indisponible' : 'Aucun morceau trouvé'),
+      message: songSearchEmptyText(globalEnabled),
+      actionLabel: 'Effacer la recherche',
+      onAction: () => {
+        const search = $('#saved-tuning-search');
+        if (!search) return;
+        search.value = '';
+        handleSongSearchInput();
+        search.focus();
+      }
+    }));
     return;
   }
 
@@ -1455,6 +1482,35 @@ function setSavedManagerOpen(open) {
   }
 }
 
+function createEmptyState({ kind = 'search', className = '', title, message, actionLabel, onAction }) {
+  const empty = document.createElement('div');
+  empty.className = `empty-state-block${className ? ` ${className}` : ''}`;
+
+  const marker = document.createElement('span');
+  marker.className = `empty-state-marker empty-state-marker--${kind}`;
+  marker.setAttribute('aria-hidden', 'true');
+  empty.appendChild(marker);
+
+  const heading = document.createElement('strong');
+  heading.innerText = title;
+  empty.appendChild(heading);
+
+  const copy = document.createElement('p');
+  copy.innerText = message;
+  empty.appendChild(copy);
+
+  if (actionLabel && onAction) {
+    const action = document.createElement('button');
+    action.className = 'secondary-action empty-state-action';
+    action.type = 'button';
+    action.innerText = actionLabel;
+    action.addEventListener('click', onAction);
+    empty.appendChild(action);
+  }
+
+  return empty;
+}
+
 function renderSavedManager() {
   const list = $('#saved-manager-list');
   if (!list) return;
@@ -1471,18 +1527,38 @@ function renderSavedManager() {
     });
 
   if (!savedTunings.length) {
-    const empty = document.createElement('p');
-    empty.className = 'saved-empty';
-    empty.innerText = 'Aucun accordage enregistré pour l’instant. Crée un accordage, donne-lui un nom, puis sauvegarde-le.';
-    list.appendChild(empty);
+    list.appendChild(createEmptyState({
+      kind: 'tuning',
+      title: 'Aucun accordage',
+      message: 'Crée un accordage libre, donne-lui un nom, puis sauvegarde-le pour le retrouver ici.',
+      actionLabel: 'Créer un accordage',
+      onAction: () => {
+        const select = $('#tuning-select');
+        if (select) {
+          select.value = 'custom';
+          handleTuningChange();
+        }
+        setSavedManagerOpen(false);
+        window.setTimeout(() => $('#custom-note-grid select')?.focus?.(), 350);
+      }
+    }));
     return;
   }
 
   if (!items.length) {
-    const empty = document.createElement('p');
-    empty.className = 'saved-empty';
-    empty.innerText = 'Aucun accordage ne correspond à cette recherche.';
-    list.appendChild(empty);
+    list.appendChild(createEmptyState({
+      kind: 'search',
+      title: 'Aucun résultat',
+      message: 'Aucun accordage ne correspond à cette recherche.',
+      actionLabel: 'Effacer le filtre',
+      onAction: () => {
+        const search = $('#saved-manager-search');
+        if (!search) return;
+        search.value = '';
+        renderSavedManager();
+        search.focus();
+      }
+    }));
     return;
   }
 
@@ -2113,11 +2189,10 @@ function renderChromaticWheel(chromatic) {
   const wheel = $('#chromatic-wheel');
   if (!wheel) return;
   ensureChromaticWheelMarkup(wheel);
-  ensureWheelAnimator(wheel);
 
   if (!chromatic || !Number.isFinite(chromatic.noteIndex)) {
     const idleRotation = getWheelTargetRotation(0, { idle: true });
-    applyWheelRotation(wheel, idleRotation, { immediate: true });
+    applyWheelRotation(wheel, idleRotation);
     setNearestChromaticTick(wheel, null);
     wheel.classList.add('is-idle');
     return;
@@ -2126,59 +2201,59 @@ function renderChromaticWheel(chromatic) {
   wheel.classList.remove('is-idle');
   const cents = Number.isFinite(chromatic.cents) ? chromatic.cents : 0;
   const targetRotation = getWheelTargetRotation(chromatic.noteIndex, { cents });
-  applyWheelRotation(wheel, targetRotation, { cents });
+  applyWheelRotation(wheel, targetRotation);
   setNearestChromaticTick(wheel, chromatic.noteIndex);
 }
 
-function ensureWheelAnimator(wheel) {
-  if (chromaticWheelQuickTo && chromaticWheelTweenElement === wheel) return;
-
-  chromaticWheelTweenElement = wheel;
-  chromaticWheelQuickTo = (value) => animateWheelRotation(wheel, value);
-}
-
-function applyWheelRotation(wheel, targetRotation, { cents = null, immediate = false } = {}) {
+function applyWheelRotation(wheel, targetRotation, { immediate = false } = {}) {
   const normalizedTarget = normalizeWheelRotation(chromaticWheelRotationDeg, targetRotation);
-  chromaticWheelRotationDeg = normalizedTarget;
+  chromaticWheelTargetRotationDeg = normalizedTarget;
+  const rotationHost = getWheelRotationHost(wheel);
 
-  const nearPerfect = Number.isFinite(cents) && Math.abs(cents) <= PERFECT_CENTS;
-  const value = `${normalizedTarget.toFixed(3)}deg`;
-
-  if (immediate || nearPerfect || !chromaticWheelQuickTo) {
+  if (immediate) {
     cancelWheelAnimation();
-    wheel.style.setProperty('--wheel-rotation', value);
+    chromaticWheelRotationDeg = normalizedTarget;
+    setWheelRotation(rotationHost, chromaticWheelRotationDeg);
     return;
   }
 
-  chromaticWheelQuickTo(value);
+  startWheelAnimation(rotationHost);
 }
 
-function animateWheelRotation(wheel, value) {
-  const target = parseFloat(value);
-  if (!Number.isFinite(target)) return;
-
-  cancelWheelAnimation();
-
-  const start = readWheelRotation(wheel);
-  const startAt = performance.now();
-  const duration = 115;
+function startWheelAnimation(rotationHost) {
+  if (chromaticWheelTween) return;
+  chromaticWheelLastAnimationAt = performance.now();
 
   const tick = (now) => {
-    const progress = Math.min(1, (now - startAt) / duration);
-    const eased = 1 - Math.pow(1 - progress, 3);
-    const current = start + ((target - start) * eased);
-    wheel.style.setProperty('--wheel-rotation', `${current.toFixed(3)}deg`);
+    const elapsedSeconds = Math.min(0.05, Math.max(0.001, (now - chromaticWheelLastAnimationAt) / 1000));
+    chromaticWheelLastAnimationAt = now;
+    chromaticWheelTargetRotationDeg = normalizeWheelRotation(
+      chromaticWheelRotationDeg,
+      chromaticWheelTargetRotationDeg
+    );
 
-    if (progress < 1) {
+    const difference = chromaticWheelTargetRotationDeg - chromaticWheelRotationDeg;
+    const smoothingFactor = 1 - Math.exp(-elapsedSeconds * 18);
+    chromaticWheelRotationDeg += difference * smoothingFactor;
+
+    if (Math.abs(difference) < 0.015) {
+      chromaticWheelRotationDeg = chromaticWheelTargetRotationDeg;
+    }
+    setWheelRotation(rotationHost, chromaticWheelRotationDeg);
+
+    if (Math.abs(chromaticWheelTargetRotationDeg - chromaticWheelRotationDeg) > 0.01) {
       chromaticWheelTween = requestAnimationFrame(tick);
       return;
     }
 
     chromaticWheelTween = null;
-    wheel.style.setProperty('--wheel-rotation', `${target.toFixed(3)}deg`);
   };
 
   chromaticWheelTween = requestAnimationFrame(tick);
+}
+
+function setWheelRotation(rotationHost, rotationDeg) {
+  rotationHost.style.setProperty('--wheel-rotation', `${rotationDeg.toFixed(3)}deg`);
 }
 
 function cancelWheelAnimation() {
@@ -2187,10 +2262,8 @@ function cancelWheelAnimation() {
   chromaticWheelTween = null;
 }
 
-function readWheelRotation(wheel) {
-  const inlineValue = wheel.style.getPropertyValue('--wheel-rotation');
-  const parsed = parseFloat(inlineValue);
-  return Number.isFinite(parsed) ? parsed : chromaticWheelRotationDeg;
+function getWheelRotationHost(wheel) {
+  return wheel.closest('.dial') || wheel;
 }
 
 function getWheelTargetRotation(noteIndex, { idle = false, cents = 0 } = {}) {

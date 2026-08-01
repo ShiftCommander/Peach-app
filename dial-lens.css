@@ -86,7 +86,6 @@
   height: var(--wheel-size) !important;
   opacity: 1 !important;
   filter: none !important;
-  transform: translate(-50%, -50%) rotate(var(--wheel-rotation, 0deg)) !important;
   transition: none !important;
 }
 
