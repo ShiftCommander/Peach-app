@@ -6,7 +6,7 @@
 
 See commit history for details.
 
-## v52.1.3
+## v52.1.4
 
 - Consolidated the chromatic wheel onto one rotation source shared by the wheel, its notes, textures and lens view.
 - Removed duplicate JavaScript and CSS smoothing paths that could make the lens lag behind the main wheel.
