@@ -194,9 +194,9 @@ let lastAnalysisAt = 0;
 let lastSignalAt = 0;
 let lastUiFrequency = null;
 let chromaticWheelRotationDeg = 0;
-let chromaticWheelQuickTo = null;
+let chromaticWheelTargetRotationDeg = 0;
 let chromaticWheelTween = null;
-let chromaticWheelTweenElement = null;
+let chromaticWheelLastAnimationAt = 0;
 let chromaticWheelInitialized = false;
 let lastNearestNoteIndex = null;
 let smoothedDisplayFrequency = null;
@@ -232,6 +232,7 @@ window.addEventListener('DOMContentLoaded', () => {
   bindUI();
   forceSavedManagerClosedOnBoot();
   requestAnimationFrame(forceSavedManagerClosedOnBoot);
+  renderChromaticWheel(null);
   renderTargetNotes();
   renderStringsGrid();
   renderCustomInputs();
@@ -2188,11 +2189,10 @@ function renderChromaticWheel(chromatic) {
   const wheel = $('#chromatic-wheel');
   if (!wheel) return;
   ensureChromaticWheelMarkup(wheel);
-  ensureWheelAnimator(wheel);
 
   if (!chromatic || !Number.isFinite(chromatic.noteIndex)) {
     const idleRotation = getWheelTargetRotation(0, { idle: true });
-    applyWheelRotation(wheel, idleRotation, { immediate: true });
+    applyWheelRotation(wheel, idleRotation);
     setNearestChromaticTick(wheel, null);
     wheel.classList.add('is-idle');
     return;
@@ -2201,59 +2201,59 @@ function renderChromaticWheel(chromatic) {
   wheel.classList.remove('is-idle');
   const cents = Number.isFinite(chromatic.cents) ? chromatic.cents : 0;
   const targetRotation = getWheelTargetRotation(chromatic.noteIndex, { cents });
-  applyWheelRotation(wheel, targetRotation, { cents });
+  applyWheelRotation(wheel, targetRotation);
   setNearestChromaticTick(wheel, chromatic.noteIndex);
 }
 
-function ensureWheelAnimator(wheel) {
-  if (chromaticWheelQuickTo && chromaticWheelTweenElement === wheel) return;
-
-  chromaticWheelTweenElement = wheel;
-  chromaticWheelQuickTo = (value) => animateWheelRotation(wheel, value);
-}
-
-function applyWheelRotation(wheel, targetRotation, { cents = null, immediate = false } = {}) {
+function applyWheelRotation(wheel, targetRotation, { immediate = false } = {}) {
   const normalizedTarget = normalizeWheelRotation(chromaticWheelRotationDeg, targetRotation);
-  chromaticWheelRotationDeg = normalizedTarget;
+  chromaticWheelTargetRotationDeg = normalizedTarget;
+  const rotationHost = getWheelRotationHost(wheel);
 
-  const nearPerfect = Number.isFinite(cents) && Math.abs(cents) <= PERFECT_CENTS;
-  const value = `${normalizedTarget.toFixed(3)}deg`;
-
-  if (immediate || nearPerfect || !chromaticWheelQuickTo) {
+  if (immediate) {
     cancelWheelAnimation();
-    wheel.style.setProperty('--wheel-rotation', value);
+    chromaticWheelRotationDeg = normalizedTarget;
+    setWheelRotation(rotationHost, chromaticWheelRotationDeg);
     return;
   }
 
-  chromaticWheelQuickTo(value);
+  startWheelAnimation(rotationHost);
 }
 
-function animateWheelRotation(wheel, value) {
-  const target = parseFloat(value);
-  if (!Number.isFinite(target)) return;
-
-  cancelWheelAnimation();
-
-  const start = readWheelRotation(wheel);
-  const startAt = performance.now();
-  const duration = 115;
+function startWheelAnimation(rotationHost) {
+  if (chromaticWheelTween) return;
+  chromaticWheelLastAnimationAt = performance.now();
 
   const tick = (now) => {
-    const progress = Math.min(1, (now - startAt) / duration);
-    const eased = 1 - Math.pow(1 - progress, 3);
-    const current = start + ((target - start) * eased);
-    wheel.style.setProperty('--wheel-rotation', `${current.toFixed(3)}deg`);
+    const elapsedSeconds = Math.min(0.05, Math.max(0.001, (now - chromaticWheelLastAnimationAt) / 1000));
+    chromaticWheelLastAnimationAt = now;
+    chromaticWheelTargetRotationDeg = normalizeWheelRotation(
+      chromaticWheelRotationDeg,
+      chromaticWheelTargetRotationDeg
+    );
 
-    if (progress < 1) {
+    const difference = chromaticWheelTargetRotationDeg - chromaticWheelRotationDeg;
+    const smoothingFactor = 1 - Math.exp(-elapsedSeconds * 18);
+    chromaticWheelRotationDeg += difference * smoothingFactor;
+
+    if (Math.abs(difference) < 0.015) {
+      chromaticWheelRotationDeg = chromaticWheelTargetRotationDeg;
+    }
+    setWheelRotation(rotationHost, chromaticWheelRotationDeg);
+
+    if (Math.abs(chromaticWheelTargetRotationDeg - chromaticWheelRotationDeg) > 0.01) {
       chromaticWheelTween = requestAnimationFrame(tick);
       return;
     }
 
     chromaticWheelTween = null;
-    wheel.style.setProperty('--wheel-rotation', `${target.toFixed(3)}deg`);
   };
 
   chromaticWheelTween = requestAnimationFrame(tick);
+}
+
+function setWheelRotation(rotationHost, rotationDeg) {
+  rotationHost.style.setProperty('--wheel-rotation', `${rotationDeg.toFixed(3)}deg`);
 }
 
 function cancelWheelAnimation() {
@@ -2262,10 +2262,8 @@ function cancelWheelAnimation() {
   chromaticWheelTween = null;
 }
 
-function readWheelRotation(wheel) {
-  const inlineValue = wheel.style.getPropertyValue('--wheel-rotation');
-  const parsed = parseFloat(inlineValue);
-  return Number.isFinite(parsed) ? parsed : chromaticWheelRotationDeg;
+function getWheelRotationHost(wheel) {
+  return wheel.closest('.dial') || wheel;
 }
 
 function getWheelTargetRotation(noteIndex, { idle = false, cents = 0 } = {}) {

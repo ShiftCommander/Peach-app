@@ -1,2 +1,2 @@
-Peach - Guitar Tuner V52.1.2
-High-resolution Peach app icon and splash assets.
+Peach - Guitar Tuner V52.1.3
+Single-axis chromatic wheel rotation for synchronized notes, textures and lens.

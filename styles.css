@@ -330,7 +330,7 @@ svg {
   border-radius: 50%;
   transform: translateX(-50%) rotate(var(--wheel-rotation, 0deg));
   transform-origin: center center;
-  transition: transform 138ms cubic-bezier(0.22, 0.76, 0.26, 1), opacity 160ms ease, filter 160ms ease;
+  transition: opacity 160ms ease, filter 160ms ease;
   filter: drop-shadow(0 2rem 4rem rgba(65, 71, 86, 0.28));
 }
 
