@@ -1,0 +1,98 @@
+name: Apply exact Peach icon assets
+
+on:
+  push:
+    branches:
+      - fix/exact-peach-icon-assets-v2
+
+permissions:
+  contents: write
+
+jobs:
+  apply-icons:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download the exact validated icon at each required size
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p icons
+          curl --fail --location --retry 3 'https://sdmntprnortheu.oaiusercontent.com/files/00000000-830c-81f4-bbd8-f17e7e7e2186/raw?se=2026-08-01T18:45:18Z&sp=r&sv=2026-02-06&sr=b&scid=f57f8b10-07e3-542b-b1d9-74e532df7164&skoid=e32cbaad-a1eb-4299-9f16-1b364ab43781&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-08-01T06:51:57Z&ske=2026-08-02T06:51:57Z&sks=b&skv=2026-02-06&sig=iT5YSIE245kNWI%2BeMbIBwIq9KTeX0PXSiTDQg31jIsU%3D' --output icons/favicon-32.png
+          curl --fail --location --retry 3 'https://sdmntprnortheu.oaiusercontent.com/files/00000000-7620-81f4-928a-5ccdac9f9575/raw?se=2026-08-01T18:44:05Z&sp=r&sv=2026-02-06&sr=b&scid=ab7400b3-65a9-5e97-a8e2-61788206a77d&skoid=e32cbaad-a1eb-4299-9f16-1b364ab43781&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-08-01T15:07:17Z&ske=2026-08-02T15:07:17Z&sks=b&skv=2026-02-06&sig=SRT5FTSqBskXD1eA4VsX90TZQLKvw57zalzk64teh7s%3D' --output icons/apple-touch-icon.png
+          curl --fail --location --retry 3 'https://sdmntprnortheu.oaiusercontent.com/files/00000000-b404-81f4-a1de-da023f80311e/raw?se=2026-08-01T18:44:18Z&sp=r&sv=2026-02-06&sr=b&scid=c95831e1-efee-5737-af2b-eb0e59024856&skoid=e32cbaad-a1eb-4299-9f16-1b364ab43781&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-08-01T06:32:19Z&ske=2026-08-02T06:32:19Z&sks=b&skv=2026-02-06&sig=vvY2PMSGERwEkS9QIaDMDsH5idvdnokKOp6MyNRWhcU%3D' --output icons/icon-192.png
+          curl --fail --location --retry 3 'https://sdmntprnortheu.oaiusercontent.com/files/00000000-e72c-81f4-8c73-c90a5992357b/raw?se=2026-08-01T18:43:51Z&sp=r&sv=2026-02-06&sr=b&scid=e477523a-02c4-57e3-93ea-a05589010d67&skoid=e32cbaad-a1eb-4299-9f16-1b364ab43781&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-08-01T05:06:10Z&ske=2026-08-02T05:06:10Z&sks=b&skv=2026-02-06&sig=e3hzHDeLcLxftzqAoOwvgZqHEjeC27hb72UuCd%2BA7zM%3D' --output icons/icon-512.png
+          cp icons/icon-192.png icons/maskable-icon-192.png
+          cp icons/icon-512.png icons/maskable-icon-512.png
+
+      - name: Verify dimensions, source files and visual identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+          import struct
+
+          expected = {
+              'icons/favicon-32.png': ((32, 32), '2dde5fbadd140722f755ab0cb0171356f54691e1327b6f6c017686a9c41f25a8'),
+              'icons/apple-touch-icon.png': ((180, 180), '7708b3b579aa2dba4ebe12fcf41e4054d1dcb4bf023af5056951336349cfd0f6'),
+              'icons/icon-192.png': ((192, 192), 'b62685351738a2c2d1c5361ab3794ea08a8609fe552488ef2f8e424d116184fc'),
+              'icons/icon-512.png': ((512, 512), 'a0ddf351afc7896bbbc39701210810b350ed30978814e44942ad9a1d6886bc30'),
+          }
+
+          def png_size(data):
+              if data[:8] != b'\x89PNG\r\n\x1a\n':
+                  raise ValueError('Not a PNG')
+              return struct.unpack('>II', data[16:24])
+
+          for path, (dimensions, digest) in expected.items():
+              data = Path(path).read_bytes()
+              assert png_size(data) == dimensions, (path, png_size(data), dimensions)
+              assert hashlib.sha256(data).hexdigest() == digest, path
+
+          assert Path('icons/icon-192.png').read_bytes() == Path('icons/maskable-icon-192.png').read_bytes()
+          assert Path('icons/icon-512.png').read_bytes() == Path('icons/maskable-icon-512.png').read_bytes()
+          PY
+
+      - name: Refresh PWA release metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          import re
+
+          for filename in ('package.json', 'release.json'):
+              path = Path(filename)
+              data = json.loads(path.read_text())
+              data['version'] = '52.1.3'
+              path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + '\n')
+
+          sw = Path('sw.js')
+          text = sw.read_text()
+          text = re.sub(r"const APP_VERSION = '[^']+';", "const APP_VERSION = '52.1.3';", text, count=1)
+          text = re.sub(r"const CACHE_NAME = '[^']+';", "const CACHE_NAME = 'peach-guitar-tuner-v52-1-3';", text, count=1)
+          sw.write_text(text)
+
+          Path('version.txt').write_text(
+              'Peach - Guitar Tuner V52.1.3\n'
+              'One exact Peach icon across the app, installed icon and PWA splash assets.\n'
+          )
+          PY
+
+      - name: Commit the corrected assets and remove transfer files
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .tmp-peach-icon
+          rm -f .github/workflows/apply-exact-peach-icons.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --quiet && exit 0
+          git commit -m 'Fix Peach icon consistency across app and splash'
+          git push
