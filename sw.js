@@ -1,5 +1,5 @@
-const APP_VERSION = '52.1.4';
-const CACHE_NAME = 'peach-guitar-tuner-v52-1-4';
+const APP_VERSION = '52.1.5';
+const CACHE_NAME = 'peach-guitar-tuner-v52-1-5';
 const EXPLICIT_UPDATE_BASE_CACHE = 'peach-guitar-tuner-v52';
 const CACHE_PREFIX = 'peach-guitar-tuner-v';
 const CORE_ASSETS = [
