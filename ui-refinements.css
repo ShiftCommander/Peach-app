@@ -1,0 +1,228 @@
+/* Cross-theme shell simplification and the first screenshot-driven readability pass. */
+
+:root {
+  --shell-edge-top: max(1rem, env(safe-area-inset-top));
+  --shell-edge-right: max(1rem, env(safe-area-inset-right));
+  --shell-edge-bottom: max(1.25rem, env(safe-area-inset-bottom));
+  --shell-edge-left: max(1rem, env(safe-area-inset-left));
+  --floating-banner-max-width: 90rem;
+  --theme-switch-reveal-space: clamp(4rem, 12vh, 8rem);
+  --search-icon-size: 1rem;
+}
+
+/* Branding and settings now live in the app icon and the low-priority theme switch. */
+.app-header,
+.saved-drawer {
+  display: none !important;
+}
+
+.app-main {
+  min-height: calc(100dvh - var(--shell-edge-top) - var(--shell-edge-bottom));
+}
+
+/* The install prompt floats above the interface and no longer consumes a grid row. */
+.pwa-card {
+  position: fixed;
+  top: var(--shell-edge-top);
+  left: var(--shell-edge-left);
+  right: var(--shell-edge-right);
+  z-index: 80;
+  width: auto;
+  max-width: var(--floating-banner-max-width);
+  margin-inline: auto;
+}
+
+.pwa-card.is-hidden {
+  display: none !important;
+}
+
+/* Use the vertical room recovered from the removed header and in-flow install banner. */
+.dial {
+  height: clamp(19rem, 68vw, 23.5rem);
+}
+
+.theme-switch-footer {
+  display: flex;
+  justify-content: center;
+  padding: var(--theme-switch-reveal-space) 0 var(--shell-edge-bottom);
+}
+
+.theme-switch-footer .theme-toggle-button {
+  width: min(100%, 26rem);
+}
+
+/* A conventional search affordance with enough internal spacing for touch and text. */
+.saved-search {
+  position: relative;
+}
+
+.search-field-icon {
+  position: absolute;
+  left: 0.95rem;
+  top: 50%;
+  z-index: 2;
+  width: var(--search-icon-size);
+  height: var(--search-icon-size);
+  color: var(--muted);
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.saved-search input {
+  padding-left: 2.75rem;
+}
+
+.library-results-scroll {
+  padding: 0 0.12rem 0.45rem;
+}
+
+@media (min-width: 760px) {
+  .library-card {
+    height: 22.75rem;
+    min-height: 22.75rem;
+  }
+}
+
+@media (min-width: 1120px) {
+  .dial {
+    height: clamp(21.5rem, 27vw, 25rem);
+  }
+}
+
+/* Luthier: darker material balance, stronger hierarchy and readable controls. */
+:root[data-theme="luthier"] {
+  --luthier-rosewood-grain:
+    radial-gradient(ellipse at 15% 10%, rgba(238, 151, 88, 0.1), transparent 24%),
+    radial-gradient(ellipse at 84% 72%, rgba(0, 0, 0, 0.34), transparent 31%),
+    repeating-linear-gradient(177deg, rgba(255, 194, 132, 0.035) 0 1px, transparent 1px 12px),
+    repeating-linear-gradient(3deg, rgba(20, 7, 4, 0.18) 0 1px, transparent 1px 17px),
+    linear-gradient(145deg, #33170f, #170c09 58%, #25110c);
+}
+
+:root[data-theme="luthier"] .tuning-workspace-nav {
+  border: 1px solid rgba(184, 108, 63, 0.46);
+  background: var(--luthier-ebony-grain);
+  box-shadow:
+    0 0.55rem 1rem rgba(0, 0, 0, 0.56),
+    inset 0 1px 0 rgba(255, 218, 170, 0.08),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.82),
+    inset 0 0 0 0.18rem rgba(76, 37, 22, 0.34);
+}
+
+:root[data-theme="luthier"] .workspace-mode {
+  border: 1px solid transparent;
+  color: rgba(242, 207, 158, 0.86);
+  background: transparent;
+  opacity: 1;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.86);
+}
+
+:root[data-theme="luthier"] .workspace-mode.is-active {
+  border-color: rgba(255, 228, 190, 0.72);
+  color: #2b170e;
+  background:
+    radial-gradient(circle at 30% 18%, rgba(255, 255, 255, 0.42), transparent 38%),
+    linear-gradient(150deg, #fff0d4, #d8b487 54%, #f4d8ac);
+  box-shadow:
+    0 0.34rem 0.62rem rgba(0, 0, 0, 0.48),
+    inset 1px 1px 0 rgba(255, 255, 255, 0.68),
+    inset -1px -1px 0 rgba(111, 64, 33, 0.28);
+  text-shadow: 0 1px 0 rgba(255, 250, 235, 0.5);
+}
+
+:root[data-theme="luthier"] .saved-search input {
+  color: var(--luthier-nacre);
+  border-color: rgba(202, 130, 78, 0.56);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 208, 155, 0.04), transparent 48%),
+    linear-gradient(160deg, #160f0b, #050403 74%);
+  box-shadow:
+    inset 0.32rem 0.36rem 0.66rem rgba(0, 0, 0, 0.84),
+    inset -1px -1px 0 rgba(255, 211, 158, 0.06),
+    0 1px 0 rgba(255, 188, 125, 0.05);
+}
+
+:root[data-theme="luthier"] .saved-search input::placeholder {
+  color: rgba(239, 211, 171, 0.72);
+}
+
+:root[data-theme="luthier"] .search-field-icon {
+  color: var(--luthier-copper-light);
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.76));
+}
+
+:root[data-theme="luthier"] .library-filter {
+  border: 1px solid rgba(181, 105, 62, 0.46);
+  color: rgba(244, 215, 176, 0.9);
+  background: linear-gradient(155deg, #20130e, #090605 72%);
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 204, 148, 0.07),
+    inset -1px -1px 0 rgba(0, 0, 0, 0.82);
+  opacity: 1;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.84);
+}
+
+:root[data-theme="luthier"] .library-filter.is-active {
+  border-color: rgba(255, 226, 185, 0.72);
+  color: #2a160d;
+  background:
+    radial-gradient(circle at 30% 18%, rgba(255, 255, 255, 0.42), transparent 38%),
+    linear-gradient(150deg, #fff0d4, #d7b183 54%, #f0d1a2);
+  box-shadow:
+    0 0.28rem 0.5rem rgba(0, 0, 0, 0.38),
+    inset 1px 1px 0 rgba(255, 255, 255, 0.7),
+    inset -1px -1px 0 rgba(111, 64, 33, 0.3);
+  text-shadow: 0 1px 0 rgba(255, 250, 235, 0.5);
+}
+
+:root[data-theme="luthier"] .library-tuning-item {
+  border-color: rgba(179, 103, 60, 0.48);
+  color: var(--luthier-ivory);
+  background:
+    radial-gradient(circle at 28% 12%, rgba(255, 195, 130, 0.05), transparent 42%),
+    linear-gradient(150deg, #21140e, #080604 72%);
+  box-shadow:
+    0 0.36rem 0.64rem rgba(0, 0, 0, 0.54),
+    inset 1px 1px 0 rgba(255, 203, 145, 0.07),
+    inset -1px -1px 0 rgba(0, 0, 0, 0.84),
+    inset 0 0 0 0.1rem rgba(67, 31, 18, 0.46);
+}
+
+:root[data-theme="luthier"] .library-tuning-item .saved-item__title-button strong {
+  color: var(--luthier-nacre);
+}
+
+:root[data-theme="luthier"] .library-tuning-item .saved-item__title-button span {
+  color: rgba(220, 187, 142, 0.76);
+}
+
+:root[data-theme="luthier"] .library-tuning-item.is-active {
+  border-color: rgba(229, 157, 96, 0.76);
+  background:
+    radial-gradient(circle at 24% 12%, rgba(255, 193, 125, 0.14), transparent 44%),
+    linear-gradient(145deg, #5a2a19, #2b120c 62%, #3c1a11);
+  box-shadow:
+    0 0.42rem 0.72rem rgba(0, 0, 0, 0.58),
+    inset 1px 1px 0 rgba(255, 211, 158, 0.13),
+    inset -1px -1px 0 rgba(0, 0, 0, 0.84),
+    inset 0 0 0 0.14rem rgba(116, 57, 31, 0.5);
+}
+
+:root[data-theme="luthier"] .library-tuning-state {
+  border-color: rgba(241, 196, 137, 0.64);
+  background: #7a482b;
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 232, 196, 0.26),
+    0 0 0.36rem rgba(208, 125, 69, 0.28);
+}
+
+:root[data-theme="luthier"] .library-tuning-item.is-active .library-tuning-state {
+  background: var(--luthier-brass-light);
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.42),
+    0 0 0.5rem rgba(235, 169, 98, 0.54);
+}
+
+:root[data-theme="luthier"] .theme-switch-footer .theme-toggle-button {
+  border-color: rgba(255, 222, 179, 0.76);
+}
