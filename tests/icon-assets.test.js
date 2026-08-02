@@ -185,6 +185,6 @@ test('manifest and HTML expose the correct platform icon roles', () => {
   assert.equal(byKey.get('maskable:512x512'), 'icons/maskable-icon-512.png');
 
   const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
+  assert.match(html, /<link rel="icon" type="image\/png" sizes="32x32" href="icons\/favicon-32\.png" \/>/);
   assert.match(html, /<link rel="apple-touch-icon" href="icons\/apple-touch-icon\.png" \/>/);
-  assert.match(html, /<img src="icons\/apple-touch-icon\.png" alt="" \/>/);
 });

@@ -13,25 +13,10 @@
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="dial-lens.css" />
+  <link rel="stylesheet" href="ui-refinements.css" />
 </head>
 <body>
   <div class="app-shell">
-    <header class="app-header">
-      <div class="brand">
-        <div class="brand-mark brand-mark--image" aria-hidden="true">
-          <img src="icons/apple-touch-icon.png" alt="" />
-        </div>
-        <div>
-          <h1>Peach</h1>
-          <p>Guitar Tuner</p>
-        </div>
-      </div>
-
-      <button id="library-menu-button" class="library-menu-button" type="button" aria-label="Ouvrir le menu" aria-controls="saved-drawer" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
-    </header>
-
     <main class="app-main">
 
       <section id="pwa-card" class="pwa-card is-hidden" aria-live="polite" aria-label="Application Peach">
@@ -49,7 +34,6 @@
         </div>
         <button id="mic-permission-button" type="button">Autoriser</button>
       </section>
-
 
       <section class="tuner-card" aria-label="Accordeur automatique">
         <div class="dial" aria-label="Cadran chromatique">
@@ -70,7 +54,6 @@
         </div>
 
         <div id="target-notes-ui" class="target-notes target-notes--tuner is-hidden" aria-hidden="true"></div>
-
       </section>
 
       <section class="tuning-carousel" aria-label="Bibliothèque, diapason et accordage libre">
@@ -98,6 +81,10 @@
 
               <label class="field-stack saved-search compact-search">
                 <span class="sr-only">Rechercher un morceau ou un accordage</span>
+                <svg class="search-field-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="7"></circle>
+                  <path d="m20 20-3.2-3.2"></path>
+                </svg>
                 <input id="saved-tuning-search" type="search" placeholder="Chercher morceau ou accordage…" autocomplete="off" />
               </label>
 
@@ -169,30 +156,12 @@
       </section>
     </main>
 
-    <aside id="saved-drawer" class="saved-drawer" aria-hidden="true">
-      <button id="saved-drawer-backdrop" class="saved-drawer__backdrop" type="button" aria-label="Fermer le menu"></button>
-      <div class="saved-drawer__panel" role="dialog" aria-modal="true" aria-labelledby="saved-drawer-title">
-        <div class="saved-drawer__head">
-          <div>
-            <strong id="saved-drawer-title">Menu</strong>
-            <span>Apparence et réglages de Peach.</span>
-          </div>
-          <button id="saved-drawer-close" class="help-toggle drawer-close-btn" type="button" aria-label="Fermer">×</button>
-        </div>
-
-        <div class="saved-drawer__appearance">
-          <div class="saved-drawer__appearance-header">
-            <strong>Apparence</strong>
-            <span id="current-theme-label" class="current-theme-label">Thème actuel : Console</span>
-          </div>
-          <button id="theme-toggle-button" type="button" class="secondary-action theme-toggle-button" aria-label="Passer au thème Luthier">
-            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-            <span id="theme-toggle-text">Passer au thème Luthier</span>
-          </button>
-        </div>
-      </div>
-    </aside>
-
+    <footer class="theme-switch-footer" aria-label="Changer l’apparence de Peach">
+      <button id="theme-toggle-button" type="button" class="secondary-action theme-toggle-button" aria-label="Passer au thème Luthier">
+        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        <span id="theme-toggle-text">Passer au thème Luthier</span>
+      </button>
+    </footer>
   </div>
 
   <script src="config.js" defer></script>
