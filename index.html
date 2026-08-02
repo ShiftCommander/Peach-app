@@ -27,7 +27,7 @@
         </div>
       </div>
 
-      <button id="library-menu-button" class="library-menu-button" type="button" aria-label="Ouvrir mes accordages" aria-controls="saved-drawer" aria-expanded="false">
+      <button id="library-menu-button" class="library-menu-button" type="button" aria-label="Ouvrir le menu" aria-controls="saved-drawer" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
     </header>
@@ -70,14 +70,21 @@
         </div>
 
         <div id="target-notes-ui" class="target-notes target-notes--tuner is-hidden" aria-hidden="true"></div>
+
       </section>
 
       <section class="tuning-carousel" aria-label="Bibliothèque, diapason et accordage libre">
+        <div class="tuning-workspace-nav" role="group" aria-label="Mode de réglage">
+          <button id="workspace-diapason" class="workspace-mode is-active" type="button" data-tuning-page="diapason" aria-pressed="true">Diapason</button>
+          <button id="workspace-custom" class="workspace-mode" type="button" data-tuning-page="custom" aria-pressed="false">Accordage libre</button>
+        </div>
+
         <div id="tuning-scroll" class="tuning-scroll" aria-label="Cartes d’accordage">
           <article id="tuning-card-library" class="tuning-card library-card" aria-label="Bibliothèque d’accordages">
-            <div class="section-title section-title--with-help">
+            <div class="section-title section-title--library section-title--with-help">
               <strong>Bibliothèque</strong>
               <button class="help-toggle" type="button" aria-label="Aide sur la bibliothèque" aria-controls="library-help" aria-expanded="false" data-help-target="library-help">?</button>
+              <button id="library-close-button" class="help-toggle library-close-button" type="button" aria-label="Fermer la Bibliothèque">×</button>
             </div>
 
             <div id="library-help" class="glass-help-popover is-hidden" role="dialog" aria-label="Aide sur la bibliothèque">
@@ -87,24 +94,28 @@
             </div>
 
             <div class="library-card__body card-body-stack">
-              <div class="tuning-control-row">
-                <label class="field-stack saved-search compact-search">
-                  <span class="sr-only">Rechercher un morceau ou un accordage</span>
-                  <input id="saved-tuning-search" type="search" placeholder="Chercher morceau ou accordage…" autocomplete="off" />
-                </label>
+              <select id="tuning-select" class="state-select" aria-hidden="true" tabindex="-1"></select>
 
-                <label class="field-stack compact-select">
-                  <span class="sr-only">Accordage</span>
-                  <select id="tuning-select" aria-label="Choisir l’accordage"></select>
-                </label>
+              <label class="field-stack saved-search compact-search">
+                <span class="sr-only">Rechercher un morceau ou un accordage</span>
+                <input id="saved-tuning-search" type="search" placeholder="Chercher morceau ou accordage…" autocomplete="off" />
+              </label>
+
+              <div class="library-filters" role="group" aria-label="Filtrer la Bibliothèque">
+                <button type="button" class="library-filter is-active" data-library-filter="all" aria-pressed="true">Tous</button>
+                <button type="button" class="library-filter" data-library-filter="presets" aria-pressed="false">Préréglages</button>
+                <button type="button" class="library-filter" data-library-filter="saved" aria-pressed="false">Mes accordages</button>
               </div>
 
-              <div id="song-tuning-results" class="song-tuning-results is-hidden" aria-live="polite"></div>
+              <div class="library-results-scroll">
+                <div id="song-tuning-results" class="song-tuning-results is-hidden" aria-live="polite"></div>
+                <div id="saved-manager-list" class="saved-manager-list library-tuning-list" aria-live="polite"></div>
+              </div>
 
-              <div class="library-save-block">
+              <div id="library-save-block" class="library-save-block is-hidden">
                 <label class="field-stack tuning-name-field">
-                  <span>Nom libre</span>
-                  <input id="custom-tuning-name" type="text" placeholder="Ex : Iris — Goo Goo Dolls" autocomplete="off" maxlength="80" />
+                  <span>Nom de l’accordage</span>
+                  <input id="custom-tuning-name" type="text" placeholder="Nom de l’accordage…" autocomplete="off" maxlength="80" />
                 </label>
                 <button id="save-custom" type="button" class="secondary-action">Sauvegarder</button>
               </div>
@@ -112,8 +123,15 @@
           </article>
 
           <article id="tuning-card-diapason" class="tuning-card diapason-card" aria-label="Diapason">
-            <div class="section-title section-title--with-help">
+            <div class="section-title section-title--diapason section-title--with-help">
               <strong>Diapason</strong>
+              <button id="active-tuning-display" class="active-tuning-display" type="button" aria-label="Accordage actif : Standard. Ouvrir la Bibliothèque" aria-controls="tuning-card-library" aria-expanded="false">
+                <span class="active-tuning-display__label">Accordage</span>
+                <span class="active-tuning-display__screen">
+                  <strong id="active-tuning-name">Standard</strong>
+                  <span id="active-tuning-status" class="active-tuning-status" role="img" aria-label="Accordage enregistré"></span>
+                </span>
+              </button>
               <button class="help-toggle" type="button" aria-label="Aide sur le diapason" aria-controls="diapason-help" aria-expanded="false" data-help-target="diapason-help">?</button>
             </div>
 
@@ -152,22 +170,15 @@
     </main>
 
     <aside id="saved-drawer" class="saved-drawer" aria-hidden="true">
-      <button id="saved-drawer-backdrop" class="saved-drawer__backdrop" type="button" aria-label="Fermer mes accordages"></button>
+      <button id="saved-drawer-backdrop" class="saved-drawer__backdrop" type="button" aria-label="Fermer le menu"></button>
       <div class="saved-drawer__panel" role="dialog" aria-modal="true" aria-labelledby="saved-drawer-title">
         <div class="saved-drawer__head">
           <div>
-            <strong id="saved-drawer-title">Mes accordages</strong>
-            <span>Utilise, renomme, duplique ou supprime tes réglages sauvegardés.</span>
+            <strong id="saved-drawer-title">Menu</strong>
+            <span>Apparence et réglages de Peach.</span>
           </div>
           <button id="saved-drawer-close" class="help-toggle drawer-close-btn" type="button" aria-label="Fermer">×</button>
         </div>
-
-        <label class="field-stack saved-drawer-search">
-          <span class="sr-only">Filtrer mes accordages</span>
-          <input id="saved-manager-search" type="search" placeholder="Filtrer mes accordages…" autocomplete="off" />
-        </label>
-
-        <div id="saved-manager-list" class="saved-manager-list saved-manager-list--drawer"></div>
 
         <div class="saved-drawer__appearance">
           <div class="saved-drawer__appearance-header">

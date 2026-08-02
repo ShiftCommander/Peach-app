@@ -5,12 +5,14 @@
 }
 
 .dial {
+  container-type: inline-size;
   --glass-inset: .72rem;
   --lens-top: clamp(1.18rem, 4.4vw, 1.42rem);
   --lens-height: clamp(2.36rem, 7vw, 2.58rem);
   --lens-half-height: clamp(1.18rem, 3.5vw, 1.29rem);
   --lens-width: clamp(6.05rem, 22vw, 7.15rem);
   --wheel-size: clamp(31.5rem, 174vw, 41.5rem);
+  --wheel-size: max(31.5rem, calc(100cqi + 2.75rem));
   --note-radius: calc(var(--wheel-size) * .398);
   --lens-center-y: calc(var(--glass-inset) + var(--lens-top) + var(--lens-half-height));
   --wheel-center-y: calc(var(--lens-center-y) + var(--note-radius));
@@ -119,6 +121,7 @@
     --lens-height: clamp(2.32rem, 7.2vw, 2.52rem);
     --lens-half-height: clamp(1.16rem, 3.6vw, 1.26rem);
     --wheel-size: clamp(30.5rem, 172vw, 40.25rem);
+    --wheel-size: max(30.5rem, calc(100cqi + 2.25rem));
     --note-radius: calc(var(--wheel-size) * .398);
   }
 }

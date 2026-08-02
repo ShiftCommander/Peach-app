@@ -207,6 +207,10 @@ let noteHistory = [];
 let lastStableTarget = '';
 let stableFrames = 0;
 let tuningPage = 'diapason';
+let lastTuningPage = 'diapason';
+let libraryFilter = 'all';
+let tuningScrollAnimationId = null;
+let programmaticTuningScroll = false;
 let customCardDiscovered = false;
 let autoApplyTimer = null;
 let globalSearchTimer = null;
@@ -303,11 +307,26 @@ function bindUI() {
   $('#custom-tuning-name').addEventListener('input', () => {
     activeCustomName = $('#custom-tuning-name').value.trim();
     updateCustomActionState();
+    updateActiveTuningDisplay();
+  });
+  $('#active-tuning-display')?.addEventListener('click', () => {
+    setTuningPage(tuningPage === 'library' ? lastTuningPage : 'library');
+  });
+  $('#library-close-button')?.addEventListener('click', () => setTuningPage(lastTuningPage));
+  document.querySelectorAll('[data-tuning-page]').forEach((button) => {
+    button.addEventListener('click', () => setTuningPage(button.dataset.tuningPage));
+  });
+  document.querySelectorAll('[data-library-filter]').forEach((button) => {
+    button.addEventListener('click', () => {
+      libraryFilter = ['presets', 'saved'].includes(button.dataset.libraryFilter) ? button.dataset.libraryFilter : 'all';
+      updateLibraryFilterState();
+      renderSavedManager();
+      renderSongTuningResults();
+    });
   });
   $('#library-menu-button')?.addEventListener('click', () => setSavedManagerOpen(true));
   $('#saved-drawer-close')?.addEventListener('click', () => setSavedManagerOpen(false));
   $('#saved-drawer-backdrop')?.addEventListener('click', () => setSavedManagerOpen(false));
-  $('#saved-manager-search')?.addEventListener('input', renderSavedManager);
   document.addEventListener('click', (event) => {
     if (!openSavedMenuId) return;
     if (event.target.closest('.saved-item__more') || event.target.closest('.saved-item__menu')) return;
@@ -350,7 +369,11 @@ function bindUI() {
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') {
       const closedHelp = closeHelpPopovers({ returnFocus: true });
-      if (!closedHelp) setSavedManagerOpen(false);
+      if (!closedHelp && tuningPage === 'library') {
+        setTuningPage(lastTuningPage);
+      } else if (!closedHelp) {
+        setSavedManagerOpen(false);
+      }
     }
     if (event.key === 'Tab') trapSavedDrawerFocus(event);
   });
@@ -661,48 +684,134 @@ function handleTuningChange() {
   renderStringsGrid();
   renderCustomInputs();
   updateCustomActionState();
+  renderSavedManager();
+  updateActiveTuningDisplay();
   stopReferenceTone({ resumeMic: true });
 }
 
 function setTuningPage(page, { scroll = true, smooth = true } = {}) {
-  const nextPage = page === 'custom' ? 'custom' : 'diapason';
+  const nextPage = ['library', 'custom'].includes(page) ? page : 'diapason';
+  if (nextPage === 'library' && tuningPage !== 'library') {
+    lastTuningPage = tuningPage === 'custom' ? 'custom' : 'diapason';
+  } else if (nextPage !== 'library') {
+    lastTuningPage = nextPage;
+  }
   tuningPage = nextPage;
 
   const scrollEl = $('#tuning-scroll');
-  const customCard = $('#tuning-card-custom');
-  const diapasonCard = $('#tuning-card-diapason');
+  const cards = {
+    library: $('#tuning-card-library'),
+    diapason: $('#tuning-card-diapason'),
+    custom: $('#tuning-card-custom')
+  };
 
   if (nextPage === 'custom') markCustomCardDiscovered();
+  if (nextPage === 'library') {
+    renderSavedManager();
+    renderSongTuningResults();
+  }
+
+  updateWorkspaceState();
+  updateActiveTuningDisplay();
 
   if (scroll && scrollEl) {
-    const targetLeft = nextPage === 'custom'
-      ? (customCard?.offsetLeft || 0)
-      : (diapasonCard?.offsetLeft || 0);
-    scrollEl.scrollTo({ left: targetLeft, behavior: smooth ? 'smooth' : 'auto' });
+    const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    animateTuningScrollTo(scrollEl, getTuningCardScrollLeft(scrollEl, cards[nextPage]), smooth && !reduceMotion ? 280 : 0);
   }
 
   updateCustomSwipeHint();
   if (nextPage === 'custom') renderCustomInputs();
 }
 
+function getTuningCardScrollLeft(scrollEl, card) {
+  if (!scrollEl || !card) return 0;
+  const scrollRect = scrollEl.getBoundingClientRect();
+  const cardRect = card.getBoundingClientRect();
+  const paddingLeft = Number.parseFloat(getComputedStyle(scrollEl).paddingLeft) || 0;
+  return scrollEl.scrollLeft + cardRect.left - scrollRect.left - paddingLeft;
+}
+
+function animateTuningScrollTo(scrollEl, targetLeft, duration = 280) {
+  if (tuningScrollAnimationId) cancelAnimationFrame(tuningScrollAnimationId);
+
+  const startLeft = scrollEl.scrollLeft;
+  const distance = targetLeft - startLeft;
+  if (!duration || Math.abs(distance) < 1) {
+    scrollEl.scrollLeft = targetLeft;
+    programmaticTuningScroll = false;
+    return;
+  }
+
+  programmaticTuningScroll = true;
+  const startAt = performance.now();
+  const step = (now) => {
+    const progress = Math.min(1, (now - startAt) / duration);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    scrollEl.scrollLeft = startLeft + (distance * eased);
+    if (progress < 1) {
+      tuningScrollAnimationId = requestAnimationFrame(step);
+      return;
+    }
+    tuningScrollAnimationId = null;
+    programmaticTuningScroll = false;
+    scrollEl.scrollLeft = targetLeft;
+  };
+  tuningScrollAnimationId = requestAnimationFrame(step);
+}
+
+function updateWorkspaceState() {
+  document.querySelectorAll('[data-tuning-page]').forEach((button) => {
+    const active = button.dataset.tuningPage === tuningPage;
+    button.classList.toggle('is-active', active);
+    button.setAttribute('aria-pressed', active ? 'true' : 'false');
+  });
+  $('#active-tuning-display')?.setAttribute('aria-expanded', tuningPage === 'library' ? 'true' : 'false');
+}
+
+function updateLibraryFilterState() {
+  document.querySelectorAll('[data-library-filter]').forEach((button) => {
+    const active = button.dataset.libraryFilter === libraryFilter;
+    button.classList.toggle('is-active', active);
+    button.setAttribute('aria-pressed', active ? 'true' : 'false');
+  });
+}
+
 function bindTuningCardScroll() {
   const scrollEl = $('#tuning-scroll');
-  const customCard = $('#tuning-card-custom');
-  if (!scrollEl || !customCard) return;
+  const cards = [
+    ['library', $('#tuning-card-library')],
+    ['diapason', $('#tuning-card-diapason')],
+    ['custom', $('#tuning-card-custom')]
+  ].filter(([, card]) => card);
+  if (!scrollEl || !cards.length) return;
 
   let ticking = false;
   const update = () => {
     ticking = false;
+    if (programmaticTuningScroll) return;
     const viewportCenter = scrollEl.scrollLeft + scrollEl.clientWidth / 2;
-    const customCenter = customCard.offsetLeft + customCard.offsetWidth / 2;
-    const distance = Math.abs(viewportCenter - customCenter);
-    const isCustomVisible = distance < customCard.offsetWidth * 0.46;
+    const scrollRect = scrollEl.getBoundingClientRect();
+    const [visiblePage] = cards.reduce((closest, entry) => {
+      const [, card] = entry;
+      const cardRect = card.getBoundingClientRect();
+      const cardCenter = scrollEl.scrollLeft + cardRect.left - scrollRect.left + cardRect.width / 2;
+      const distance = Math.abs(viewportCenter - cardCenter);
+      return distance < closest[2] ? [entry[0], card, distance] : closest;
+    }, [tuningPage, cards[0][1], Number.POSITIVE_INFINITY]);
 
-    if (isCustomVisible) {
-      tuningPage = 'custom';
+    if (visiblePage !== tuningPage) {
+      if (visiblePage === 'library' && tuningPage !== 'library') {
+        lastTuningPage = tuningPage === 'custom' ? 'custom' : 'diapason';
+      } else if (visiblePage !== 'library') {
+        lastTuningPage = visiblePage;
+      }
+      tuningPage = visiblePage;
+      updateWorkspaceState();
+      updateActiveTuningDisplay();
+    }
+
+    if (visiblePage === 'custom') {
       markCustomCardDiscovered();
-    } else {
-      tuningPage = 'diapason';
     }
   };
 
@@ -757,6 +866,8 @@ function applyCustomTuning({ silent = false, stayOnCustom = true, fromHz = false
   renderTargetNotes();
   renderStringsGrid();
   updateCustomActionState();
+  renderSavedManager();
+  updateActiveTuningDisplay();
   stopReferenceTone({ resumeMic: true });
   resetTunerVisuals();
   if (!stayOnCustom) setTuningPage('diapason');
@@ -843,7 +954,7 @@ function isGlobalTuningSearchEnabled() {
 }
 
 function handleSongSearchInput() {
-  renderTuningSelect({ preserveSelection: true });
+  renderSavedManager();
   renderSongTuningResults();
   scheduleGlobalTuningSearch();
 }
@@ -1051,6 +1162,11 @@ function findSongById(id) {
 function renderSongTuningResults() {
   const results = $('#song-tuning-results');
   if (!results) return;
+  if (libraryFilter !== 'all') {
+    results.innerHTML = '';
+    results.classList.add('is-hidden');
+    return;
+  }
   const query = $('#saved-tuning-search')?.value || '';
   const cleanQuery = normalizeSearchTerm(query);
   const localMatches = getSongTuningMatches(query);
@@ -1098,7 +1214,7 @@ function renderSongTuningResults() {
       <button class="song-result-main" type="button" data-song-action="apply" data-song-id="${escapeHtml(song.id)}" aria-label="Appliquer ${escapeHtml(song.displayName)}">
         <strong>${escapeHtml(song.title)}</strong>
         <span>${escapeHtml(song.artist)} · ${escapeHtml(song.tuningName)}</span>
-        <small>${escapeHtml(song.notes.map(stripOctave).join(' '))} · ${escapeHtml(song.version)}${song.role ? ' · ' + escapeHtml(song.role) : ''} · ${escapeHtml(song.sourceLabel || 'Base morceaux')}</small>
+        <small>${escapeHtml(song.notes.join(' '))} · ${escapeHtml(song.version)}${song.role ? ' · ' + escapeHtml(song.role) : ''} · ${escapeHtml(song.sourceLabel || 'Base morceaux')}</small>
       </button>
       <button class="song-result-save" type="button" data-song-action="save" data-song-id="${escapeHtml(song.id)}" aria-label="Sauvegarder ${escapeHtml(song.displayName)}" title="Sauvegarder">
         <span aria-hidden="true">＋</span>
@@ -1217,7 +1333,6 @@ function renderTuningSelect({ preserveSelection = false } = {}) {
   if (!select) return;
 
   const previous = preserveSelection ? select.value || currentPresetKey : currentPresetKey;
-  const search = ($('#saved-tuning-search')?.value || '').trim().toLowerCase();
   select.innerHTML = '';
 
   const presetGroup = document.createElement('optgroup');
@@ -1232,22 +1347,21 @@ function renderTuningSelect({ preserveSelection = false } = {}) {
 
   const savedGroup = document.createElement('optgroup');
   savedGroup.label = 'Mes accordages';
-  const filteredSaved = savedTunings
+  const orderedSaved = savedTunings
     .slice()
-    .sort((a, b) => String(b.lastUsedAt || b.updatedAt).localeCompare(String(a.lastUsedAt || a.updatedAt)))
-    .filter((item) => !search || item.name.toLowerCase().includes(search) || item.notes.join(' ').toLowerCase().includes(search));
+    .sort((a, b) => String(b.lastUsedAt || b.updatedAt).localeCompare(String(a.lastUsedAt || a.updatedAt)));
 
-  if (filteredSaved.length) {
-    filteredSaved.forEach((item) => {
+  if (orderedSaved.length) {
+    orderedSaved.forEach((item) => {
       const option = document.createElement('option');
       option.value = `saved:${item.id}`;
-      option.textContent = `${item.name} — ${item.notes.map(stripOctave).join(' ')}`;
+      option.textContent = `${item.name} — ${item.notes.join(' ')}`;
       savedGroup.appendChild(option);
     });
   } else {
     const empty = document.createElement('option');
     empty.disabled = true;
-    empty.textContent = search ? 'Aucun accordage sauvegardé trouvé' : 'Aucun accordage sauvegardé';
+    empty.textContent = 'Aucun accordage sauvegardé';
     savedGroup.appendChild(empty);
   }
   select.appendChild(savedGroup);
@@ -1420,7 +1534,8 @@ function activateSavedTuning(id) {
 
 function updateCustomActionState() {
   const save = $('#save-custom');
-  if (!save) return;
+  const saveBlock = $('#library-save-block');
+  if (!save || !saveBlock) return;
 
   const rawName = ($('#custom-tuning-name')?.value || '').trim();
   const fallbackName = (activeCustomName || '').trim();
@@ -1440,18 +1555,81 @@ function updateCustomActionState() {
   });
 
   let disabled = !canResolveName || duplicateNameAndNotes;
+  let hasPitchChanges = false;
+  let hasNameChanges = false;
 
   if (selectedSaved) {
     const normalizedBaselineFreqs = selectedSaved.freqs.map((value) => Number(Number(value).toFixed(2)));
-    const hasPitchChanges = !arraysEqual(tuning.notes, selectedSaved.notes) || !arraysEqual(normalizedCurrentFreqs, normalizedBaselineFreqs);
-    const hasNameChanges = rawName.length > 0 && rawName !== selectedSaved.name;
+    hasPitchChanges = !arraysEqual(tuning.notes, selectedSaved.notes) || !arraysEqual(normalizedCurrentFreqs, normalizedBaselineFreqs);
+    hasNameChanges = rawName.length > 0 && rawName !== selectedSaved.name;
     disabled = disabled || !(hasPitchChanges || hasNameChanges);
   }
 
-  save.innerText = 'Sauvegarder';
+  const hasSavedChanges = Boolean(selectedSaved && (hasPitchChanges || hasNameChanges));
+  const shouldOfferSave = currentPresetKey === 'custom' || hasSavedChanges;
+  saveBlock.classList.toggle('is-hidden', !shouldOfferSave);
+  save.innerText = selectedSaved ? 'Mettre à jour' : 'Sauvegarder';
   save.disabled = disabled;
   save.classList.toggle('is-disabled', disabled);
   save.setAttribute('aria-disabled', disabled ? 'true' : 'false');
+  updateActiveTuningDisplay({ invalid: duplicateNameAndNotes });
+}
+
+function getActiveTuningDisplayName() {
+  if (tuningPage === 'library') return 'Bibliothèque';
+  if (activeSavedTuningId) {
+    return savedTunings.find((item) => item.id === activeSavedTuningId)?.name || activeCustomName || 'Personnalisé';
+  }
+  if (currentPresetKey === 'custom') {
+    return ($('#custom-tuning-name')?.value || '').trim() || activeCustomName || 'Personnalisé';
+  }
+  return PRESET_SELECT_META.find(([key]) => key === currentPresetKey)?.[1] || 'Standard';
+}
+
+function getActiveTuningVisualState() {
+  if (tuningPage === 'library') return 'library';
+  if (currentPresetKey === 'custom' && !activeSavedTuningId) return 'unsaved';
+  if (!activeSavedTuningId) return 'preset';
+  return hasActiveSavedTuningChanges() ? 'modified' : 'saved';
+}
+
+function hasActiveSavedTuningChanges() {
+  if (!activeSavedTuningId) return false;
+  const selectedSaved = savedTunings.find((item) => item.id === activeSavedTuningId);
+  if (!selectedSaved) return true;
+  const tuning = readCustomUnifiedFromUI();
+  const normalizedCurrentFreqs = tuning.freqs.map((value) => Number(value.toFixed(2)));
+  const normalizedSavedFreqs = selectedSaved.freqs.map((value) => Number(Number(value).toFixed(2)));
+  const enteredName = ($('#custom-tuning-name')?.value || '').trim();
+  return !arraysEqual(tuning.notes, selectedSaved.notes)
+    || !arraysEqual(normalizedCurrentFreqs, normalizedSavedFreqs)
+    || Boolean(enteredName && enteredName !== selectedSaved.name);
+}
+
+function updateActiveTuningDisplay({ invalid = false } = {}) {
+  const display = $('#active-tuning-display');
+  const name = $('#active-tuning-name');
+  const status = $('#active-tuning-status');
+  if (!display || !name || !status) return;
+
+  const visualState = invalid ? 'invalid' : getActiveTuningVisualState();
+  const displayName = getActiveTuningDisplayName();
+  const statusLabels = {
+    library: 'Bibliothèque ouverte',
+    preset: 'Préréglage actif',
+    saved: 'Accordage enregistré',
+    unsaved: 'Accordage non enregistré',
+    modified: 'Modifications non enregistrées',
+    invalid: 'Accordage à corriger avant sauvegarde'
+  };
+
+  name.innerText = displayName;
+  display.classList.remove('is-library', 'is-preset', 'is-saved', 'is-unsaved', 'is-modified', 'is-invalid');
+  display.classList.add(`is-${visualState}`);
+  display.setAttribute('aria-label', tuningPage === 'library'
+    ? 'Bibliothèque ouverte. Revenir au réglage précédent'
+    : `Accordage actif : ${displayName}. Ouvrir la Bibliothèque`);
+  status.setAttribute('aria-label', statusLabels[visualState]);
 }
 
 function arraysEqual(a = [], b = []) {
@@ -1516,61 +1694,80 @@ function renderSavedManager() {
   if (!list) return;
   list.innerHTML = '';
 
-  const query = ($('#saved-manager-search')?.value || '').trim().toLowerCase();
+  const query = ($('#saved-tuning-search')?.value || '').trim().toLowerCase();
+  const showPresets = libraryFilter === 'all' || libraryFilter === 'presets';
+  const showSaved = libraryFilter === 'all' || libraryFilter === 'saved';
+  let renderedCount = 0;
+
+  if (showPresets) {
+    PRESET_SELECT_META
+      .filter(([key, label]) => {
+        if (!query) return true;
+        const notes = presetTunings[key]?.notes || [];
+        return `${label} ${notes.join(' ')}`.toLowerCase().includes(query);
+      })
+      .forEach(([key, label]) => {
+        const active = currentPresetKey === key && !activeSavedTuningId;
+        const row = document.createElement('div');
+        row.className = `saved-item library-tuning-item${active ? ' is-active' : ''}`;
+        row.innerHTML = `
+          <div class="saved-item__top">
+            <span class="library-tuning-state" aria-hidden="true"></span>
+            <button class="saved-item__title saved-item__title-button" type="button" data-action="use-preset" data-key="${key}" aria-label="Utiliser ${escapeHtml(label)}" aria-pressed="${active ? 'true' : 'false'}">
+              <strong>${escapeHtml(label)}</strong>
+              <span>${escapeHtml(presetTunings[key].notes.join(' · '))}</span>
+            </button>
+            <span class="saved-item__more-placeholder" aria-hidden="true"></span>
+          </div>
+        `;
+        list.appendChild(row);
+        renderedCount += 1;
+      });
+  }
+
+  if (showSaved && currentPresetKey === 'custom' && !activeSavedTuningId) {
+    const customName = ($('#custom-tuning-name')?.value || '').trim() || activeCustomName || 'Personnalisé';
+    const matchesQuery = !query || `${customName} ${currentNotes.join(' ')}`.toLowerCase().includes(query);
+    if (matchesQuery) {
+      const row = document.createElement('div');
+      row.className = 'saved-item library-tuning-item is-active is-unsaved';
+      row.innerHTML = `
+        <div class="saved-item__top">
+          <span class="library-tuning-state" aria-hidden="true"></span>
+          <button class="saved-item__title saved-item__title-button" type="button" data-action="edit-custom" aria-label="Modifier ${escapeHtml(customName)}" aria-pressed="true">
+            <strong>${escapeHtml(customName)}</strong>
+            <span>${escapeHtml(currentNotes.join(' · '))}</span>
+          </button>
+          <span class="saved-item__more-placeholder" aria-hidden="true"></span>
+        </div>
+      `;
+      list.appendChild(row);
+      renderedCount += 1;
+    }
+  }
+
   const items = savedTunings
     .slice()
     .sort((a, b) => String(b.lastUsedAt || b.updatedAt).localeCompare(String(a.lastUsedAt || a.updatedAt)))
     .filter((item) => {
+      if (!showSaved) return false;
       if (!query) return true;
-      const haystack = `${item.name} ${item.notes.join(' ')} ${item.notes.map(stripOctave).join(' ')}`.toLowerCase();
+      const haystack = `${item.name} ${item.notes.join(' ')}`.toLowerCase();
       return haystack.includes(query);
     });
-
-  if (!savedTunings.length) {
-    list.appendChild(createEmptyState({
-      kind: 'tuning',
-      title: 'Aucun accordage',
-      message: 'Crée un accordage libre, donne-lui un nom, puis sauvegarde-le pour le retrouver ici.',
-      actionLabel: 'Créer un accordage',
-      onAction: () => {
-        const select = $('#tuning-select');
-        if (select) {
-          select.value = 'custom';
-          handleTuningChange();
-        }
-        setSavedManagerOpen(false);
-        window.setTimeout(() => $('#custom-note-grid select')?.focus?.(), 350);
-      }
-    }));
-    return;
-  }
-
-  if (!items.length) {
-    list.appendChild(createEmptyState({
-      kind: 'search',
-      title: 'Aucun résultat',
-      message: 'Aucun accordage ne correspond à cette recherche.',
-      actionLabel: 'Effacer le filtre',
-      onAction: () => {
-        const search = $('#saved-manager-search');
-        if (!search) return;
-        search.value = '';
-        renderSavedManager();
-        search.focus();
-      }
-    }));
-    return;
-  }
 
   items.forEach((item) => {
     const isMenuOpen = openSavedMenuId === item.id;
     const row = document.createElement('div');
-    row.className = `saved-item${activeSavedTuningId === item.id ? ' is-active' : ''}${isMenuOpen ? ' is-menu-open' : ''}`;
+    const active = activeSavedTuningId === item.id;
+    const modified = active && hasActiveSavedTuningChanges();
+    row.className = `saved-item library-tuning-item${active ? ' is-active' : ''}${modified ? ' is-modified' : ''}${isMenuOpen ? ' is-menu-open' : ''}`;
     row.innerHTML = `
       <div class="saved-item__top">
-        <button class="saved-item__title saved-item__title-button" type="button" data-action="use" data-id="${item.id}" aria-label="Utiliser ${escapeHtml(item.name)}">
+        <span class="library-tuning-state" aria-hidden="true"></span>
+        <button class="saved-item__title saved-item__title-button" type="button" data-action="use" data-id="${item.id}" aria-label="Utiliser ${escapeHtml(item.name)}" aria-pressed="${active ? 'true' : 'false'}">
           <strong>${escapeHtml(item.name)}</strong>
-          <span>${escapeHtml(item.notes.map(stripOctave).join(' · '))}</span>
+          <span>${escapeHtml(item.notes.join(' · '))}</span>
         </button>
         <button class="saved-item__more" type="button" data-action="toggle-menu" data-id="${item.id}" aria-label="Plus d’actions pour ${escapeHtml(item.name)}" aria-expanded="${isMenuOpen ? 'true' : 'false'}">…</button>
       </div>
@@ -1581,21 +1778,81 @@ function renderSavedManager() {
       </div>
     `;
     list.appendChild(row);
+    renderedCount += 1;
   });
+
+  if (!renderedCount) {
+    if (query) {
+      list.appendChild(createEmptyState({
+        kind: 'search',
+        title: 'Aucun résultat',
+        message: 'Aucun accordage ne correspond à cette recherche.',
+        actionLabel: 'Effacer la recherche',
+        onAction: () => {
+          const search = $('#saved-tuning-search');
+          if (!search) return;
+          search.value = '';
+          handleSongSearchInput();
+          search.focus();
+        }
+      }));
+    } else {
+      list.appendChild(createEmptyState({
+        kind: 'tuning',
+        title: 'Aucun accordage',
+        message: 'Crée un accordage libre, donne-lui un nom, puis sauvegarde-le pour le retrouver ici.',
+        actionLabel: 'Créer un accordage',
+        onAction: beginCustomTuning
+      }));
+    }
+  }
+
+  if (showSaved && renderedCount) {
+    const create = document.createElement('button');
+    create.type = 'button';
+    create.className = 'library-create-button';
+    create.dataset.action = 'create';
+    create.innerText = 'Créer un accordage';
+    list.appendChild(create);
+  }
 
   list.querySelectorAll('button[data-action]').forEach((button) => {
     button.addEventListener('click', (event) => {
       const id = button.dataset.id;
       const action = button.dataset.action;
+      if (action === 'use-preset') {
+        const key = button.dataset.key;
+        renderTuningSelect();
+        $('#tuning-select').value = key;
+        handleTuningChange();
+        return;
+      }
+      if (action === 'edit-custom') {
+        setTuningPage('custom');
+        return;
+      }
+      if (action === 'create') {
+        beginCustomTuning();
+        return;
+      }
       if (action === 'toggle-menu') {
         event.stopPropagation();
-        openSavedMenuId = openSavedMenuId === id ? null : id;
+        const willOpen = openSavedMenuId !== id;
+        openSavedMenuId = willOpen ? id : null;
         renderSavedManager();
+        if (willOpen) {
+          window.requestAnimationFrame(() => {
+            const target = [...list.querySelectorAll('.saved-item__more')]
+              .find((control) => control.dataset.id === id)
+              ?.closest('.saved-item');
+            target?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+          });
+        }
         return;
       }
       if (action === 'use') {
         activateSavedTuning(id);
-        setSavedManagerOpen(false);
+        setTuningPage('diapason');
       }
       if (action === 'rename') {
         openSavedMenuId = null;
@@ -1611,6 +1868,21 @@ function renderSavedManager() {
       }
     });
   });
+}
+
+function beginCustomTuning() {
+  activeSavedTuningId = null;
+  activeCustomName = '';
+  currentPresetKey = 'custom';
+  presetTunings.custom.notes = [...currentNotes];
+  presetTunings.custom.freqs = [...currentFreqs];
+  $('#custom-tuning-name').value = '';
+  renderTuningSelect();
+  $('#tuning-select').value = 'custom';
+  renderCustomInputs();
+  updateCustomActionState();
+  renderSavedManager();
+  setTuningPage('custom');
 }
 
 function escapeHtml(value) {
@@ -1679,7 +1951,10 @@ function renderCustomUnifiedInputs() {
       <span>Corde ${6 - index}</span>
       <div class="custom-dual-input">
         <select id="custom-note-${index}" aria-label="Note de la corde ${6 - index}">${getNoteOptionsHtml(note)}</select>
-        <input type="number" id="custom-f-${index}" aria-label="Fréquence de la corde ${6 - index}" step="0.01" min="30" max="1000" value="${freq.toFixed(2)}" inputmode="decimal" />
+        <span class="custom-frequency-field">
+          <input type="number" id="custom-f-${index}" aria-label="Fréquence de la corde ${6 - index} en hertz" step="0.01" min="30" max="1000" value="${freq.toFixed(2)}" inputmode="decimal" />
+          <span class="custom-frequency-unit" aria-hidden="true">Hz</span>
+        </span>
       </div>
     `;
     grid.appendChild(label);
@@ -1748,7 +2023,8 @@ function getNoteOptionsHtml(selectedNote) {
   for (let octave = CUSTOM_NOTE_MIN_OCTAVE; octave <= CUSTOM_NOTE_MAX_OCTAVE; octave += 1) {
     NOTE_NAMES.forEach((noteName, noteIndex) => {
       const value = `${noteName}${octave}`;
-      const label = `${NOTE_LABELS[noteIndex]}${octave}`;
+      const aliases = NOTE_LABELS[noteIndex].split(' / ');
+      const label = aliases.map((alias) => `${alias}${octave}`).join(' / ');
       options.push(`<option value="${value}"${value === selected ? ' selected' : ''}>${label}</option>`);
     });
   }
