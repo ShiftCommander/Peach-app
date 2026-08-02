@@ -307,3 +307,142 @@
   font-weight: 900;
   text-shadow: 0 1px 1px rgba(255, 242, 212, 0.9);
 }
+
+/* Active tuning display: small glazed nameplate set into the instrument surface. */
+:root[data-theme="luthier"] .active-tuning-display__screen {
+  border-color: rgba(104, 72, 36, 0.42);
+  color: #3d2b1c;
+  background:
+    linear-gradient(112deg, rgba(255, 251, 239, 0.54), transparent 35%),
+    linear-gradient(180deg, rgba(235, 218, 187, 0.88), rgba(195, 169, 130, 0.82));
+  box-shadow:
+    inset 0.26rem 0.3rem 0.62rem rgba(77, 52, 29, 0.2),
+    inset -0.2rem -0.2rem 0.52rem rgba(255, 248, 229, 0.52),
+    0 1px 0 rgba(255, 249, 235, 0.72),
+    0 0.36rem 0.8rem rgba(76, 53, 30, 0.14);
+  backdrop-filter: blur(2px) saturate(0.92);
+  -webkit-backdrop-filter: blur(2px) saturate(0.92);
+}
+
+:root[data-theme="luthier"] .active-tuning-display__screen strong {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(0.9rem, 2.2vw, 1.02rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: 0.035em;
+  text-transform: none;
+  text-shadow: 0 1px 0 rgba(255, 246, 224, 0.72);
+}
+
+:root[data-theme="luthier"] .active-tuning-status {
+  width: 0.72rem;
+  height: 0.72rem;
+  border-color: rgba(70, 47, 24, 0.56);
+  border-radius: 50%;
+  background: #8a9c79;
+  box-shadow:
+    inset 1px 1px 1px rgba(255, 244, 215, 0.48),
+    0 0.12rem 0.24rem rgba(67, 43, 22, 0.26);
+}
+
+:root[data-theme="luthier"] .active-tuning-display.is-unsaved .active-tuning-status,
+:root[data-theme="luthier"] .active-tuning-display.is-modified .active-tuning-status {
+  border-radius: 0.16rem;
+  background: #cf8c36;
+  box-shadow:
+    inset 1px 1px 1px rgba(255, 238, 198, 0.48),
+    0 0 0.42rem rgba(183, 103, 53, 0.38);
+  transform: rotate(45deg) scale(0.78);
+}
+
+:root[data-theme="luthier"] .active-tuning-display.is-invalid .active-tuning-status {
+  background: #9d4d44;
+  box-shadow: 0 0 0.38rem rgba(157, 77, 68, 0.36);
+}
+
+:root[data-theme="luthier"] .tuning-workspace-nav {
+  border-color: rgba(76, 53, 30, 0.18);
+  background: rgba(202, 187, 163, 0.52);
+  box-shadow:
+    inset 0.22rem 0.24rem 0.52rem rgba(83, 62, 38, 0.16),
+    inset -0.18rem -0.18rem 0.46rem rgba(255, 247, 232, 0.5);
+}
+
+:root[data-theme="luthier"] .workspace-mode.is-active,
+:root[data-theme="luthier"] .library-filter.is-active,
+:root[data-theme="luthier"] .saved-item.is-active {
+  border-color: rgba(92, 62, 31, 0.24);
+  color: var(--ink-strong);
+  background: #cabaa2;
+  box-shadow:
+    inset 0.22rem 0.24rem 0.48rem rgba(83, 60, 36, 0.2),
+    inset -0.15rem -0.15rem 0.38rem rgba(255, 248, 232, 0.46);
+}
+
+:root[data-theme="luthier"] .song-results-head,
+:root[data-theme="luthier"] .song-result-item,
+:root[data-theme="luthier"] .saved-item {
+  border-color: rgba(82, 58, 34, 0.18);
+  background: linear-gradient(150deg, rgba(247, 237, 219, 0.94), rgba(224, 207, 180, 0.92));
+}
+
+:root[data-theme="luthier"] .library-filter,
+:root[data-theme="luthier"] .library-create-button,
+:root[data-theme="luthier"] .saved-item__more,
+:root[data-theme="luthier"] .saved-item__menu button {
+  border-color: rgba(82, 58, 34, 0.18);
+  color: var(--muted);
+  background: rgba(255, 248, 234, 0.28);
+}
+
+:root[data-theme="luthier"] .saved-item__menu {
+  border-color: rgba(82, 58, 34, 0.2);
+  background: rgba(236, 223, 199, 0.96);
+  box-shadow: 0 0.42rem 1rem rgba(69, 46, 26, 0.2);
+}
+
+:root[data-theme="luthier"] .library-tuning-state {
+  width: 0.98rem;
+  height: 0.98rem;
+  border-color: rgba(78, 51, 25, 0.48);
+  border-radius: 50%;
+  background: linear-gradient(145deg, #dbc7a4, #a98b63);
+  box-shadow:
+    0.1rem 0.12rem 0.22rem rgba(76, 52, 30, 0.24),
+    inset 1px 1px 1px rgba(255, 245, 222, 0.58);
+}
+
+:root[data-theme="luthier"] .saved-item.is-active .library-tuning-state {
+  background: linear-gradient(145deg, #b98648, #684120);
+  box-shadow:
+    inset 0.12rem 0.14rem 0.24rem rgba(45, 27, 13, 0.36),
+    0 0 0 0.16rem rgba(165, 122, 63, 0.18);
+  transform: translateY(1px);
+}
+
+:root[data-theme="luthier"] .saved-item.is-unsaved .library-tuning-state,
+:root[data-theme="luthier"] .saved-item.is-modified .library-tuning-state {
+  background: linear-gradient(145deg, #d9a255, #985723);
+  box-shadow:
+    inset 0.12rem 0.14rem 0.24rem rgba(75, 38, 13, 0.28),
+    0 0 0 0.16rem rgba(183, 103, 53, 0.14);
+}
+
+:root[data-theme="luthier"] .active-tuning-display:focus-visible,
+:root[data-theme="luthier"] .workspace-mode:focus-visible,
+:root[data-theme="luthier"] .library-filter:focus-visible,
+:root[data-theme="luthier"] .saved-item__more:focus-visible,
+:root[data-theme="luthier"] .saved-item__title-button:focus-visible,
+:root[data-theme="luthier"] .help-toggle:focus-visible,
+:root[data-theme="luthier"] .library-menu-button:focus-visible,
+:root[data-theme="luthier"] .pwa-card a:focus-visible,
+:root[data-theme="luthier"] .secondary-action:focus-visible,
+:root[data-theme="luthier"] .string-card:focus-visible,
+:root[data-theme="luthier"] input:focus-visible,
+:root[data-theme="luthier"] select:focus-visible {
+  outline-color: rgba(139, 104, 65, 0.78);
+}
+
+:root[data-theme="luthier"] .custom-frequency-field {
+  border-left-color: rgba(82, 58, 34, 0.22);
+}
