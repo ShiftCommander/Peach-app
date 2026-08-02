@@ -1,2 +1,2 @@
-Peach - Guitar Tuner V52.1.6
-Platform-safe Peach icons with exact source artwork for Android, iPhone and iPad.
+Peach - Guitar Tuner V52.1.7
+Simplified shell, floating install prompt and improved Luthier library contrast.
