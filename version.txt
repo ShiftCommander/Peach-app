@@ -1,2 +1,2 @@
-Peach - Guitar Tuner V52.1.5
-Dark Luthier material pass with ebony, rosewood, copper, ivory, static glass reflections and sculpted controls.
+Peach - Guitar Tuner V52.1.6
+Platform-safe Peach icons with exact source artwork for Android, iPhone and iPad.
