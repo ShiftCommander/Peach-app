@@ -1,2 +1,2 @@
-Peach - Guitar Tuner V52.1.7
-Simplified shell, floating install prompt and improved Luthier library contrast.
+Peach - Guitar Tuner V52.1.8
+Full-bleed Android maskable icons without a launcher border.
