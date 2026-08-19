@@ -30,19 +30,16 @@ test('Luthier CSS remains scoped and structurally valid', () => {
   assert.doesNotMatch(css, /LUTHIER CSS PASS 2|NEUTRAL PLACEHOLDER/);
 });
 
-test('Luthier owns its material assets and fidelity layer loads after the Console lens stylesheet', () => {
+test('Luthier fidelity overlay loads after the base theme without changing Console', () => {
   const html = read('index.html');
   const lensCss = read('dial-lens.css');
   const refinements = read('ui-refinements.css');
   const luthierIndex = html.indexOf('href="luthier-theme.css"');
-  const fidelityIndex = html.indexOf('href="luthier-fidelity.css"');
   const lensIndex = html.indexOf('href="dial-lens.css"');
-  const refinementsIndex = html.indexOf('href="ui-refinements.css"');
 
   assert.ok(lensIndex >= 0, 'dial-lens.css must remain loaded for Console');
   assert.ok(luthierIndex > lensIndex, 'luthier-theme.css must load after dial-lens.css');
-  assert.ok(fidelityIndex > luthierIndex, 'luthier-fidelity.css must load after the base Luthier theme');
-  assert.ok(refinementsIndex > fidelityIndex, 'cross-theme refinements must load after Luthier styling');
+  assert.match(refinements, /^@import\s+url\(["']luthier-fidelity\.css["']\);/);
   assert.doesNotMatch(lensCss, /@import\s+url\(["']luthier-theme\.css["']\)/);
   assert.doesNotMatch(refinements, /:root\[data-theme="luthier"\]/);
 });
