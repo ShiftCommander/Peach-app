@@ -1,5 +1,5 @@
-const APP_VERSION = '52.1.8';
-const CACHE_NAME = 'peach-guitar-tuner-v52-1-8';
+const APP_VERSION = '52.1.9';
+const CACHE_NAME = 'peach-guitar-tuner-v52-1-9';
 const EXPLICIT_UPDATE_BASE_CACHE = 'peach-guitar-tuner-v52';
 const CACHE_PREFIX = 'peach-guitar-tuner-v';
 const CORE_ASSETS = [
@@ -9,6 +9,9 @@ const CORE_ASSETS = [
   './dial-lens.css',
   './luthier-theme.css',
   './ui-refinements.css',
+  './textures/ebony-512.webp',
+  './textures/rosewood-768.webp',
+  './textures/nacre-strip.webp',
   './config.js',
   './pwa-lifecycle.js',
   './app.js',
