@@ -53,13 +53,12 @@ test('Luthier uses dedicated wood and nacre textures and disables the Console lo
 
 test('Luthier dial has a fixed needle and one rotating quarter-tone marker between notes', () => {
   const html = read('index.html');
-  const app = read('app.js');
   const css = read('luthier-theme.css');
 
   assert.match(html, /class="luthier-needle"/);
   assert.match(css, /:root\[data-theme="luthier"\]\s+\.luthier-needle/);
-  assert.match(app, /chromatic-quarter-tick/);
-  assert.match(app, /noteIndex\s*\*\s*30\s*\+\s*15/);
+  assert.match(css, /repeating-conic-gradient\(from 15deg/);
+  assert.match(css, /transparent\s+0\.28deg\s+30deg/);
 });
 
 test('Release metadata and service worker cache stay synchronized', () => {
