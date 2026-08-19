@@ -1,2 +1,2 @@
-Peach - Guitar Tuner V52.1.9
-Final Luthier materials, nacre dial and simplified needle targeting.
+Peach - Guitar Tuner V52.1.10
+Luthier material fidelity, hand-drawn inlays and restored Android metallic icon rim.
