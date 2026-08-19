@@ -1,2 +1,2 @@
-Peach - Guitar Tuner V52.1.8
-Full-bleed Android maskable icons without a launcher border.
+Peach - Guitar Tuner V52.1.9
+Final Luthier materials, nacre dial and simplified needle targeting.
