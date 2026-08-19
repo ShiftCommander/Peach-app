@@ -13,6 +13,7 @@ const CORE_ASSETS = [
   './textures/ebony-512.webp',
   './textures/rosewood-768.webp',
   './textures/nacre-strip.webp',
+  './textures/nacre-frame.webp',
   './ornaments/luthier-readout-flower.svg',
   './ornaments/luthier-divider.svg',
   './ornaments/luthier-finial.svg',
