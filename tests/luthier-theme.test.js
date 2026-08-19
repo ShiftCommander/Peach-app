@@ -61,6 +61,24 @@ test('Luthier dial has a fixed needle and one rotating quarter-tone marker betwe
   assert.match(css, /transparent\s+0\.28deg\s+30deg/);
 });
 
+test('Luthier frame and ornaments use the validated physical construction', () => {
+  const css = read('luthier-theme.css');
+  const requiredAssets = [
+    'ornaments/luthier-readout-flower.svg',
+    'ornaments/luthier-divider.svg',
+    'ornaments/luthier-finial.svg',
+  ];
+
+  assert.match(css, /:root\[data-theme="luthier"\]\s+\.dial::before\s*\{[\s\S]*?content:\s*none/);
+  assert.match(css, /url\("\.\/ornaments\/luthier-readout-flower\.svg"\)/);
+  assert.match(css, /url\("\.\/ornaments\/luthier-divider\.svg"\)/);
+  assert.match(css, /url\("\.\/ornaments\/luthier-finial\.svg"\)/);
+  assert.doesNotMatch(css, /content:\s*"✥"|content:\s*"✦"/);
+  for (const asset of requiredAssets) {
+    assert.ok(fs.existsSync(path.join(root, asset)), `${asset} must exist`);
+  }
+});
+
 test('Release metadata and service worker cache stay synchronized', () => {
   const packageJson = JSON.parse(read('package.json'));
   const releaseJson = JSON.parse(read('release.json'));
