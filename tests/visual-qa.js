@@ -21,26 +21,51 @@ const fs = require('node:fs');
   await page.goto('http://127.0.0.1:4173/index.html', { waitUntil: 'networkidle' });
   await page.waitForTimeout(500);
 
-  const state = await page.evaluate(() => {
+  const state = await page.evaluate(async () => {
     const needle = document.querySelector('.luthier-needle');
     const cLabel = document.querySelector('.chromatic-tick[data-note-index="0"] .chromatic-tick__label');
     const needleRect = needle.getBoundingClientRect();
     const labelRect = cLabel.getBoundingClientRect();
     const spearTop = Number.parseFloat(getComputedStyle(needle, '::before').top) || 0;
-    const background = (selector) => getComputedStyle(document.querySelector(selector)).backgroundImage;
+    const style = (selector) => getComputedStyle(document.querySelector(selector));
+
+    const img = new Image();
+    img.src = './textures/ebony-512.webp';
+    await img.decode();
+    const canvas = document.createElement('canvas');
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    const ebonyPixel = [...ctx.getImageData(20, 20, 1, 1).data];
 
     return {
       theme: document.documentElement.dataset.theme,
-      lensDisplay: getComputedStyle(document.querySelector('.dial-lens')).display,
-      needleDisplay: getComputedStyle(needle).display,
+      lensDisplay: style('.dial-lens').display,
+      needleDisplay: style('.luthier-needle').display,
       needleTipY: needleRect.top + spearTop,
       targetNoteBottomY: labelRect.bottom,
       bodyWidth: document.body.scrollWidth,
       viewportWidth: window.innerWidth,
-      tunerBackground: background('.tuner-card'),
-      navBackground: background('.tuning-workspace-nav'),
-      readoutBackground: background('.dial-note-readout'),
-      libraryBackground: background('.library-card'),
+      ebonyPixel,
+      tuner: {
+        background: style('.tuner-card').backgroundImage,
+        backgroundColor: style('.tuner-card').backgroundColor,
+        opacity: style('.tuner-card').opacity,
+        filter: style('.tuner-card').filter,
+      },
+      nav: {
+        background: style('.tuning-workspace-nav').backgroundImage,
+        backgroundColor: style('.tuning-workspace-nav').backgroundColor,
+        opacity: style('.tuning-workspace-nav').opacity,
+        filter: style('.tuning-workspace-nav').filter,
+      },
+      readout: {
+        background: style('.dial-note-readout').backgroundImage,
+        backgroundColor: style('.dial-note-readout').backgroundColor,
+        opacity: style('.dial-note-readout').opacity,
+        filter: style('.dial-note-readout').filter,
+      },
     };
   });
 
