@@ -50,6 +50,8 @@ test('Luthier uses dedicated wood and nacre textures and disables the Console lo
   assert.match(css, /textures\/ebony-512\.webp/);
   assert.match(css, /textures\/rosewood-768\.webp/);
   assert.match(css, /textures\/nacre-strip\.webp/);
+  assert.match(css, /textures\/nacre-frame\.webp/);
+  assert.ok(fs.existsSync(path.join(root, 'textures/nacre-frame.webp')), 'oriented nacre frame texture must exist');
   assert.match(css, /:root\[data-theme="luthier"\]\s+\.dial-lens\s*\{[\s\S]*?display:\s*none\s*!important/);
   assert.match(css, /:root\[data-theme="luthier"\]\s+\.chromatic-wheel--lens\s*\{[\s\S]*?display:\s*none\s*!important/);
 });
@@ -101,6 +103,7 @@ test('Release metadata and service worker cache stay synchronized', () => {
   assert.match(serviceWorker, /'\.\/textures\/ebony-512\.webp'/);
   assert.match(serviceWorker, /'\.\/textures\/rosewood-768\.webp'/);
   assert.match(serviceWorker, /'\.\/textures\/nacre-strip\.webp'/);
+  assert.match(serviceWorker, /'\.\/textures\/nacre-frame\.webp'/);
   assert.match(serviceWorker, /'\.\/ornaments\/luthier-readout-flower\.svg'/);
   assert.match(serviceWorker, /'\.\/ornaments\/luthier-divider\.svg'/);
   assert.match(serviceWorker, /'\.\/ornaments\/luthier-finial\.svg'/);
