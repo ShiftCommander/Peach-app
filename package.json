@@ -1,6 +1,6 @@
 {
   "name": "peach-guitar-tuner",
-  "version": "52.1.8",
+  "version": "52.1.9",
   "private": true,
   "description": "Static Peach guitar tuner PWA with optional Node.js global tuning API backend.",
   "scripts": {
