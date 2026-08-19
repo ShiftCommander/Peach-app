@@ -7,7 +7,7 @@
     linear-gradient(155deg, rgba(18, 12, 9, 0.2), rgba(2, 2, 2, 0.44)),
     url("./textures/ebony-512.webp");
   --luthier-rosewood-photo:
-    linear-gradient(150deg, rgba(42, 18, 10, 0.18), rgba(8, 4, 3, 0.46)),
+    linear-gradient(150deg, rgba(31, 14, 8, 0.34), rgba(5, 3, 2, 0.6)),
     url("./textures/rosewood-768.webp");
 }
 
@@ -65,26 +65,26 @@
   display: none;
 }
 
-/* Real mother-of-pearl strip from the approved headstock reference.
-   It stays a thin binding, framed by restrained dark/brass fillets. */
+/* The mother-of-pearl binding is assembled from the real headstock strip so
+   horizontal and vertical runs keep their physical orientation and shell scale. */
 :root[data-theme="luthier"] .dial::after {
-  inset: 0.57rem;
-  border-radius: 1.2rem;
-  padding: 0.13rem;
-  background:
-    linear-gradient(90deg, rgba(255,255,255,0.04), rgba(229,191,127,0.03)),
-    url("./textures/nacre-strip.webp") center / 32rem 1.06rem repeat;
+  inset: 0.53rem;
+  border-radius: 1.22rem;
+  padding: 0;
+  background: url("./textures/nacre-frame.webp") center / 100% 100% no-repeat;
+  -webkit-mask: none;
+  mask: none;
   box-shadow:
-    0 0 0 1px rgba(40, 25, 17, 0.88),
-    0 0 0 2px rgba(158, 109, 63, 0.34),
-    inset 0 0 0 1px rgba(255, 233, 195, 0.12);
-  filter: saturate(1.08) brightness(0.92) contrast(1.05);
+    0 0 0 1px rgba(34, 21, 14, 0.92),
+    0 0 0 2px rgba(157, 108, 63, 0.34),
+    inset 0 0 0 1px rgba(255, 235, 199, 0.08);
+  filter: saturate(1.07) brightness(0.91) contrast(1.04);
   opacity: 0.98;
 }
 
 /* Bezel layer is now only the top binding ornament, not another rectangular frame. */
 :root[data-theme="luthier"] .dial-bezel-light {
-  inset: 0.39rem 0.62rem auto;
+  inset: 0.35rem 0.62rem auto;
   left: 0.62rem;
   z-index: 9;
   height: 1.3rem;
@@ -100,8 +100,8 @@
     radial-gradient(circle at 50% 50%,
       rgba(4, 4, 3, 0.99) 0 48%,
       rgba(8, 6, 5, 0.985) 48% 59%,
-      rgba(28, 13, 8, 0.43) 59% 100%),
-    linear-gradient(145deg, rgba(255, 204, 139, 0.025), rgba(0, 0, 0, 0.26)),
+      rgba(25, 12, 8, 0.25) 59% 100%),
+    linear-gradient(145deg, rgba(255, 204, 139, 0.02), rgba(0, 0, 0, 0.18)),
     url("./textures/rosewood-768.webp") center / cover no-repeat;
   box-shadow:
     inset 0.5rem 0.65rem 1.4rem rgba(0, 0, 0, 0.72),
@@ -154,9 +154,9 @@
 
 :root[data-theme="luthier"] .dial-note-readout::before {
   content: "";
-  top: 0.12rem;
-  width: 7.6rem;
-  height: 1.4rem;
+  top: 0.08rem;
+  width: 8.35rem;
+  height: 1.55rem;
   background: url("./ornaments/luthier-readout-flower.svg") center / contain no-repeat;
   filter: drop-shadow(0 0.08rem 0.09rem rgba(0, 0, 0, 0.74));
 }
@@ -170,7 +170,8 @@
   filter: drop-shadow(0 0.08rem 0.08rem rgba(0, 0, 0, 0.72));
 }
 
-/* Rich rosewood surfaces use a single high-resolution crop, not a small repeated tile. */
+/* Rich rosewood surfaces use a single instrument-scale crop, darkened by a
+   lacquer-like glaze instead of a synthetic repeating grain. */
 :root[data-theme="luthier"] .library-card,
 :root[data-theme="luthier"] .library-tuning-item.is-active,
 :root[data-theme="luthier"] .saved-item.is-active,
@@ -220,19 +221,18 @@
 
 @media (max-width: 520px) {
   :root[data-theme="luthier"] .dial::after {
-    inset: 0.53rem;
-    padding: 0.12rem;
-    background-size: 27rem 0.96rem;
+    inset: 0.49rem;
+    background-size: 100% 100%;
   }
 
   :root[data-theme="luthier"] .dial-bezel-light {
-    inset: 0.34rem 0.58rem auto;
+    inset: 0.31rem 0.58rem auto;
     left: 0.58rem;
     background-size: 2.55rem 1.14rem;
   }
 
   :root[data-theme="luthier"] .dial-note-readout::before {
-    width: 6.8rem;
-    height: 1.25rem;
+    width: 7.55rem;
+    height: 1.4rem;
   }
 }
