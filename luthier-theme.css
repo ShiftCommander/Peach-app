@@ -69,7 +69,7 @@
   border: 1px solid rgba(152, 91, 51, 0.42);
   border-radius: clamp(1.5rem, 4vw, 2.35rem);
   background: var(--luthier-ebony-grain);
-  background-size: auto, auto, 14rem 14rem;
+  background-size: auto, auto, 22rem 22rem;
   box-shadow:
     0 1.5rem 4rem rgba(0, 0, 0, 0.68),
     inset 0 0 0 1px rgba(248, 202, 143, 0.055),
@@ -118,7 +118,7 @@
 :root[data-theme="luthier"] .tuner-card {
   border-color: rgba(120, 72, 40, 0.44);
   background: var(--luthier-ebony-grain);
-  background-size: auto, auto, 15rem 15rem;
+  background-size: auto, auto, 22rem 22rem;
   box-shadow:
     0 1rem 1.8rem rgba(0, 0, 0, 0.65),
     inset 0 1px 0 rgba(255, 208, 151, 0.055),
@@ -139,7 +139,7 @@
     radial-gradient(ellipse at 50% 5%, rgba(255, 220, 172, 0.055), transparent 34%),
     radial-gradient(ellipse at 50% 112%, rgba(92, 43, 22, 0.22), transparent 44%),
     var(--luthier-ebony-grain);
-  background-size: auto, auto, auto, auto, 13rem 13rem;
+  background-size: auto, auto, auto, auto, 20rem 20rem;
   box-shadow:
     inset 0 0 0 0.27rem rgba(4, 3, 2, 0.94),
     inset 0 0 0 0.38rem rgba(119, 70, 38, 0.34),
@@ -171,17 +171,17 @@
   z-index: 8;
   pointer-events: none;
   border-radius: 1.19rem;
-  padding: 0.15rem;
+  padding: 0.16rem;
   background:
     linear-gradient(90deg, rgba(255, 244, 220, 0.16), transparent 28% 72%, rgba(166, 213, 215, 0.08)),
-    url("./textures/nacre-strip.webp") center / 8rem 100% repeat;
+    url("./textures/nacre-strip.webp") center / 8rem 1rem repeat;
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
-  filter: saturate(0.82) brightness(0.82);
-  opacity: 0.9;
+  filter: saturate(0.96) brightness(0.88);
+  opacity: 0.92;
 }
 
 :root[data-theme="luthier"] .dial-lens {
@@ -245,7 +245,7 @@
   text-shadow:
     0 1px 0 rgba(255, 241, 214, 0.2),
     0 0.15rem 0.3rem rgba(0, 0, 0, 0.94) !important;
-  transform: translate(-50%, -50%) scale(1.06) !important;
+  transform: translate(-50%, -50%) scale(1.14) !important;
 }
 
 :root[data-theme="luthier"] .tuner-card.is-low .chromatic-wheel .chromatic-tick.is-nearest .chromatic-tick__label {
@@ -260,11 +260,11 @@
 :root[data-theme="luthier"] .luthier-needle {
   position: absolute;
   left: 50%;
-  top: calc(var(--lens-center-y) + 0.82rem);
+  top: calc(var(--lens-center-y) + 1.58rem);
   z-index: 6;
   display: block;
   width: 0.13rem;
-  height: clamp(7.6rem, 27vw, 9.9rem);
+  height: clamp(6.9rem, 25vw, 9.15rem);
   pointer-events: none;
   border-radius: 999rem;
   transform: translateX(-50%);
@@ -342,7 +342,7 @@
   background:
     radial-gradient(ellipse at 50% 0%, rgba(224, 163, 96, 0.045), transparent 45%),
     var(--luthier-ebony-grain);
-  background-size: auto, auto, auto, 11rem 11rem;
+  background-size: auto, auto, auto, 20rem 20rem;
   box-shadow:
     0 0.55rem 0.96rem rgba(0, 0, 0, 0.54),
     inset 0 1px 0 rgba(255, 217, 171, 0.065),
@@ -386,7 +386,7 @@
   overflow: hidden;
   border: 1px solid rgba(151, 93, 52, 0.48);
   background: var(--luthier-ebony-grain);
-  background-size: auto, auto, 12rem 12rem;
+  background-size: auto, auto, 20rem 20rem;
   box-shadow:
     0 0.48rem 0.9rem rgba(0, 0, 0, 0.58),
     inset 0 1px 0 rgba(255, 211, 157, 0.075),
@@ -423,7 +423,7 @@
 :root[data-theme="luthier"] .tuning-card {
   border-color: rgba(154, 92, 51, 0.48);
   background: var(--luthier-ebony-grain);
-  background-size: auto, auto, 14rem 14rem;
+  background-size: auto, auto, 22rem 22rem;
   box-shadow:
     0 0.75rem 1.35rem rgba(0, 0, 0, 0.6),
     inset 0 1px 0 rgba(255, 209, 154, 0.065),
@@ -477,7 +477,7 @@
   background:
     radial-gradient(circle at 34% 18%, rgba(255, 213, 155, 0.075), transparent 40%),
     var(--luthier-ebony-grain);
-  background-size: auto, auto, auto, 8rem 8rem;
+  background-size: auto, auto, auto, 18rem 18rem;
   box-shadow:
     0 0.32rem 0.62rem rgba(0, 0, 0, 0.64),
     inset 1px 1px 0 rgba(255, 209, 151, 0.09),
@@ -516,7 +516,7 @@
   border: 1px solid rgba(148, 94, 53, 0.48);
   color: rgba(231, 208, 177, 0.9);
   background: var(--luthier-ebony-grain);
-  background-size: auto, auto, 9rem 9rem;
+  background-size: auto, auto, 18rem 18rem;
   box-shadow:
     0 0.3rem 0.52rem rgba(0, 0, 0, 0.5),
     inset 1px 1px 0 rgba(255, 207, 148, 0.055),
@@ -546,7 +546,7 @@
   border-color: rgba(150, 93, 51, 0.48);
   color: var(--luthier-ivory);
   background: var(--luthier-ebony-grain);
-  background-size: auto, auto, 11rem 11rem;
+  background-size: auto, auto, 18rem 18rem;
   box-shadow:
     0 0.36rem 0.64rem rgba(0, 0, 0, 0.56),
     inset 1px 1px 0 rgba(255, 207, 150, 0.055),
@@ -651,7 +651,7 @@
   border-color: rgba(154, 94, 52, 0.46);
   color: var(--ink);
   background: var(--luthier-ebony-grain);
-  background-size: auto, auto, 9rem 9rem;
+  background-size: auto, auto, 18rem 18rem;
   box-shadow:
     0 0.38rem 0.66rem rgba(0, 0, 0, 0.56),
     inset 1px 1px 0 rgba(255, 207, 149, 0.055),
@@ -679,7 +679,7 @@
   color: var(--ink);
   background:
     linear-gradient(155deg, rgba(30, 18, 12, 0.98), rgba(7, 5, 4, 0.985)),
-    url("./textures/ebony-512.webp") center / 10rem 10rem repeat;
+    url("./textures/ebony-512.webp") center / 20rem 20rem repeat;
   box-shadow:
     0 0.85rem 1.6rem rgba(0, 0, 0, 0.7),
     inset 1px 1px 0 rgba(255, 209, 153, 0.075);
@@ -705,7 +705,7 @@
 :root[data-theme="luthier"] .toast-stamp__circle {
   border: 1px solid rgba(198, 136, 78, 0.58);
   background: var(--luthier-ebony-grain);
-  background-size: auto, auto, 8rem 8rem;
+  background-size: auto, auto, 18rem 18rem;
 }
 
 :root[data-theme="luthier"] .toast-stamp__icon {
@@ -747,7 +747,7 @@
   }
 
   :root[data-theme="luthier"] .luthier-needle {
-    height: clamp(7.2rem, 29vw, 8.8rem);
+    height: clamp(6.55rem, 27vw, 8.15rem);
   }
 }
 
