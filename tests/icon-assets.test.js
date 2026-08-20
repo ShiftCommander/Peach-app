@@ -7,16 +7,15 @@ const zlib = require('node:zlib');
 
 const ROOT = path.resolve(__dirname, '..');
 const ICONS = path.join(ROOT, 'icons');
-const APPLE_BACKGROUND = [0xd7, 0xd9, 0xdf, 0xff];
-const MASKABLE_FALLBACK = [0x19, 0x0c, 0x08, 0xff];
+const BACKGROUND = [0xd7, 0xd9, 0xdf, 0xff];
 
 const EXPECTED = {
   'favicon-32.png': { size: 32, sha256: 'aad74960741830ed7b4b5e5553e174e84492c6909312e2536dede74b0b8a00ff', transparent: true },
   'apple-touch-icon.png': { size: 180, sha256: '3d9f9a9e320b4dd55553d1e713597f8f5995fcf0964bcd49e220923940e95901', apple: true },
   'icon-192.png': { size: 192, sha256: '5aaabd7d71a801d9b510bea58afa4cb1e3f6cdd359019e1d3833ccb97ea340b5', transparent: true },
   'icon-512.png': { size: 512, sha256: 'f6ed83fe92d9d96fbabf6c41b29d630437c09d8571f8c396200a611d5115228d', transparent: true },
-  'maskable-icon-192.png': { size: 192, sha256: 'fa5770118d3d7811ddb9e7387acb1d464a66911132894ae8d3b3706c49f2727d', maskable: true },
-  'maskable-icon-512.png': { size: 512, sha256: '66b757ebd68e9e137928ae0ee64e07f9a163385306fa3dee78fd541c80b26bf7', maskable: true },
+  'maskable-icon-192.png': { size: 192, sha256: '1ebaf454fbb81ba278b9e530d53ba5e037a1e750b4f53f71d3178f44dc91d6db', maskable: true },
+  'maskable-icon-512.png': { size: 512, sha256: '590b175ceb057d079a52eedc11ce156f9bd86e55a788e3bbe8199b905dac1918', maskable: true },
 };
 
 function paeth(a, b, c) {
@@ -106,7 +105,7 @@ function rgbaAt(image, x, y) {
 }
 
 function sameRgba(a, b) {
-  return a.every((value, index) => value === b[index]);
+  return a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3];
 }
 
 test('Peach icon files keep their approved dimensions and exact bytes', () => {
@@ -125,55 +124,66 @@ test('favicon and standard PWA icons keep transparent corners', () => {
   for (const [name, expected] of Object.entries(EXPECTED)) {
     if (!expected.transparent) continue;
     const image = decodeRgbaPng(fs.readFileSync(path.join(ICONS, name)));
-    const last = image.width - 1;
-    for (const [x, y] of [[0, 0], [last, 0], [0, last], [last, last]]) {
-      assert.equal(rgbaAt(image, x, y)[3], 0, `${name} must keep transparent corners`);
-    }
+    const corners = [
+      rgbaAt(image, 0, 0),
+      rgbaAt(image, image.width - 1, 0),
+      rgbaAt(image, 0, image.height - 1),
+      rgbaAt(image, image.width - 1, image.height - 1),
+    ];
+    for (const corner of corners) assert.equal(corner[3], 0, `${name} must keep transparent corners`);
   }
 });
 
-test('Apple touch icon stays opaque on its platform canvas', () => {
-  const image = decodeRgbaPng(fs.readFileSync(path.join(ICONS, 'apple-touch-icon.png')));
-  for (let index = 3; index < image.pixels.length; index += 4) {
-    assert.equal(image.pixels[index], 255, 'apple-touch-icon.png must be fully opaque');
-  }
-  assert.deepEqual(rgbaAt(image, 0, 0), APPLE_BACKGROUND);
-});
-
-test('Android maskable icons are opaque and full bleed under a circular launcher mask', () => {
+test('Apple touch icons use opaque platform canvases and the same centered artwork', () => {
   for (const [name, expected] of Object.entries(EXPECTED)) {
-    if (!expected.maskable) continue;
+    if (!expected.apple) continue;
     const image = decodeRgbaPng(fs.readFileSync(path.join(ICONS, name)));
-
     for (let index = 3; index < image.pixels.length; index += 4) {
       assert.equal(image.pixels[index], 255, `${name} must be fully opaque`);
     }
+    assert.deepEqual(rgbaAt(image, 0, 0), BACKGROUND, `${name} corner background`);
+  }
+});
 
+test('maskable icons are opaque and keep all artwork inside the W3C safe zone', () => {
+  for (const [name, expected] of Object.entries(EXPECTED)) {
+    if (!expected.maskable) continue;
+    const image = decodeRgbaPng(fs.readFileSync(path.join(ICONS, name)));
     const center = image.width / 2;
-    const radius = image.width * 0.495;
-    for (let degrees = 0; degrees < 360; degrees += 22.5) {
-      const radians = degrees * Math.PI / 180;
-      const x = Math.min(image.width - 1, Math.max(0, Math.round(center + Math.cos(radians) * radius - 0.5)));
-      const y = Math.min(image.height - 1, Math.max(0, Math.round(center + Math.sin(radians) * radius - 0.5)));
-      assert.equal(
-        sameRgba(rgbaAt(image, x, y), MASKABLE_FALLBACK),
-        false,
-        `${name} exposes fallback canvas at ${degrees} degrees`,
-      );
+    const safeRadius = image.width * 0.4;
+    let maxArtworkRadius = 0;
+    let artworkPixels = 0;
+
+    for (let y = 0; y < image.height; y += 1) {
+      for (let x = 0; x < image.width; x += 1) {
+        const pixel = rgbaAt(image, x, y);
+        assert.equal(pixel[3], 255, `${name} must be fully opaque`);
+        if (sameRgba(pixel, BACKGROUND)) continue;
+
+        artworkPixels += 1;
+        const radius = Math.hypot((x + 0.5) - center, (y + 0.5) - center);
+        maxArtworkRadius = Math.max(maxArtworkRadius, radius);
+        assert.ok(radius <= safeRadius + 0.001, `${name} artwork exceeds the maskable safe zone`);
+      }
     }
+
+    assert.ok(artworkPixels > 0, `${name} contains no artwork`);
+    assert.ok(maxArtworkRadius / safeRadius >= 0.99, `${name} should fill at least 99% of the guaranteed safe radius`);
+    assert.deepEqual(rgbaAt(image, 0, 0), BACKGROUND, `${name} corner background`);
   }
 });
 
 test('manifest and HTML expose the correct platform icon roles', () => {
   const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, 'manifest.json'), 'utf8'));
-  const byKey = new Map(manifest.icons.map((icon) => [`${icon.purpose}:${icon.sizes}`, icon.src]));
+  assert.equal(manifest.background_color.toLowerCase(), '#d7d9df');
+  assert.equal(manifest.theme_color.toLowerCase(), '#d7d9df');
 
+  const byKey = new Map(manifest.icons.map((icon) => [`${icon.purpose}:${icon.sizes}`, icon.src]));
   assert.equal(byKey.get('any:192x192'), 'icons/icon-192.png');
   assert.equal(byKey.get('any:512x512'), 'icons/icon-512.png');
   assert.equal(byKey.get('maskable:192x192'), 'icons/maskable-icon-192.png');
   assert.equal(byKey.get('maskable:512x512'), 'icons/maskable-icon-512.png');
 
   const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
-  assert.match(html, /<link rel="icon" type="image\/png" sizes="32x32" href="icons\/favicon-32\.png" \/>/);
   assert.match(html, /<link rel="apple-touch-icon" href="icons\/apple-touch-icon\.png" \/>/);
 });

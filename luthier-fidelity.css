@@ -1,0 +1,255 @@
+/* Luthier fidelity overlay
+   Material scale, inlay and hand-drawn ornament corrections.
+   Scoped to Luthier so Console remains untouched. */
+
+:root[data-theme="luthier"] {
+  --luthier-ebony-photo:
+    linear-gradient(155deg, rgba(16, 10, 7, 0.12), rgba(1, 1, 1, 0.42)),
+    url("./textures/ebony-512.webp");
+  --luthier-rosewood-photo:
+    linear-gradient(150deg, rgba(24, 11, 7, 0.2), rgba(4, 2, 2, 0.48)),
+    url("./textures/rosewood-768.webp");
+}
+
+/* Real wood grain stays at instrument scale. */
+:root[data-theme="luthier"] .app-shell,
+:root[data-theme="luthier"] .tuning-workspace-nav,
+:root[data-theme="luthier"] .tuning-card,
+:root[data-theme="luthier"] .string-card,
+:root[data-theme="luthier"] .target-note,
+:root[data-theme="luthier"] .target-note-pill,
+:root[data-theme="luthier"] .library-filter,
+:root[data-theme="luthier"] .library-create-button,
+:root[data-theme="luthier"] .library-tuning-item,
+:root[data-theme="luthier"] .saved-item {
+  background-image: var(--luthier-ebony-photo);
+  background-size: auto, 24rem 24rem;
+  background-repeat: no-repeat, repeat;
+  background-position: center, center top;
+}
+
+:root[data-theme="luthier"] .app-shell {
+  border-color: rgba(127, 77, 47, 0.22);
+  box-shadow:
+    0 1.45rem 3.4rem rgba(0, 0, 0, 0.66),
+    inset 0 1px 0 rgba(244, 206, 157, 0.035);
+}
+
+/* The dial itself is the physical cadran. The surrounding tuner card must not
+   read as another frame. */
+:root[data-theme="luthier"] .tuner-card {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+:root[data-theme="luthier"] .tuner-card::before {
+  content: none;
+  display: none;
+}
+
+:root[data-theme="luthier"] .dial {
+  border: 0;
+  border-radius: 1.72rem;
+  background-image:
+    radial-gradient(ellipse at 50% 3%, rgba(255, 224, 182, 0.03), transparent 30%),
+    linear-gradient(165deg, rgba(21, 14, 10, 0.08), rgba(1, 1, 1, 0.3)),
+    url("./textures/ebony-512.webp");
+  background-size: auto, auto, 24rem 24rem;
+  background-repeat: no-repeat, no-repeat, repeat;
+  background-position: center, center, center;
+  box-shadow:
+    inset 0.42rem 0.52rem 1.15rem rgba(0, 0, 0, 0.76),
+    inset -0.16rem -0.18rem 0.44rem rgba(118, 73, 40, 0.045),
+    0 0.62rem 1.2rem rgba(0, 0, 0, 0.62);
+}
+
+:root[data-theme="luthier"] .dial::before {
+  content: none;
+  display: none;
+}
+
+/* One continuous mother-of-pearl binding, built from the real guitar-headstock
+   strip. The raster itself contains the metal fillets so CSS does not add a
+   second decorative border. */
+:root[data-theme="luthier"] .dial::after {
+  content: "";
+  position: absolute;
+  display: block;
+  inset: 0.34rem;
+  z-index: 10;
+  border-radius: 1.48rem;
+  padding: 0;
+  pointer-events: none;
+  background: url("./textures/nacre-frame.webp") center / 100% 100% no-repeat;
+  -webkit-mask: none;
+  mask: none;
+  box-shadow: none;
+  filter: saturate(1.12) brightness(1.08) contrast(1.02);
+  opacity: 1;
+}
+
+/* Central binding crown only. It is an inlay, never another rectangular bezel. */
+:root[data-theme="luthier"] .dial-bezel-light {
+  inset: 0.22rem 0.54rem auto;
+  left: 0.54rem;
+  z-index: 11;
+  display: block;
+  height: 1.72rem;
+  border-radius: 0;
+  background: url("./ornaments/luthier-binding-crown.svg") top center / 4.3rem 1.72rem no-repeat;
+  box-shadow: none;
+  filter: drop-shadow(0 0.1rem 0.12rem rgba(0, 0, 0, 0.84));
+}
+
+/* Photographic rosewood is restricted to the rotating timber band and selected
+   timber surfaces. Grain remains visible beneath a dark lacquer glaze. */
+:root[data-theme="luthier"] .chromatic-wheel::before {
+  background:
+    radial-gradient(circle at 50% 50%,
+      rgba(4, 4, 3, 0.995) 0 48%,
+      rgba(7, 6, 5, 0.99) 48% 59%,
+      rgba(20, 10, 7, 0.18) 59% 100%),
+    linear-gradient(145deg, rgba(255, 204, 139, 0.015), rgba(0, 0, 0, 0.12)),
+    url("./textures/rosewood-768.webp") center / cover no-repeat;
+  box-shadow:
+    inset 0.5rem 0.65rem 1.4rem rgba(0, 0, 0, 0.72),
+    inset -0.25rem -0.32rem 0.9rem rgba(124, 72, 41, 0.035),
+    inset 0 0 0 1px rgba(134, 83, 48, 0.2);
+}
+
+:root[data-theme="luthier"] .chromatic-wheel::after {
+  border-color: rgba(175, 128, 78, 0.22);
+  opacity: 0.72;
+}
+
+/* Fine physical pointer with a smaller spearhead and visible brass pivot. */
+:root[data-theme="luthier"] .luthier-needle {
+  width: 0.085rem;
+  background: linear-gradient(90deg, #4b301d, #e4c183 42% 58%, #56351e);
+  box-shadow: 0.05rem 0.075rem 0.11rem rgba(0, 0, 0, 0.8);
+}
+
+:root[data-theme="luthier"] .luthier-needle::before {
+  top: -0.54rem;
+  width: 0.52rem;
+  height: 0.74rem;
+  clip-path: polygon(50% 0, 80% 60%, 50% 100%, 20% 60%);
+}
+
+:root[data-theme="luthier"] .luthier-needle::after {
+  bottom: -0.34rem;
+  width: 0.68rem;
+  height: 0.68rem;
+  border-width: 1px;
+}
+
+/* Readout: one recessed ebony plaque, with a real drawn floral inlay sitting on
+   its upper edge as on the validated reference. */
+:root[data-theme="luthier"] .dial-note-readout {
+  width: min(17.4rem, 79%);
+  padding: 1.48rem 1rem 0.72rem;
+  border-color: rgba(128, 78, 45, 0.34);
+  border-radius: 42% 42% 1.25rem 1.25rem / 24% 24% 1.25rem 1.25rem;
+  background-image:
+    radial-gradient(ellipse at 50% 0%, rgba(225, 172, 107, 0.022), transparent 42%),
+    linear-gradient(155deg, rgba(17, 11, 8, 0.12), rgba(1, 1, 1, 0.36)),
+    url("./textures/ebony-512.webp");
+  background-size: auto, auto, 24rem 24rem;
+  background-repeat: no-repeat, no-repeat, repeat;
+  box-shadow:
+    0 0.42rem 0.78rem rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 220, 177, 0.04),
+    inset 0 0 0 1px rgba(20, 12, 8, 0.76);
+}
+
+:root[data-theme="luthier"] .dial-note-readout::before {
+  content: "";
+  display: block;
+  top: -0.12rem;
+  width: 10.8rem;
+  height: 2.25rem;
+  background: url("./ornaments/luthier-readout-flower.svg") center / contain no-repeat;
+  filter: drop-shadow(0 0.09rem 0.1rem rgba(0, 0, 0, 0.78));
+  opacity: 1;
+}
+
+/* Hand-drawn inlay between the two existing workspace buttons. */
+:root[data-theme="luthier"] .tuning-workspace-nav::after {
+  content: "";
+  display: block;
+  width: 2.35rem;
+  height: 1.15rem;
+  background: url("./ornaments/luthier-divider.svg") center / contain no-repeat;
+  filter: drop-shadow(0 0.08rem 0.08rem rgba(0, 0, 0, 0.72));
+  opacity: 1;
+}
+
+/* Rich rosewood surfaces use photo-derived grain rather than synthetic swirls. */
+:root[data-theme="luthier"] .library-card,
+:root[data-theme="luthier"] .library-tuning-item.is-active,
+:root[data-theme="luthier"] .saved-item.is-active,
+:root[data-theme="luthier"] .string-card.is-playing,
+:root[data-theme="luthier"] .string-card.is-current-target,
+:root[data-theme="luthier"] .target-note.is-current,
+:root[data-theme="luthier"] .target-note-pill.is-active {
+  background-image: var(--luthier-rosewood-photo);
+  background-size: auto, 18rem 18rem;
+  background-repeat: no-repeat, repeat;
+  background-position: center, center top;
+}
+
+:root[data-theme="luthier"] .library-card {
+  border-color: rgba(153, 97, 57, 0.38);
+  box-shadow:
+    0 0.68rem 1.2rem rgba(0, 0, 0, 0.58),
+    inset 0 1px 0 rgba(255, 219, 173, 0.06),
+    inset 0 0 0 1px rgba(21, 11, 7, 0.6);
+}
+
+/* Bottom finial: a proper carved/inlaid termination rather than three blobs. */
+:root[data-theme="luthier"] .library-card::after {
+  content: "";
+  display: block;
+  bottom: -0.02rem;
+  width: 5.25rem;
+  height: 1.7rem;
+  background: url("./ornaments/luthier-finial.svg") center / contain no-repeat;
+  opacity: 0.94;
+  filter: drop-shadow(0 0.08rem 0.08rem rgba(0, 0, 0, 0.78));
+}
+
+:root[data-theme="luthier"] .library-tuning-item.is-active,
+:root[data-theme="luthier"] .saved-item.is-active {
+  border-color: rgba(190, 126, 72, 0.56);
+  box-shadow:
+    0 0.3rem 0.52rem rgba(0, 0, 0, 0.5),
+    inset 1px 1px 0 rgba(255, 216, 166, 0.065),
+    inset -1px -1px 0 rgba(0, 0, 0, 0.8);
+}
+
+/* Ivory active preset remains readable on the physical ivory surface. */
+:root[data-theme="luthier"] .active-tuning-display__screen strong {
+  color: #2b190f;
+  text-shadow: 0 1px 0 rgba(255, 247, 226, 0.55);
+}
+
+@media (max-width: 520px) {
+  :root[data-theme="luthier"] .dial::after {
+    inset: 0.28rem;
+    background-size: 100% 100%;
+  }
+
+  :root[data-theme="luthier"] .dial-bezel-light {
+    inset: 0.17rem 0.46rem auto;
+    left: 0.46rem;
+    height: 1.46rem;
+    background-size: 3.75rem 1.46rem;
+  }
+
+  :root[data-theme="luthier"] .dial-note-readout::before {
+    width: 9.45rem;
+    height: 1.96rem;
+  }
+}

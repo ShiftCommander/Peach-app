@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 58" fill="none">
+  <defs>
+    <linearGradient id="brass" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#5f3a21"/><stop offset=".28" stop-color="#b17b48"/><stop offset=".52" stop-color="#e0b77b"/><stop offset=".75" stop-color="#8a5834"/><stop offset="1" stop-color="#4d2f1d"/>
+    </linearGradient>
+    <radialGradient id="pearl" cx="32%" cy="22%" r="88%">
+      <stop stop-color="#fff9df"/><stop offset=".2" stop-color="#f4e8cf"/><stop offset=".42" stop-color="#d9e7df"/><stop offset=".63" stop-color="#ecd3c8"/><stop offset=".82" stop-color="#d9c28e"/><stop offset="1" stop-color="#927052"/>
+    </radialGradient>
+    <linearGradient id="leaf" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#d2a46f"/><stop offset=".42" stop-color="#8a6040"/><stop offset="1" stop-color="#493021"/>
+    </linearGradient>
+  </defs>
+
+  <path d="M16 39C43 39 59 31 79 19c9-6 18-9 29-10M244 39c-27 0-43-8-63-20-9-6-18-9-29-10" stroke="url(#brass)" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M34 37c8-7 14-9 23-7-5 8-12 11-23 7ZM226 37c-8-7-14-9-23-7 5 8 12 11 23 7Z" fill="url(#leaf)" stroke="#c49462" stroke-width=".9"/>
+  <path d="M55 29c7-8 13-10 22-8-4 8-11 12-22 8ZM205 29c-7-8-13-10-22-8 4 8 11 12 22 8Z" fill="url(#leaf)" stroke="#bc8b59" stroke-width=".9"/>
+  <path d="M78 18c6-7 12-8 19-5-5 6-10 8-19 5ZM182 18c-6-7-12-8-19-5 5 6 10 8 19 5Z" fill="url(#leaf)" stroke="#ae7f52" stroke-width=".8"/>
+  <path d="M72 42c9-5 16-5 24 0-8 6-16 6-24 0ZM188 42c-9-5-16-5-24 0 8 6 16 6 24 0Z" fill="url(#leaf)" stroke="#a9784f" stroke-width=".8"/>
+  <path d="M18 39c-5 2-9 5-12 9M242 39c5 2 9 5 12 9" stroke="#7f5133" stroke-width="1.2" stroke-linecap="round"/>
+
+  <g transform="translate(130 25)">
+    <path d="M0-21c8 4 11 10 7 18-3 5-9 6-14 1-5-7-3-14 7-19Z" fill="url(#pearl)" stroke="#ead9b5" stroke-width="1.2"/>
+    <path d="M20-7c1 9-3 15-11 17-6 1-10-3-9-9 1-9 8-12 20-8Z" fill="url(#pearl)" stroke="#ead9b5" stroke-width="1.2"/>
+    <path d="M13 16c-6 8-13 10-20 5-5-4-5-9 0-13 7-6 14-3 20 8Z" fill="url(#pearl)" stroke="#ead9b5" stroke-width="1.2"/>
+    <path d="M-13 16c-6-11 1-14 8-8 5 4 5 9 0 13-7 5-14 3-20-5Z" transform="scale(-1 1)" fill="url(#pearl)" stroke="#ead9b5" stroke-width="1.2"/>
+    <path d="M-20-7c12-4 19-1 20 8 1 6-3 10-9 9-8-2-12-8-11-17Z" fill="url(#pearl)" stroke="#ead9b5" stroke-width="1.2"/>
+    <circle r="6.2" fill="#b98550" stroke="#f0dfbb" stroke-width="1.5"/>
+    <circle cx="-1.7" cy="-1.7" r="1.6" fill="#fff5d7" opacity=".85"/>
+  </g>
+
+  <path d="M109 47c7 4 14 4 21 1M151 47c-7 4-14 4-21 1" stroke="#7b4d31" stroke-width="1" stroke-linecap="round"/>
+</svg>
