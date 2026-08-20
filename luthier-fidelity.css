@@ -23,7 +23,7 @@
 :root[data-theme="luthier"] .library-tuning-item,
 :root[data-theme="luthier"] .saved-item {
   background-image: var(--luthier-ebony-photo);
-  background-size: auto, 36rem 36rem;
+  background-size: auto, 24rem 24rem;
   background-repeat: no-repeat, repeat;
   background-position: center, center top;
 }
@@ -56,7 +56,7 @@
     radial-gradient(ellipse at 50% 3%, rgba(255, 224, 182, 0.03), transparent 30%),
     linear-gradient(165deg, rgba(21, 14, 10, 0.08), rgba(1, 1, 1, 0.3)),
     url("./textures/ebony-512.webp");
-  background-size: auto, auto, 33rem 33rem;
+  background-size: auto, auto, 24rem 24rem;
   background-repeat: no-repeat, no-repeat, repeat;
   background-position: center, center, center;
   box-shadow:
@@ -74,15 +74,19 @@
    strip. The raster itself contains the metal fillets so CSS does not add a
    second decorative border. */
 :root[data-theme="luthier"] .dial::after {
+  content: "";
+  position: absolute;
+  display: block;
   inset: 0.34rem;
-  z-index: 8;
+  z-index: 10;
   border-radius: 1.48rem;
   padding: 0;
+  pointer-events: none;
   background: url("./textures/nacre-frame.webp") center / 100% 100% no-repeat;
   -webkit-mask: none;
   mask: none;
   box-shadow: none;
-  filter: saturate(1.08) brightness(1.03) contrast(1.03);
+  filter: saturate(1.12) brightness(1.08) contrast(1.02);
   opacity: 1;
 }
 
@@ -90,7 +94,8 @@
 :root[data-theme="luthier"] .dial-bezel-light {
   inset: 0.22rem 0.54rem auto;
   left: 0.54rem;
-  z-index: 9;
+  z-index: 11;
+  display: block;
   height: 1.72rem;
   border-radius: 0;
   background: url("./ornaments/luthier-binding-crown.svg") top center / 4.3rem 1.72rem no-repeat;
@@ -151,7 +156,7 @@
     radial-gradient(ellipse at 50% 0%, rgba(225, 172, 107, 0.022), transparent 42%),
     linear-gradient(155deg, rgba(17, 11, 8, 0.12), rgba(1, 1, 1, 0.36)),
     url("./textures/ebony-512.webp");
-  background-size: auto, auto, 29rem 29rem;
+  background-size: auto, auto, 24rem 24rem;
   background-repeat: no-repeat, no-repeat, repeat;
   box-shadow:
     0 0.42rem 0.78rem rgba(0, 0, 0, 0.5),
@@ -161,20 +166,24 @@
 
 :root[data-theme="luthier"] .dial-note-readout::before {
   content: "";
+  display: block;
   top: -0.12rem;
   width: 10.8rem;
   height: 2.25rem;
   background: url("./ornaments/luthier-readout-flower.svg") center / contain no-repeat;
   filter: drop-shadow(0 0.09rem 0.1rem rgba(0, 0, 0, 0.78));
+  opacity: 1;
 }
 
 /* Hand-drawn inlay between the two existing workspace buttons. */
 :root[data-theme="luthier"] .tuning-workspace-nav::after {
   content: "";
+  display: block;
   width: 2.35rem;
   height: 1.15rem;
   background: url("./ornaments/luthier-divider.svg") center / contain no-repeat;
   filter: drop-shadow(0 0.08rem 0.08rem rgba(0, 0, 0, 0.72));
+  opacity: 1;
 }
 
 /* Rich rosewood surfaces use photo-derived grain rather than synthetic swirls. */
@@ -186,7 +195,7 @@
 :root[data-theme="luthier"] .target-note.is-current,
 :root[data-theme="luthier"] .target-note-pill.is-active {
   background-image: var(--luthier-rosewood-photo);
-  background-size: auto, 30rem 30rem;
+  background-size: auto, 18rem 18rem;
   background-repeat: no-repeat, repeat;
   background-position: center, center top;
 }
@@ -202,11 +211,12 @@
 /* Bottom finial: a proper carved/inlaid termination rather than three blobs. */
 :root[data-theme="luthier"] .library-card::after {
   content: "";
+  display: block;
   bottom: -0.02rem;
   width: 5.25rem;
   height: 1.7rem;
   background: url("./ornaments/luthier-finial.svg") center / contain no-repeat;
-  opacity: 0.9;
+  opacity: 0.94;
   filter: drop-shadow(0 0.08rem 0.08rem rgba(0, 0, 0, 0.78));
 }
 
