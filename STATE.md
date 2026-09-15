@@ -1,12 +1,12 @@
 # Peach Tuner — État courant
 
 **Last consolidated:** 2026-09-15  
-**Last verified:** 2026-09-15 — dépôt local, `main`, `origin/main`, refs distantes, version, pipeline audio, tests locaux, merge des PR #25 et #27, checks GitHub associés et séparation des documents canoniques.
+**Last verified:** 2026-09-15 — dépôt local, `main`, `origin/main`, refs distantes, version, pipeline audio, tests locaux, merges des PR #25, #27 et #28, checks GitHub associés et séparation des documents canoniques.
 **Status:** baseline de production fusionnée ; prochain axe : mesurer puis améliorer la détection audio multi-instruments.
 
 ## État actuel
 
-- `main` et `origin/main` pointent sur `f839c23527f10d825a4ecb24e8fc15c7cdb74863`, le merge de la PR #27, lui-même fondé sur le merge de la PR #25.
+- La branche principale contient les trois documents canoniques, intégrés par les PR #27 et #28 ; leur séparation et leur cohérence ont été vérifiées après ces merges.
 - La version frontend est `52.1.10` dans `package.json`, `release.json`, `version.txt` et `sw.js`.
 - Peach reste une PWA statique HTML, CSS et JavaScript, avec un backend Node.js optionnel pour la recherche globale d’accordages.
 - Le produit cible Android et iPhone en portrait. La QA tablette et desktop est hors périmètre par défaut.
@@ -34,6 +34,7 @@
 - `npm run check` passe sur le `main` fusionné.
 - Les workflows GitHub `CI` et `Visual QA` de la PR #25 ont réussi sur le commit de branche `e343016` avant le merge.
 - La PR #27, qui ajoute les trois documents canoniques, est fusionnée dans `main` après revue et CI réussies.
+- La PR #28, qui synchronise `STATE.md` avec le merge des documents, est fusionnée dans `main` après CI réussie.
 
 ## Blocages et inconnues actuels
 
@@ -75,6 +76,7 @@
 - **2026-09-15 :** les trois fichiers canoniques ont été créés depuis le template fourni — ils centralisent désormais règles, plan et état.
 - **2026-09-15 :** la QA smartphone portrait a été retirée des règles générales d’`AGENTS.md`; elle reste une décision et un fait de cycle dans `PLAN.md` et `STATE.md`.
 - **2026-09-15 :** la PR #27 a été fusionnée dans `main`; les trois documents canoniques sont désormais intégrés.
+- **2026-09-15 :** la PR #28 a synchronisé `STATE.md` avec l’intégration des documents et a été fusionnée dans `main`.
 
 ## Dernier run — 2026-09-15
 
@@ -83,7 +85,7 @@
 - Réalisé : création de `AGENTS.md`, `PLAN.md` et `STATE.md` avec séparation des responsabilités.
 - Corrigé : suppression de la portée QA smartphone spécifique dans `AGENTS.md` et ajout d’une séparation explicite entre règles durables, planification et état vérifié.
 - Revue : l’axe standards est passé ; les trois écarts de discipline identifiés par l’axe spécification ont été corrigés dans `AGENTS.md` et `STATE.md`.
-- Fusion : la PR #27 a été créée après revue et CI vertes, puis fusionnée avec le commit `f839c23527f10d825a4ecb24e8fc15c7cdb74863`.
+- Fusion : les PR #27 et #28 ont été créées après revue et CI vertes, puis fusionnées dans `main`.
 - Bloqué / non prouvé : amélioration acoustique réelle, en attente du cadrage instrument et des mesures sur appareils.
 - `AGENTS.md` relu ; les règles permanentes ont été établies dans ce bootstrap.
 - Les trois fichiers canoniques ont été relus après correction et leur séparation, leurs références et leur prochaine action sont réconciliées pour le handoff.
