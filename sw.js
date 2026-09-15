@@ -1,5 +1,5 @@
-const APP_VERSION = '52.1.10';
-const CACHE_NAME = 'peach-guitar-tuner-v52-1-10';
+const APP_VERSION = '52.2.0';
+const CACHE_NAME = 'peach-guitar-tuner-v52-2-0';
 const EXPLICIT_UPDATE_BASE_CACHE = 'peach-guitar-tuner-v52';
 const CACHE_PREFIX = 'peach-guitar-tuner-v';
 const CORE_ASSETS = [
@@ -21,6 +21,7 @@ const CORE_ASSETS = [
   './config.js',
   './pwa-lifecycle.js',
   './app.js',
+  './pitch-tracker.js',
   './dial-lens.js',
   './manifest.json',
   './version.txt',
