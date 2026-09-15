@@ -8,7 +8,6 @@
   --shell-edge-bottom: max(1.25rem, env(safe-area-inset-bottom));
   --shell-edge-left: max(1rem, env(safe-area-inset-left));
   --floating-banner-max-width: 90rem;
-  --theme-switch-reveal-space: clamp(4rem, 12vh, 8rem);
   --search-icon-size: 1rem;
 }
 
@@ -47,7 +46,8 @@
 .theme-switch-footer {
   display: flex;
   justify-content: center;
-  padding: var(--theme-switch-reveal-space) 0 var(--shell-edge-bottom);
+  margin-top: var(--space-section);
+  padding: 0 0 var(--shell-edge-bottom);
 }
 
 .theme-switch-footer .theme-toggle-button {

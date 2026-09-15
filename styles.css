@@ -22,6 +22,14 @@
   --card-radius: 2rem;
   --control-radius: 1.1rem;
   --card-pad: clamp(1.25rem, 3.8vw, 1.65rem);
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-section: clamp(var(--space-4), 2.4vw, var(--space-6));
+  --space-scroll-shadow: var(--space-6);
   --motion-panel: 270ms;
   --lcd-surface-top: #dde5da;
   --lcd-surface-bottom: #afbdaf;
@@ -203,7 +211,7 @@ svg {
 .app-main {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: clamp(1rem, 2.4vw, 1.55rem);
+  gap: var(--space-section);
   align-items: start;
 }
 
@@ -736,7 +744,7 @@ svg {
   display: flex;
   gap: clamp(0.9rem, 2.8vw, 1.25rem);
   overflow-x: auto;
-  padding: 0 max(1rem, env(safe-area-inset-right)) 1.5rem max(1rem, env(safe-area-inset-left));
+  padding: 0 max(1rem, env(safe-area-inset-right)) var(--space-scroll-shadow) max(1rem, env(safe-area-inset-left));
   scroll-snap-type: x mandatory;
   scroll-padding-inline-start: max(1rem, env(safe-area-inset-left));
   scrollbar-width: none;
@@ -1649,8 +1657,8 @@ select:focus-visible {
 
   .tuning-scroll {
     display: flex;
-    overflow: hidden;
-    padding: 0;
+    overflow-x: auto;
+    padding: 0 max(1rem, env(safe-area-inset-right)) var(--space-scroll-shadow) max(1rem, env(safe-area-inset-left));
   }
 
   .tuning-card {
