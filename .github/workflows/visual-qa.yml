@@ -1,0 +1,49 @@
+name: Visual QA
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'luthier-theme.css'
+      - 'luthier-fidelity.css'
+      - 'ui-refinements.css'
+      - 'textures/**'
+      - 'ornaments/**'
+      - 'tests/visual-qa.js'
+      - '.github/workflows/visual-qa.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  portrait-mobile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install Playwright
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Start static server
+        run: |
+          python3 -m http.server 4173 > /tmp/peach-http.log 2>&1 &
+          for i in {1..20}; do
+            curl -fsS http://127.0.0.1:4173/index.html >/dev/null && exit 0
+            sleep 0.5
+          done
+          cat /tmp/peach-http.log
+          exit 1
+      - name: Capture portrait screenshots
+        run: node tests/visual-qa.js
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: luthier-fidelity-portrait-qa
+          path: artifacts/*.png
+          if-no-files-found: error

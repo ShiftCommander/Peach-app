@@ -5,6 +5,7 @@ const path = require('node:path');
 
 const root = path.resolve(__dirname, '..');
 const index = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+const styles = fs.readFileSync(path.join(root, 'styles.css'), 'utf8');
 const refinements = fs.readFileSync(path.join(root, 'ui-refinements.css'), 'utf8');
 const serviceWorker = fs.readFileSync(path.join(root, 'sw.js'), 'utf8');
 
@@ -18,6 +19,19 @@ test('theme switching remains available at the end of the page', () => {
   assert.match(index, /class="theme-switch-footer"/);
   assert.match(index, /id="theme-toggle-button"/);
   assert.match(index, /id="theme-toggle-text"/);
+});
+
+test('theme switching uses the shared section spacing token', () => {
+  assert.match(styles, /--space-section:\s*clamp\(/);
+  assert.match(refinements, /\.theme-switch-footer\s*\{[\s\S]*margin-top:\s*var\(--space-section\);[\s\S]*padding:\s*0\s+0\s+var\(--shell-edge-bottom\);/);
+  assert.doesNotMatch(refinements, /--theme-switch-reveal-space/);
+});
+
+test('wide tuning carousels keep horizontal scrolling and shadow clearance', () => {
+  assert.match(styles, /--space-scroll-shadow:\s*var\(--space-6\);/);
+  assert.match(styles, /\.tuning-scroll\s*\{[\s\S]*overflow-x:\s*auto;[\s\S]*padding:[^;]*var\(--space-scroll-shadow\)/);
+  assert.match(styles, /@media \(min-width: 760px\) \{[\s\S]*?\.tuning-scroll\s*\{[\s\S]*?overflow-x:\s*auto;[\s\S]*?padding:[^;]*var\(--space-scroll-shadow\)/);
+  assert.doesNotMatch(styles, /@media \(min-width: 760px\) \{[\s\S]*?\.tuning-scroll\s*\{[\s\S]*?overflow:\s*hidden;/);
 });
 
 test('the library search field has a visible search icon', () => {
