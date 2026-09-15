@@ -101,8 +101,8 @@
 - [x] **Step 2: Mark completed plan items and add a compact `State handoff` section** summarizing branch, implementation state, chosen thresholds, and physical-device validation still needed.
 - [x] **Step 3: Run fresh verification**: focused Node tests, syntax checks, JSON parsing, and whitespace/diff sanity checks available in the local harness.
 - [x] **Step 4: Review the GitHub branch diff against the spec.**
-- [ ] **Step 5: Open a pull request against `main`** with benchmark results, architectural summary, known scope boundary (`45–1000 Hz` remains V1), and physical-device follow-up.
-- [ ] **Step 6: Inspect GitHub CI/status for the PR head commit** and report any repository-level checks that cannot be proven locally.
+- [x] **Step 5: Open a pull request against `main`** with benchmark results, architectural summary, known scope boundary (`45–1000 Hz` remains V1), and physical-device follow-up.
+- [x] **Step 6: Inspect GitHub CI/status for the PR head commit** and record the observed state. CI was queued at the first post-PR inspection; GitHub remains the repository-level verification source for the full `npm run check` + `npm test` run.
 
 ## Benchmark Results
 
@@ -123,14 +123,16 @@ These figures establish the engineering baseline for V1. Real Android microphone
 ## State Handoff
 
 - Branch: `feat/adaptive-pitch-tracking`.
+- Pull request: `#26` — `feat: add adaptive pitch tracking`.
 - Base: current `main` at implementation start, commit `3d521111143e98215bd449008eb6041dc476a0e8`.
 - Release prepared: `52.2.0`.
 - Implementation state: adaptive detector/tracker, tests, PWA loading, precache, release metadata and syntax-check wiring are complete on the feature branch.
 - Diff review: branch is ahead of `main` only, with intended changes limited to the tracker, its tests/docs, PWA wiring and synchronized release metadata.
+- CI state at first inspection after PR creation: GitHub Actions `CI` run queued; workflow executes Node 20, `npm run check`, then `npm test`.
 - Current V1 scope: existing `45–1000 Hz` analysis range and microphone filters remain unchanged.
 - Physical validation remaining after PR: Android tests with sustained/decaying guitar notes first, then bass and additional instruments to tune thresholds and feed V2.
 - V2 target: instrument-aware analysis ranges/profiles, including bass below `45 Hz` and upper-register instruments above `1000 Hz`.
 
 ## Future PLAN.md / STATE.md Handoff
 
-When root coordination files are added, `PLAN.md` should link to this plan as the completed V1 adaptive-tracking milestone and create a V2 item for instrument-aware analysis ranges/profiles. `STATE.md` should capture the PR number, head commit, benchmark values above, CI status, final tuned constants, and the result of real Android tests with guitar/bass/other instruments.
+When root coordination files are added, `PLAN.md` should link to this plan as the completed V1 adaptive-tracking milestone and create a V2 item for instrument-aware analysis ranges/profiles. `STATE.md` should capture PR `#26`, the final head commit, benchmark values above, final CI conclusion, final tuned constants, and the result of real Android tests with guitar/bass/other instruments.
