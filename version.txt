@@ -1,2 +1,2 @@
-Peach - Guitar Tuner V52.2.0
-Adaptive pitch tracking with dynamic noise floor, decay persistence, octave resilience and confidence-aware smoothing.
+Peach - Guitar Tuner V52.2.1
+Restore full-bleed Android launcher icons and force Chromium to refresh installed icon assets.
